@@ -65,7 +65,7 @@ describe('ida e volta', () => {
   test('pelo armazenamento: exportar, mudar tudo e importar restaura o estado', async () => {
     await salvarNota(notaCompleta())
     await salvarNota(notaSimples('segunda', 300))
-    await salvarConfiguracoes({ autoBackupMinutes: 360 })
+    await salvarConfiguracoes({ autoBackupMinutes: 10080 })
     const antes = await listarNotas()
     const arquivo = JSON.stringify(criarBackup(antes, await lerConfiguracoes()))
 
@@ -75,7 +75,7 @@ describe('ida e volta', () => {
     const backup = lerBackup(arquivo)
     await substituirTudo(notasDoBackup(backup), backup.settings)
     expect(await listarNotas()).toEqual(antes)
-    expect((await lerConfiguracoes()).autoBackupMinutes).toBe(360)
+    expect((await lerConfiguracoes()).autoBackupMinutes).toBe(10080)
   })
 })
 

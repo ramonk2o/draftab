@@ -5,8 +5,12 @@ import type { Nota } from './notas'
 
 const PREFIXO_NOTA = 'note:'
 
+// Intervalos do backup automático, em minutos (0 = desligado; mensal = 30 dias)
+export const INTERVALOS_DE_BACKUP = [0, 1, 60, 1440, 10080, 43200] as const
+export type IntervaloDeBackup = (typeof INTERVALOS_DE_BACKUP)[number]
+
 export type Configuracoes = {
-  autoBackupMinutes: 0 | 1 | 60 | 360 | 720 | 1440 // 1 = teste, só no build de desenvolvimento
+  autoBackupMinutes: IntervaloDeBackup
   sidebarCollapsed: boolean
 }
 
@@ -80,7 +84,12 @@ export async function substituirTudo(notas: Nota[], configuracoes: Partial<Confi
   await chrome.storage.local.set(novos)
 }
 
-// Avisa quando uma importação acontece (nesta aba ou em outra)
+// Apaga todas as notas, mantendo as configurações. Avisa as abas como uma importação.
+export async function excluirTodasAsNotas(): Promise<void> {
+  await substituirTudo([], await lerConfiguracoes())
+}
+
+// Avisa quando uma importação (ou exclusão de todas as notas) acontece, nesta aba ou em outra
 export function aoImportar(callback: () => void) {
   chrome.storage.onChanged.addListener((mudancas, area) => {
     if (area !== 'local' || !mudancas.meta) return
@@ -95,7 +104,23 @@ export function aoImportar(callback: () => void) {
 
 export async function lerConfiguracoes(): Promise<Configuracoes> {
   const { settings } = await chrome.storage.local.get('settings')
-  return { ...CONFIGURACOES_PADRAO, ...(settings as Partial<Configuracoes> | undefined) }
+  const configuracoes = { ...CONFIGURACOES_PADRAO, ...(settings as Partial<Configuracoes> | undefined) }
+  configuracoes.autoBackupMinutes = intervaloValido(configuracoes.autoBackupMinutes)
+  return configuracoes
+}
+
+// Valores que não estão na lista (ex.: 6 h ou 12 h, de versões antigas) viram
+// o intervalo mais próximo; nunca desliga um backup que estava ligado
+export function intervaloValido(minutos: number): IntervaloDeBackup {
+  if ((INTERVALOS_DE_BACKUP as readonly number[]).includes(minutos)) return minutos as IntervaloDeBackup
+  if (!(minutos > 0)) return 0
+  let melhor: IntervaloDeBackup = 1
+  for (const opcao of INTERVALOS_DE_BACKUP) {
+    if (opcao === 0) continue
+    // Mais próximo em proporção: 6 h fica mais perto de 1 dia (4×) que de 1 h (6×)
+    if (Math.abs(Math.log(minutos / opcao)) < Math.abs(Math.log(minutos / melhor))) melhor = opcao
+  }
+  return melhor
 }
 
 export async function salvarConfiguracoes(mudancas: Partial<Configuracoes>): Promise<void> {

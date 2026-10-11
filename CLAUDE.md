@@ -6,7 +6,7 @@ Extensão do Chrome (Manifest V3) que substitui a nova aba por um bloco de notas
 
 ## Comandos
 - Instalar: `npm install`
-- Desenvolver (build em watch): `npm run dev` (modo desenvolvimento: inclui o intervalo de teste de 1 min do backup automático)
+- Desenvolver (build em watch): `npm run dev`
 - Build: `npm run build` (saída em `dist/`)
 - Testes: `npm test` (Vitest)
 - Carregar no Chrome: chrome://extensions → Modo do desenvolvedor → "Carregar sem compactação" → `dist/`. Após rebuild, clicar em ↻ na extensão e reabrir a aba.

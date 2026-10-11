@@ -39,6 +39,67 @@
       <div id="editor"></div>
     </main>
 
+    <!-- Configurações (lightbox): fecha pelo ×, com Esc ou clicando fora -->
+    <dialog id="configuracoes" aria-labelledby="titulo-configuracoes">
+      <div class="conteudo-dialogo">
+        <header class="cabecalho-dialogo">
+          <h1 id="titulo-configuracoes">Configurações</h1>
+          <button id="fechar-configuracoes" class="botao-icone" type="button" title="Fechar" aria-label="Fechar"></button>
+        </header>
+
+        <section>
+          <h2>Backup</h2>
+          <p class="explicacao">
+            Um arquivo JSON com todas as notas e configurações. Cada nota vai também em markdown, para dar
+            para ler o arquivo sem o Draftab.
+          </p>
+          <div class="botoes">
+            <button id="config-exportar" class="botao" type="button">Exportar backup</button>
+            <button id="config-importar" class="botao" type="button">Importar backup…</button>
+          </div>
+          <p class="explicacao">Importar substitui todas as notas atuais pelas do arquivo.</p>
+          <p id="mensagem-backup" class="mensagem" role="status" aria-live="polite"></p>
+        </section>
+
+        <section>
+          <h2>Backup automático</h2>
+          <p class="explicacao">
+            Salva um backup em <code>Downloads/draftab-backups/</code> sem perguntar, só quando alguma nota mudou
+            desde o último. Funciona mesmo com a aba fechada, enquanto o Chrome estiver aberto.
+          </p>
+          <label class="linha">
+            <span>Fazer backup</span>
+            <select id="intervalo">
+              <option value="0">Desligado</option>
+              <option value="1">A cada minuto</option>
+              <option value="60">A cada hora</option>
+              <option value="1440">Diário</option>
+              <option value="10080">Semanal</option>
+              <option value="43200">Mensal</option>
+            </select>
+          </label>
+          <p id="ultimo-backup" class="explicacao"></p>
+          <p class="explicacao pequena">
+            Se o Chrome estiver configurado para "Perguntar onde salvar cada arquivo", ele vai abrir essa
+            pergunta a cada backup automático.
+          </p>
+        </section>
+
+        <section class="zona-perigo">
+          <h2>Apagar todas as notas</h2>
+          <p class="explicacao">
+            Remove todas as notas deste navegador. Não dá para desfazer; exporte um backup antes se quiser
+            guardar algo. As configurações são mantidas.
+          </p>
+          <label class="linha">
+            <span>Para confirmar, digite <strong>apagar tudo</strong>:</span>
+            <input id="confirmar-apagar" type="text" autocomplete="off" spellcheck="false" />
+          </label>
+          <button id="apagar-tudo" class="botao perigo" type="button" disabled>Apagar todas as notas</button>
+        </section>
+      </div>
+    </dialog>
+
     <script type="module" src="/src/newtab.ts"></script>
   </body>
 </html>

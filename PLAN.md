@@ -23,9 +23,9 @@ Etapas em ordem de risco: o que pode invalidar a ideia vem primeiro.
 - **Status:** concluída. `npm test`: 39 testes ok (exportar → importar idêntico; 9 tipos de arquivo inválido recusados); roteiro manual no Chrome com a extensão: 13 verificações ok; aprovado no uso. Nome do arquivo: `draftab_AAAA-MM-DD-HHhMM.json`.
 
 ## Etapa 5: Backup automático
-- **Entrega:** seletor de intervalo nas Configurações, `chrome.alarms` + `chrome.downloads` no service worker, pula quando nada mudou, mostra data do último backup.
-- **Como verificar:** com intervalo de teste de 1 min (só em build de dev), editar uma nota e ver o arquivo em `Downloads/draftab-backups/`; sem editar, nenhum arquivo novo aparece.
-- **Status:** implementada (`npm test`: 48 testes ok; no Chrome com a extensão (build de dev, intervalo de 1 min): editar → backup em `draftab-backups/`; sem editar → nenhum arquivo novo; editar de novo → segundo arquivo; 10 verificações ok); falta seu teste no Chrome.
+- **Entrega:** seletor de intervalo nas Configurações (desligado, a cada minuto, a cada hora, diário, semanal, mensal), `chrome.alarms` + `chrome.downloads` no service worker, pula quando nada mudou, mostra data do último backup. Configurações em lightbox, com a seção "Apagar todas as notas" (confirmação digitada).
+- **Como verificar:** com o intervalo "a cada minuto", editar uma nota e ver o arquivo em `Downloads/draftab-backups/`; sem editar, nenhum arquivo novo aparece. Lightbox fecha pelo ×, Esc e clique fora; apagar tudo só com "apagar tudo" digitado.
+- **Status:** implementada (`npm test`: 52 testes ok; no Chrome com a extensão: backup real a cada minuto — 8 verificações ok; lightbox, intervalos e apagar tudo — 18 verificações ok); falta seu teste no Chrome.
 
 ## Etapa 6: Pronto para uso diário
 - **Entrega:** ícones, atalho de teclado para nova nota, estados vazios, script `npm run zip`, rascunho de política de privacidade para publicação futura.

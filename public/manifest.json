@@ -12,7 +12,6 @@
     "alarms",
     "downloads"
   ],
-  "options_page": "opcoes.html",
   "background": {
     "service_worker": "background.js",
     "type": "module"

@@ -468,3 +468,169 @@ body.reordenando .cursor-soltar {
 .alca-lista:active {
   cursor: grabbing;
 }
+
+/* ---------- Configurações (lightbox) ---------- */
+
+:root {
+  --erro: #b42318;
+  --ok: #1a7f37;
+}
+
+#configuracoes {
+  box-sizing: border-box;
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100vh - 64px);
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--texto);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+#configuracoes::backdrop {
+  background: rgba(20, 20, 20, 0.35);
+}
+
+#configuracoes[open] {
+  animation: abrir-dialogo 180ms var(--suave);
+}
+
+#configuracoes[open]::backdrop {
+  animation: escurecer 180ms ease-out;
+}
+
+@keyframes abrir-dialogo {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+}
+
+@keyframes escurecer {
+  from { opacity: 0; }
+}
+
+.conteudo-dialogo {
+  padding: 20px 28px 8px;
+}
+
+.cabecalho-dialogo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.cabecalho-dialogo h1 {
+  margin: 0;
+  font-size: 1.35em;
+}
+
+#fechar-configuracoes {
+  width: 30px;
+  height: 30px;
+}
+
+#configuracoes section {
+  padding: 18px 0;
+  border-top: 1px solid var(--borda);
+}
+
+#configuracoes h2 {
+  margin: 0 0 6px;
+  font-size: 1em;
+}
+
+.explicacao {
+  margin: 0 0 12px;
+  color: #666;
+}
+
+.explicacao.pequena {
+  font-size: 0.9em;
+}
+
+.botoes {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.linha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.botao {
+  padding: 7px 14px;
+  border: 1px solid #d6d6d6;
+  border-radius: 6px;
+  background: #fff;
+  color: var(--texto);
+  font: inherit;
+  cursor: pointer;
+}
+
+.botao:hover {
+  background: #f5f5f4;
+}
+
+.botao.perigo {
+  border-color: var(--erro);
+  color: var(--erro);
+}
+
+.botao.perigo:hover:not(:disabled) {
+  background: var(--erro);
+  color: #fff;
+}
+
+.botao:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+#configuracoes select,
+#confirmar-apagar {
+  padding: 6px 8px;
+  border: 1px solid #d6d6d6;
+  border-radius: 6px;
+  background: #fff;
+  font: inherit;
+}
+
+#configuracoes code {
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+  background: var(--fundo-codigo);
+  font-size: 0.9em;
+}
+
+.mensagem {
+  min-height: 1.5em;
+  margin: 0;
+  color: var(--ok);
+}
+
+.mensagem.erro {
+  color: var(--erro);
+}
+
+/* Sem mensagem, não ocupa espaço */
+.mensagem:empty {
+  display: none;
+}
+
+.zona-perigo h2 {
+  color: var(--erro);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #configuracoes[open],
+  #configuracoes[open]::backdrop {
+    animation: none;
+  }
+}

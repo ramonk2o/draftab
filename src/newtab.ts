@@ -2,6 +2,7 @@ import type { JSONContent } from '@tiptap/core'
 import { EditorState } from '@tiptap/pm/state'
 import { criarEditor } from './editor'
 import { exportarBackup, importarBackup } from './backup-ui'
+import { abrirConfiguracoes } from './configuracoes'
 import { ICONE_ENGRENAGEM, ICONE_EXPORTAR, ICONE_IMPORTAR, ICONE_LAPIS, ICONE_LIXEIRA } from './icones'
 import {
   comTituloAtualizado,
@@ -295,9 +296,10 @@ botaoImportar.addEventListener('click', async () => {
   // Se deu certo, aoImportar recarrega a aba
 })
 
-botaoConfiguracoes.addEventListener('click', () => chrome.runtime.openOptionsPage())
+botaoConfiguracoes.addEventListener('click', () => abrirConfiguracoes())
 
-// Depois de uma importação (nesta aba ou em outra), recarrega com os dados novos,
+// Depois de uma importação ou de apagar todas as notas (nesta aba ou em outra),
+// recarrega com os dados novos,
 // descartando a digitação pendente para não gravar por cima do backup
 aoImportar(() => {
   clearTimeout(temporizador)

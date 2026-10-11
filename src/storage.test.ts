@@ -3,6 +3,8 @@ import { criarChromeFalso } from './chrome-falso'
 import { novaNotaEmBranco, type Nota } from './notas'
 import {
   aoMudarNotas,
+  excluirTodasAsNotas,
+  intervaloValido,
   excluirNota,
   lerConfiguracoes,
   lerMeta,
@@ -95,6 +97,35 @@ describe('configurações', () => {
   test('salvar uma parte mantém o resto', async () => {
     await salvarConfiguracoes({ autoBackupMinutes: 60 })
     await salvarConfiguracoes({ sidebarCollapsed: true })
+    expect(await lerConfiguracoes()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true })
+  })
+})
+
+describe('intervalo do backup automático', () => {
+  test('valores da lista ficam como estão', () => {
+    for (const v of [0, 1, 60, 1440, 10080, 43200]) expect(intervaloValido(v)).toBe(v)
+  })
+
+  test('valores antigos viram o intervalo mais próximo, sem desligar', () => {
+    expect(intervaloValido(360)).toBe(1440) // 6 h → diário
+    expect(intervaloValido(720)).toBe(1440) // 12 h → diário
+    expect(intervaloValido(5)).toBe(1)
+    expect(intervaloValido(-3)).toBe(0)
+  })
+
+  test('configuração antiga gravada é lida já convertida', async () => {
+    await chrome.storage.local.set({ settings: { autoBackupMinutes: 720, sidebarCollapsed: false } })
+    expect((await lerConfiguracoes()).autoBackupMinutes).toBe(1440)
+  })
+})
+
+describe('excluirTodasAsNotas', () => {
+  test('apaga todas as notas e mantém as configurações', async () => {
+    await salvarNota(notaCom('a', 1))
+    await salvarNota(notaCom('b', 2))
+    await salvarConfiguracoes({ autoBackupMinutes: 60, sidebarCollapsed: true })
+    await excluirTodasAsNotas()
+    expect(await listarNotas()).toEqual([])
     expect(await lerConfiguracoes()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true })
   })
 })

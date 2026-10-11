@@ -13,7 +13,6 @@ export default defineConfig({
       // Uma entrada por página da extensão
       input: {
         newtab: 'newtab.html',
-        opcoes: 'opcoes.html',
         background: 'src/background.ts',
       },
       output: {

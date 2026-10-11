@@ -100,9 +100,9 @@ describe('agendarBackup', () => {
   })
 
   test('ligar cria o alarme com o intervalo escolhido; desligar remove', async () => {
-    await salvarConfiguracoes({ autoBackupMinutes: 360 })
+    await salvarConfiguracoes({ autoBackupMinutes: 10080 })
     await agendarBackup()
-    expect(chromeFalso.alarms.criados.get('backup-automatico')).toEqual({ delayInMinutes: 360, periodInMinutes: 360 })
+    expect(chromeFalso.alarms.criados.get('backup-automatico')).toEqual({ delayInMinutes: 10080, periodInMinutes: 10080 })
     await salvarConfiguracoes({ autoBackupMinutes: 0 })
     await agendarBackup()
     expect(chromeFalso.alarms.criados.size).toBe(0)
