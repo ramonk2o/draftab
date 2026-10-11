@@ -13,9 +13,9 @@ Etapas em ordem de risco: o que pode invalidar a ideia vem primeiro.
 - **Status:** concluída. Build ok; atalhos e arraste testados no Chrome (script automatizado) e checklist manual aprovado. Além do previsto: reordenação animada, arrastar lista inteira e blocos entre níveis (ver SPEC).
 
 ## Etapa 3: Persistência e lista de notas
-- **Entrega:** `src/storage.ts` (CRUD em `chrome.storage.local`), nova nota por aba, descarte de nota vazia, título pela primeira linha, barra lateral com busca e exclusão, sincronização entre abas via `chrome.storage.onChanged`.
-- **Como verificar:** `npm test` passa (CRUD com `chrome.storage` simulado). Manual: recarregar mantém notas e ordem dos blocos; abrir e fechar aba sem digitar não cria nota; duas abas na mesma nota se atualizam.
-- **Status:** pendente
+- **Entrega:** `src/storage.ts` (CRUD em `chrome.storage.local`), nova nota por aba, descarte de nota vazia, título automático pela primeira linha até a nota ser renomeada, barra lateral recolhível com busca, renomear e exclusão, sincronização entre abas via `chrome.storage.onChanged`.
+- **Como verificar:** `npm test` passa (CRUD com `chrome.storage` simulado). Manual: recarregar mantém notas e ordem dos blocos; abrir e fechar aba sem digitar não cria nota; duas abas na mesma nota se atualizam; renomear fixa o título; recolher a barra persiste ao recarregar.
+- **Status:** implementada (`npm test`: 23 testes ok; roteiro manual executado no Chrome com a extensão carregada: 18 verificações ok); falta seu teste no Chrome.
 
 ## Etapa 4: Backup manual
 - **Entrega:** página de Configurações com Exportar (JSON no formato do SPEC, incluindo markdown) e Importar (valida `app`/`version`, confirma, substitui tudo).

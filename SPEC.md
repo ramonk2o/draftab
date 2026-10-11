@@ -17,8 +17,11 @@ Sucesso: ~2 semanas de uso real sem perder nenhuma nota e sem voltar ao New Tab 
   - Itens e parágrafos podem mudar de nível: a altura do mouse escolhe a posição; nas bordas de uma lista, o movimento horizontal decide se o bloco fica dentro (direita) ou fora (esquerda) dela.
   - Conversões ao mudar de nível: item que sai da lista continua item, numa lista própria; parágrafo que entra numa lista vira item; item de lista ↔ item de checklist conforme a lista de destino. Listas vizinhas do mesmo tipo se juntam.
   - Títulos, citações, código, divisores e listas inteiras não entram em listas (movem-se só entre os blocos da nota).
-- Barra lateral lista as notas por última edição, com busca (título e conteúdo), botão "nova nota" e excluir com confirmação.
-- Título da nota = primeira linha de texto. Nota vazia não é salva (abrir e fechar a aba não deixa lixo).
+- Barra lateral lista as notas por última edição, com busca (título e conteúdo), botão "nova nota", renomear (duplo clique no título ou botão ✎) e excluir com confirmação.
+  - A barra lateral pode ser recolhida; o estado (aberta/recolhida) é lembrado.
+- Título da nota: enquanto ela não tem título definido pelo usuário, o título acompanha a primeira linha de texto. Renomear fixa o título; renomear para vazio volta ao título automático.
+- Nota vazia (sem texto e sem título definido) não é salva: abrir e fechar a aba não deixa lixo, e uma nota salva que fica vazia sai da lista.
+- Recarregar a aba reabre a mesma nota (o id fica no `sessionStorage` da aba, que sobrevive à recarga e some ao fechá-la).
 - Salvamento automático com debounce de ~500 ms. Mudança feita em outra aba aparece nesta (última gravação vence).
 - Página de Configurações:
   - Exportar backup agora (baixa um JSON).
@@ -44,12 +47,13 @@ Sucesso: ~2 semanas de uso real sem perder nenhuma nota e sem voltar ao New Tab 
 - Vitest para as camadas de dados e backup; o editor é verificado manualmente.
 
 ## Modelo de dados
-- `Note { id: string (uuid), doc: TiptapJSON, title: string, createdAt: number, updatedAt: number }`
+- `Note { id: string (uuid), doc: TiptapJSON, title: string, titleManual: boolean, createdAt: number, updatedAt: number }`
+  `titleManual` = o usuário renomeou a nota; enquanto for `false`, `title` acompanha a primeira linha.
   O JSON do Tiptap é a fonte da verdade (sem perdas de conversão).
-- `settings { autoBackupMinutes: 0 | 60 | 360 | 720 | 1440 }`
+- `settings { autoBackupMinutes: 0 | 60 | 360 | 720 | 1440, sidebarCollapsed: boolean }`
 - `meta { lastChangeAt: number, lastBackupAt: number }`
 - Arquivo de backup:
-  `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, markdown, doc, createdAt, updatedAt }] }`
+  `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, titleManual, markdown, doc, createdAt, updatedAt }] }`
   `markdown` é para leitura humana; a importação restaura a partir de `doc`.
 
 ## Fluxos principais

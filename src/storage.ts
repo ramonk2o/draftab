@@ -1,0 +1,81 @@
+import type { Nota } from './notas'
+
+// Todo acesso ao chrome.storage passa por aqui.
+// Chaves: "note:<id>" (uma por nota), "settings" e "meta".
+
+const PREFIXO_NOTA = 'note:'
+
+export type Configuracoes = {
+  autoBackupMinutes: 0 | 60 | 360 | 720 | 1440
+  sidebarCollapsed: boolean
+}
+
+export type Meta = {
+  lastChangeAt: number // última mudança em qualquer nota
+  lastBackupAt: number // último backup automático
+}
+
+const CONFIGURACOES_PADRAO: Configuracoes = { autoBackupMinutes: 0, sidebarCollapsed: false }
+const META_PADRAO: Meta = { lastChangeAt: 0, lastBackupAt: 0 }
+
+// ---------- Notas ----------
+
+// Todas as notas, da editada mais recentemente para a mais antiga
+export async function listarNotas(): Promise<Nota[]> {
+  const tudo = await chrome.storage.local.get(null)
+  return Object.entries(tudo)
+    .filter(([chave]) => chave.startsWith(PREFIXO_NOTA))
+    .map(([, nota]) => nota as Nota)
+    .sort((a, b) => b.updatedAt - a.updatedAt)
+}
+
+export async function lerNota(id: string): Promise<Nota | null> {
+  const chave = PREFIXO_NOTA + id
+  const resultado = await chrome.storage.local.get(chave)
+  return (resultado[chave] as Nota | undefined) ?? null
+}
+
+export async function salvarNota(nota: Nota): Promise<void> {
+  const meta = await lerMeta()
+  await chrome.storage.local.set({
+    [PREFIXO_NOTA + nota.id]: nota,
+    meta: { ...meta, lastChangeAt: Date.now() },
+  })
+}
+
+export async function excluirNota(id: string): Promise<void> {
+  await chrome.storage.local.remove(PREFIXO_NOTA + id)
+  const meta = await lerMeta()
+  await chrome.storage.local.set({ meta: { ...meta, lastChangeAt: Date.now() } })
+}
+
+// Avisa quando notas mudam (nesta aba ou em outra). nota = null quando foi excluída.
+export function aoMudarNotas(callback: (mudancas: { id: string; nota: Nota | null }[]) => void) {
+  chrome.storage.onChanged.addListener((mudancas, area) => {
+    if (area !== 'local') return
+    const deNotas = Object.entries(mudancas)
+      .filter(([chave]) => chave.startsWith(PREFIXO_NOTA))
+      .map(([chave, mudanca]) => ({
+        id: chave.slice(PREFIXO_NOTA.length),
+        nota: (mudanca.newValue as Nota | undefined) ?? null,
+      }))
+    if (deNotas.length > 0) callback(deNotas)
+  })
+}
+
+// ---------- Configurações e meta ----------
+
+export async function lerConfiguracoes(): Promise<Configuracoes> {
+  const { settings } = await chrome.storage.local.get('settings')
+  return { ...CONFIGURACOES_PADRAO, ...(settings as Partial<Configuracoes> | undefined) }
+}
+
+export async function salvarConfiguracoes(mudancas: Partial<Configuracoes>): Promise<void> {
+  const atuais = await lerConfiguracoes()
+  await chrome.storage.local.set({ settings: { ...atuais, ...mudancas } })
+}
+
+export async function lerMeta(): Promise<Meta> {
+  const { meta } = await chrome.storage.local.get('meta')
+  return { ...META_PADRAO, ...(meta as Partial<Meta> | undefined) }
+}

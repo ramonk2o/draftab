@@ -16,6 +16,182 @@ body {
   line-height: 1.6;
 }
 
+/* ---------- Layout: barra lateral + área do editor ---------- */
+
+:root {
+  --largura-lateral: 260px;
+  --fundo-lateral: #f7f7f5;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sem animações enquanto a aba abre (a barra não "desliza" ao carregar) */
+body.carregando * {
+  transition: none !important;
+}
+
+#lateral {
+  box-sizing: border-box;
+  flex: none;
+  width: var(--largura-lateral);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  padding: 56px 10px 16px;
+  background: var(--fundo-lateral);
+  border-right: 1px solid var(--borda);
+  font-size: 14px;
+  transition: margin-left 220ms var(--suave), visibility 220ms;
+}
+
+body.lateral-recolhida #lateral {
+  margin-left: calc(-1 * var(--largura-lateral));
+  visibility: hidden;
+}
+
+#area {
+  flex: 1;
+  min-width: 0;
+}
+
+#alternar-lateral {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 20;
+  display: flex;
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #777;
+  cursor: pointer;
+}
+
+#alternar-lateral:hover {
+  background: #ebebea;
+  color: #333;
+}
+
+#nova-nota {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 7px 10px;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--texto);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+#nova-nota:hover {
+  border-color: #ccc;
+}
+
+#busca {
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  background: #fff;
+  font: inherit;
+}
+
+#lista-notas {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item-nota {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.item-nota:hover {
+  background: #ebebea;
+}
+
+.item-nota.atual {
+  background: #e3e3e1;
+  font-weight: 600;
+}
+
+.titulo-nota {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.data-nota {
+  flex: none;
+  color: var(--texto-suave);
+  font-size: 12px;
+  font-weight: normal;
+}
+
+/* Renomear e excluir aparecem no lugar da data ao passar o mouse */
+.acao-nota {
+  display: none;
+  flex: none;
+  padding: 0 4px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #777;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.acao-nota:hover {
+  background: #d9d9d7;
+  color: #222;
+}
+
+.item-nota:hover .acao-nota,
+.item-nota:focus-within .acao-nota {
+  display: block;
+}
+
+.item-nota:hover .data-nota,
+.item-nota:focus-within .data-nota {
+  display: none;
+}
+
+.campo-renomear {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 2px 6px;
+  border: 1px solid var(--link);
+  border-radius: 4px;
+  font: inherit;
+}
+
+.lista-vazia {
+  padding: 6px 8px;
+  color: var(--texto-suave);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #lateral { transition: none; }
+}
+
+/* ---------- Editor ---------- */
+
 #editor {
   /* position: relative serve de referência para a alça de arrastar */
   position: relative;
