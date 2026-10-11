@@ -25,7 +25,7 @@ Etapas em ordem de risco: o que pode invalidar a ideia vem primeiro.
 ## Etapa 5: Backup automático
 - **Entrega:** seletor de intervalo nas Configurações, `chrome.alarms` + `chrome.downloads` no service worker, pula quando nada mudou, mostra data do último backup.
 - **Como verificar:** com intervalo de teste de 1 min (só em build de dev), editar uma nota e ver o arquivo em `Downloads/draftab-backups/`; sem editar, nenhum arquivo novo aparece.
-- **Status:** pendente
+- **Status:** implementada (`npm test`: 48 testes ok; no Chrome com a extensão (build de dev, intervalo de 1 min): editar → backup em `draftab-backups/`; sem editar → nenhum arquivo novo; editar de novo → segundo arquivo; 10 verificações ok); falta seu teste no Chrome.
 
 ## Etapa 6: Pronto para uso diário
 - **Entrega:** ícones, atalho de teclado para nova nota, estados vazios, script `npm run zip`, rascunho de política de privacidade para publicação futura.

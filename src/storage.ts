@@ -6,7 +6,7 @@ import type { Nota } from './notas'
 const PREFIXO_NOTA = 'note:'
 
 export type Configuracoes = {
-  autoBackupMinutes: 0 | 60 | 360 | 720 | 1440
+  autoBackupMinutes: 0 | 1 | 60 | 360 | 720 | 1440 // 1 = teste, só no build de desenvolvimento
   sidebarCollapsed: boolean
 }
 
@@ -101,6 +101,32 @@ export async function lerConfiguracoes(): Promise<Configuracoes> {
 export async function salvarConfiguracoes(mudancas: Partial<Configuracoes>): Promise<void> {
   const atuais = await lerConfiguracoes()
   await chrome.storage.local.set({ settings: { ...atuais, ...mudancas } })
+}
+
+// Backup automático feito: guarda quando ele começou a ser gerado
+export async function registrarBackup(momento: number): Promise<void> {
+  const meta = await lerMeta() // lê de novo na hora de gravar, para não perder lastChangeAt recente
+  await chrome.storage.local.set({ meta: { ...meta, lastBackupAt: momento } })
+}
+
+// Avisa quando a data do último backup automático muda
+export function aoMudarUltimoBackup(callback: (momento: number) => void) {
+  chrome.storage.onChanged.addListener((mudancas, area) => {
+    if (area !== 'local' || !mudancas.meta) return
+    const antes = (mudancas.meta.oldValue as Partial<Meta> | undefined)?.lastBackupAt ?? 0
+    const depois = (mudancas.meta.newValue as Partial<Meta> | undefined)?.lastBackupAt ?? 0
+    if (depois !== antes) callback(depois)
+  })
+}
+
+// Avisa quando o intervalo do backup automático muda
+export function aoMudarIntervaloDeBackup(callback: () => void) {
+  chrome.storage.onChanged.addListener((mudancas, area) => {
+    if (area !== 'local' || !mudancas.settings) return
+    const antes = (mudancas.settings.oldValue as Partial<Configuracoes> | undefined)?.autoBackupMinutes
+    const depois = (mudancas.settings.newValue as Partial<Configuracoes> | undefined)?.autoBackupMinutes
+    if (depois !== antes) callback()
+  })
 }
 
 export async function lerMeta(): Promise<Meta> {

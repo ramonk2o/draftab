@@ -27,7 +27,7 @@ Sucesso: ~2 semanas de uso real sem perder nenhuma nota e sem voltar ao New Tab 
 - Página de Configurações:
   - Exportar backup agora (baixa um JSON).
   - Importar backup: valida o arquivo, pede confirmação e substitui tudo. As abas abertas do Draftab recarregam sozinhas depois da importação (nenhuma grava conteúdo antigo por cima).
-  - Backup automático: desligado / 1 h / 6 h / 12 h / 24 h, mostrando a data do último backup.
+  - Backup automático: desligado / 1 h / 6 h / 12 h / 24 h, mostrando a data do último backup automático (exportações manuais não contam). No build de desenvolvimento (`npm run dev`) há também "1 min (teste)".
 - Nome do arquivo de backup (manual e automático): `draftab_AAAA-MM-DD-HHhMM.json` (ex.: `draftab_2026-10-11-15h05.json`).
 - Backup automático salva em `Downloads/draftab-backups/` sem perguntar, e só se houve mudança desde o último backup.
 
@@ -48,7 +48,7 @@ Tudo o que não está no escopo acima. Ideias para depois do MVP ficam no backlo
 - `Note { id: string (uuid), doc: TiptapJSON, title: string, titleManual: boolean, createdAt: number, updatedAt: number }`
   `titleManual` = o usuário renomeou a nota; enquanto for `false`, `title` acompanha a primeira linha.
   O JSON do Tiptap é a fonte da verdade (sem perdas de conversão).
-- `settings { autoBackupMinutes: 0 | 60 | 360 | 720 | 1440, sidebarCollapsed: boolean }`
+- `settings { autoBackupMinutes: 0 | 1 | 60 | 360 | 720 | 1440, sidebarCollapsed: boolean }` (1 só no build de desenvolvimento)
 - `meta { lastChangeAt: number, lastBackupAt: number, lastImportAt: number }` (`lastImportAt` avisa as abas abertas para recarregar)
 - Arquivo de backup:
   `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, titleManual, markdown, doc, createdAt, updatedAt }] }`
@@ -57,7 +57,7 @@ Tudo o que não está no escopo acima. Ideias para depois do MVP ficam no backlo
 ## Fluxos principais
 1. **Escrever:** abro nova aba → digito `# Ideias` → vira título → na primeira tecla a nota é criada e aparece na lateral.
 2. **Reordenar:** passo o mouse num parágrafo → arrasto a alça para cima de outro bloco → solto → a ordem persiste ao recarregar.
-3. **Backup automático:** o alarme dispara → o service worker compara `lastChangeAt` com `lastBackupAt` → se mudou, baixa o JSON e atualiza `lastBackupAt`.
+3. **Backup automático:** o alarme dispara → o service worker compara `lastChangeAt` com `lastBackupAt` → se mudou, baixa o JSON e atualiza `lastBackupAt` com o momento em que começou a gerar o backup (assim, uma mudança feita durante a geração entra no próximo).
 
 ## Suposições e questões em aberto
 - Se a opção do Chrome "Perguntar onde salvar cada arquivo" estiver ativa, o backup automático abrirá o diálogo de salvar. Documentar no README.

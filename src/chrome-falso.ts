@@ -38,5 +38,25 @@ export function criarChromeFalso() {
         addListener: (ouvinte: Ouvinte) => ouvintes.push(ouvinte),
       },
     },
+    alarms: {
+      criados: new Map<string, { periodInMinutes?: number; delayInMinutes?: number }>(),
+      async create(nome: string, info: { periodInMinutes?: number; delayInMinutes?: number }) {
+        this.criados.set(nome, info)
+      },
+      async get(nome: string) {
+        const info = this.criados.get(nome)
+        return info ? { name: nome, ...info } : undefined
+      },
+      async clear(nome: string) {
+        return this.criados.delete(nome)
+      },
+    },
+    downloads: {
+      baixados: [] as { url: string; filename: string; conflictAction?: string; saveAs?: boolean }[],
+      async download(opcoes: { url: string; filename: string; conflictAction?: string; saveAs?: boolean }) {
+        this.baixados.push(opcoes)
+        return this.baixados.length
+      },
+    },
   }
 }

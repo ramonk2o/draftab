@@ -14,6 +14,12 @@ export default defineConfig({
       input: {
         newtab: 'newtab.html',
         opcoes: 'opcoes.html',
+        background: 'src/background.ts',
+      },
+      output: {
+        // O service worker precisa de nome fixo (o manifest aponta para ele)
+        entryFileNames: (entrada) =>
+          entrada.name === 'background' ? 'background.js' : 'assets/[name]-[hash].js',
       },
     },
   },
