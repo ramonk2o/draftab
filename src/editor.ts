@@ -23,6 +23,22 @@ function criarAlca(): HTMLElement {
   return alca
 }
 
+// Bloco sob o mouse no momento (a alça se posiciona em relação a ele)
+let blocoDaAlca: HTMLElement | null = null
+
+// Retângulo da primeira linha do bloco: a alça fica centrada nele.
+// Sem isso a alça se alinha pelo topo e fica torta em títulos e no separador.
+function primeiraLinhaDoBloco(bloco: HTMLElement): DOMRect {
+  const caixa = bloco.getBoundingClientRect()
+  const texto = bloco.matches('p, h1, h2, h3, pre') ? bloco : bloco.querySelector<HTMLElement>('p, h1, h2, h3, pre')
+  if (!texto) return caixa // separador: centraliza na própria linha
+
+  const estilo = getComputedStyle(texto)
+  const alturaDaLinha = parseFloat(estilo.lineHeight) || parseFloat(estilo.fontSize) * 1.2
+  const topo = texto.getBoundingClientRect().top + parseFloat(estilo.paddingTop)
+  return new DOMRect(caixa.left, topo, caixa.width, alturaDaLinha)
+}
+
 // "- [ ] " vira checklist. O Tiptap só reconhece "[ ] " fora de listas;
 // aqui o "- " já criou um item de lista, então trocamos a lista por checklist.
 const ChecklistDentroDeLista = Extension.create({
@@ -91,8 +107,18 @@ export function criarEditor(elemento: HTMLElement): Editor {
         onElementDragStart: comecarArraste,
         onElementDragEnd: terminarArraste,
         // Em itens de lista a alça vai mais para a esquerda, antes do marcador
-        onNodeChange: ({ node }) => {
-          alca.classList.toggle('alca-em-lista', node?.type.name === 'listItem')
+        onNodeChange: (dados) => {
+          alca.classList.toggle('alca-em-lista', dados.node?.type.name === 'listItem')
+          // pos existe em tempo de execução, mas falta nos tipos da extensão
+          const { pos } = dados as { pos?: number }
+          const el = pos !== undefined && pos >= 0 ? dados.editor.view.nodeDOM(pos) : null
+          blocoDaAlca = el instanceof HTMLElement ? el : null
+        },
+        // Alça à esquerda, centrada na primeira linha do bloco
+        computePositionConfig: { placement: 'left', strategy: 'absolute' },
+        getReferencedVirtualElement: () => {
+          const bloco = blocoDaAlca
+          return bloco ? { getBoundingClientRect: () => primeiraLinhaDoBloco(bloco) } : null
         },
         // Itens de lista também ganham alça própria
         nested: {

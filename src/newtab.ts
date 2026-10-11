@@ -1,6 +1,7 @@
 import type { JSONContent } from '@tiptap/core'
 import { EditorState } from '@tiptap/pm/state'
 import { criarEditor } from './editor'
+import { ICONE_LAPIS, ICONE_LIXEIRA } from './icones'
 import {
   comTituloAtualizado,
   filtrarNotas,
@@ -185,8 +186,8 @@ function criarItem(nota: Nota): HTMLLIElement {
   data.className = 'data-nota'
   data.textContent = formatarData(nota.updatedAt)
 
-  const renomear = botaoDeAcao('✎', 'Renomear', () => comecarRenomear(item, nota))
-  const excluir = botaoDeAcao('🗑', 'Excluir', () => confirmarExclusao(nota))
+  const renomear = botaoDeAcao(ICONE_LAPIS, 'Renomear', () => comecarRenomear(item, nota))
+  const excluir = botaoDeAcao(ICONE_LIXEIRA, 'Excluir', () => confirmarExclusao(nota))
 
   item.append(titulo, data, renomear, excluir)
   item.addEventListener('click', () => {
@@ -200,7 +201,7 @@ function botaoDeAcao(icone: string, rotulo: string, acao: () => void): HTMLButto
   const botao = document.createElement('button')
   botao.type = 'button'
   botao.className = 'acao-nota'
-  botao.textContent = icone
+  botao.innerHTML = icone // SVG fixo de icones.ts
   botao.title = rotulo
   botao.setAttribute('aria-label', rotulo)
   botao.addEventListener('click', (evento) => {
