@@ -20,6 +20,7 @@ Extensão do Chrome (Manifest V3) que substitui a nova aba por um bloco de notas
 - O usuário lê JS básico: preferir código direto e legível a abstrações.
 
 ## Regras de trabalho
+- Responder sempre em português do Brasil, inclusive mensagens intermediárias.
 - Implementar uma etapa do PLAN.md por vez.
 - Antes de declarar pronto, rodar a verificação da etapa e mostrar o resultado.
 - Ao terminar: atualizar o **Status** no PLAN.md e fazer commit.
