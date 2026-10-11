@@ -32,6 +32,7 @@ Success: ~2 weeks of real use without losing a single note and without going bac
   - Automatic backup: off / every minute / hourly / daily / weekly / monthly (30 days), showing the date of the last automatic backup (manual exports don't count). Old values outside this list move to the closest interval.
   - Delete all notes: the button only works after typing "delete everything" in a confirmation field. Open tabs reload, as with an import.
   - Theme: Automatic (follows the system's light/dark mode), Light or Dark. Default: Automatic. Applies immediately to all open tabs, and the page opens in the right theme (no flash of the wrong theme).
+  - Note font: Sans-serif (default), Serif or Monospace, using system fonts (no downloads): on macOS SF Pro / New York / SF Mono, with Segoe UI / Georgia / Consolas and similar as fallbacks elsewhere. Applies to the note content only (the sidebar and Settings stay sans-serif), immediately in every open tab, and the page opens with the right font (no flash).
 - Backup file name (manual and automatic): `draftab_YYYY-MM-DD-HHhMM.json` (e.g. `draftab_2026-10-11-15h05.json`).
 - Automatic backup saves to `Downloads/draftab-backups/` without asking, and only if something changed since the last backup.
 
@@ -56,6 +57,7 @@ Everything not in the scope above. Ideas for after the MVP go to the backlog, in
 - One key per note (`note:<id>`): avoids rewriting everything on every keystroke.
 - `chrome.alarms` + `chrome.downloads` in the service worker: backups run even with the tab closed. The file is generated as a `data:` URL (there's no `URL.createObjectURL` in the service worker).
 - Vitest for the data and backup layers; the editor is checked manually.
+- Note typography modeled on Tailwind Typography ("prose", MIT): its proportions for headings, quotes, lists, code blocks and dividers, adapted for notes — paragraphs stay close together, because in the editor every Enter creates a paragraph (prose's 1.25em paragraph spacing would look double-spaced).
 - MIT license (open source): free use, modification and redistribution, only requiring the copyright notice to be kept (credit). Every dependency shipped in the extension is MIT too.
 - Language: English everywhere in the project (code, comments, UI, docs).
 
@@ -63,7 +65,7 @@ Everything not in the scope above. Ideas for after the MVP go to the backlog, in
 - `Note { id: string (uuid), doc: TiptapJSON, title: string, titleManual: boolean, createdAt: number, updatedAt: number }`
   `titleManual` = the user renamed the note; while it's `false`, `title` follows the first line.
   The Tiptap JSON is the source of truth (no conversion losses).
-- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark', noteSort: 'updated' | 'title' | 'created' }` (0 = off)
+- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark', noteSort: 'updated' | 'title' | 'created', noteFont: 'sans' | 'serif' | 'mono' }` (0 = off)
 - `meta { lastChangeAt: number, lastBackupAt: number, lastImportAt: number }` (`lastImportAt` marks an import or the deletion of all notes, and tells open tabs to reload)
 - Backup file:
   `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, titleManual, markdown, doc, createdAt, updatedAt }] }`

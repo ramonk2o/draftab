@@ -291,12 +291,40 @@ body.sidebar-collapsed #sidebar {
 
 /* ---------- Editor ---------- */
 
+/* Note fonts (system fonts, chosen in Settings → Note font). Each one gets its own
+   size and line height, because serif fonts look smaller and monospace ones larger. */
+:root {
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: ui-serif, "New York", Charter, "Iowan Old Style", "Palatino Linotype", Georgia, Cambria, serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --note-font: var(--font-sans);
+  --note-size: 16px;
+  --note-line: 1.75;
+  --code-size: 0.875em; /* code next to proportional text */
+}
+
+:root[data-note-font="serif"] {
+  --note-font: var(--font-serif);
+  --note-size: 17px;
+  --note-line: 1.7;
+}
+
+:root[data-note-font="mono"] {
+  --note-font: var(--font-mono);
+  --note-size: 15px;
+  --note-line: 1.7;
+  --code-size: 1em; /* the text is already monospace: code only gets the background */
+}
+
 #editor {
   /* position: relative is the reference for the drag handle */
   position: relative;
   max-width: 720px;
   margin: 0 auto;
   padding: 48px 24px 48px 48px;
+  font-family: var(--note-font);
+  font-size: var(--note-size);
+  line-height: var(--note-line);
 }
 
 /* The editable area fills the screen and shows no focus outline */
@@ -305,41 +333,72 @@ body.sidebar-collapsed #sidebar {
   outline: none;
 }
 
-.tiptap > * + * {
-  margin-top: 0.5em;
-}
+/* Typography modeled on Tailwind Typography ("prose"): its proportions for
+   headings, quotes, lists, code and dividers. Adapted for notes: every Enter
+   creates a paragraph, so paragraphs stay close (prose uses 1.25em between them).
+   Vertical margins collapse between neighbors, so the larger one wins. */
 
 .tiptap p {
-  margin: 0;
+  margin: 0.25em 0;
+}
+
+.tiptap > :first-child {
+  margin-top: 0;
+}
+
+.tiptap strong {
+  font-weight: 600;
 }
 
 /* ---------- Headings ---------- */
 
-.tiptap h1,
-.tiptap h2,
-.tiptap h3 {
-  line-height: 1.25;
-  margin: 1.2em 0 0.3em;
+.tiptap h1 {
+  font-size: 2.25em;
+  font-weight: 800;
+  line-height: 1.111;
+  letter-spacing: -0.02em;
+  margin: 0.889em 0 0.444em;
 }
 
-.tiptap h1 { font-size: 2em; }
-.tiptap h2 { font-size: 1.5em; }
-.tiptap h3 { font-size: 1.2em; }
+.tiptap h2 {
+  font-size: 1.5em;
+  font-weight: 700;
+  line-height: 1.333;
+  letter-spacing: -0.01em;
+  margin: 1.333em 0 0.5em;
+}
 
-.tiptap > :first-child {
-  margin-top: 0;
+.tiptap h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  line-height: 1.6;
+  margin: 1.2em 0 0.4em;
 }
 
 /* ---------- Lists ---------- */
 
 .tiptap ul,
 .tiptap ol {
-  margin: 0;
-  padding-left: 1.5em;
+  margin: 0.75em 0;
+  padding-left: 1.625em;
 }
 
-.tiptap li > p {
-  margin: 0.15em 0;
+.tiptap li {
+  margin: 0.25em 0;
+}
+
+.tiptap li::marker {
+  color: var(--text-muted);
+}
+
+.tiptap li p {
+  margin: 0; /* includes checklist items, where the paragraph sits inside a div */
+}
+
+/* Lists inside lists stay close to their item */
+.tiptap li > ul,
+.tiptap li > ol {
+  margin: 0.25em 0;
 }
 
 /* Checklist: box on the left, text on the right */
@@ -359,7 +418,7 @@ body.sidebar-collapsed #sidebar {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  height: 1.6em; /* same as the text's line-height */
+  height: calc(var(--note-line) * 1em); /* one line of text */
   user-select: none;
 }
 
@@ -382,44 +441,50 @@ body.sidebar-collapsed #sidebar {
 /* ---------- Quote, code and divider ---------- */
 
 .tiptap blockquote {
-  margin: 0;
-  padding: 0.1em 0 0.1em 1em;
-  border-left: 3px solid var(--border);
+  margin: 1.25em 0;
+  padding-left: 1em;
+  border-left: 0.25rem solid var(--border-field);
   color: var(--text-quote);
+  font-style: italic;
 }
 
 .tiptap code {
   background: var(--bg-code);
   border-radius: 4px;
-  padding: 0.1em 0.3em;
-  font-family: ui-monospace, Menlo, monospace;
-  font-size: 0.9em;
+  padding: 0.15em 0.35em;
+  font-family: var(--font-mono);
+  font-size: var(--code-size);
+  font-weight: 500;
 }
 
 .tiptap pre {
-  margin: 0.5em 0;
-  padding: 0.8em 1em;
+  margin: 1.25em 0;
+  padding: 0.857em 1.143em;
   background: var(--bg-code);
-  border-radius: 6px;
+  border-radius: 0.375rem;
   overflow-x: auto;
+  font-size: var(--code-size);
+  line-height: 1.714;
 }
 
 .tiptap pre code {
   background: none;
   padding: 0;
-  font-size: 0.875em;
+  font-size: inherit;
+  font-weight: 400;
 }
 
 .tiptap hr {
   border: none;
   border-top: 1px solid var(--border);
-  margin: 1.2em 0;
+  margin: 2em 0;
 }
 
 /* ---------- Links ---------- */
 
 .tiptap a {
   color: var(--link);
+  font-weight: 500;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -456,7 +521,7 @@ body.sidebar-collapsed #sidebar {
 
 /* On list items, the handle sits before the marker (• or 1.) */
 .drag-handle.in-list {
-  transform: translateX(-24px);
+  transform: translateX(-1.625em); /* the list indentation; the handle inherits the note's font size */
 }
 
 /* ---------- Animated reordering ---------- */

@@ -26,14 +26,15 @@ type Slot = {
   pos: number // document position where the block would go
   parentType: string // 'doc' (the note) or the list type
   y: number // height of the slot on screen
-  x: number // content indentation at this slot
+  x: number // where text starts at this slot (compared with the mouse's horizontal movement)
   nextTop: number // where, on screen, a block entering here would start
 }
 
 type Drag = {
   origin: Block
+  originTextX: number // where the origin's text starts on screen
   originListType: string | null // if the origin is an item, the type of its list
-  listIndent: number // how far an item is indented relative to its list
+  listIndent: number // how far an item's text is indented relative to its list
   blocks: Block[]
   slots: Slot[]
   height: number // vertical space the origin takes
@@ -159,6 +160,8 @@ function prepare(): Drag | null {
       parents.push({ node: block.node, start: block.pos + 1, type: block.node.type.name })
     }
   }
+  // Where text starts: the note's left edge, or a list item's text (after its bullet or checkbox)
+  const noteX = view.dom.getBoundingClientRect().left
   const slots: Slot[] = []
   for (const parent of parents) {
     if (parent.type !== 'doc' && !entersLists) continue
@@ -172,13 +175,14 @@ function prepare(): Drag | null {
     })
     if (children.length !== parent.node.childCount) continue
 
+    const x = parent.type === 'doc' ? noteX : textX(children[0].el)
     children.forEach((child, k) => {
       const previous = children[k - 1]
       slots.push({
         pos: child.pos,
         parentType: parent.type,
         y: previous ? (previous.box.bottom + child.box.top) / 2 : child.box.top,
-        x: children[0].box.left,
+        x,
         nextTop: child.box.top,
       })
     })
@@ -187,7 +191,7 @@ function prepare(): Drag | null {
       pos: last.pos + last.node.nodeSize,
       parentType: parent.type,
       y: last.box.bottom,
-      x: children[0].box.left,
+      x,
       nextTop: last.box.bottom + 8,
     })
   }
@@ -200,11 +204,13 @@ function prepare(): Drag | null {
   const $origin = doc.resolve(originPos)
   const originList = ITEMS.includes(originType) ? blockAt.get($origin.before()) : undefined
 
+  const originTextX = textX(origin.el)
   document.body.classList.add('reordering')
   return {
     origin,
+    originTextX,
     originListType: originList ? originList.node.type.name : null,
-    listIndent: originList ? origin.box.left - originList.box.left : 24,
+    listIndent: originList ? originTextX - originList.box.left : 24,
     blocks,
     slots,
     height,
@@ -218,9 +224,20 @@ function chooseSlot(mouseX: number, mouseY: number): Slot | null {
   const { slots, origin } = drag
   const smallestDistance = Math.min(...slots.map((s) => Math.abs(mouseY - s.y)))
   const candidates = slots.filter((s) => Math.abs(mouseY - s.y) <= smallestDistance + 12)
-  // "Desired" indentation: where the origin would be if it followed the mouse horizontally
-  const desiredX = origin.box.left + (mouseX - startX)
-  return candidates.reduce((best, s) => (Math.abs(s.x - desiredX) < Math.abs(best.x - desiredX) ? s : best))
+  // "Desired" indentation: where the origin's text would be if it followed the mouse horizontally
+  const desiredX = drag.originTextX + (mouseX - startX)
+  return candidates.reduce((best, s) => {
+    const dx = Math.abs(s.x - desiredX) - Math.abs(best.x - desiredX)
+    if (Math.abs(dx) > 1) return dx < 0 ? s : best
+    // Same indentation (e.g. two slots of the same list): the one closest to the mouse wins
+    return Math.abs(mouseY - s.y) < Math.abs(mouseY - best.y) ? s : best
+  })
+}
+
+// Where a block's text starts on screen (after a bullet, number or checkbox)
+function textX(el: HTMLElement): number {
+  const text = el.matches('p, h1, h2, h3, pre') ? el : el.querySelector<HTMLElement>('p, h1, h2, h3, pre')
+  return (text ?? el).getBoundingClientRect().left
 }
 
 function staysInPlace(slot: Slot | null): boolean {
@@ -255,9 +272,10 @@ function showPreview() {
   if (!stays && slot) {
     const top = slot.pos > origin.pos ? slot.nextTop - height : slot.nextTop
     dy = top - origin.box.top
-    // An item dropped into the note gets a list of its own, with the same indentation
+    // Line the text up with the slot's text; an item dropped into the note gets a list
+    // of its own, so its text keeps the list indentation
     const getsList = slot.parentType === 'doc' && drag.originListType !== null
-    dx = slot.x + (getsList ? drag.listIndent : 0) - origin.box.left
+    dx = slot.x + (getsList ? drag.listIndent : 0) - drag.originTextX
   }
   visuals.push(visual(origin, dx, dy, 'block-moving block-dragged'))
   draw(visuals)

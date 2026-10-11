@@ -5,6 +5,7 @@ import {
   deleteAllNotes,
   deleteNote,
   listNotes,
+  onNoteFontChanged,
   onNoteSortChanged,
   onNotesChanged,
   onThemeChanged,
@@ -93,13 +94,13 @@ describe('notes', () => {
 
 describe('settings', () => {
   test('with nothing saved, uses the defaults', async () => {
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans' })
   })
 
   test('saving one part keeps the rest', async () => {
     await saveSettings({ autoBackupMinutes: 60 })
     await saveSettings({ sidebarCollapsed: true })
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans' })
   })
 })
 
@@ -128,7 +129,7 @@ describe('deleteAllNotes', () => {
     await saveSettings({ autoBackupMinutes: 60, sidebarCollapsed: true })
     await deleteAllNotes()
     expect(await listNotes()).toEqual([])
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans' })
   })
 })
 
@@ -166,5 +167,24 @@ describe('note sort order', () => {
     await saveSettings({ theme: 'dark' })
     await saveSettings({ noteSort: 'title' })
     expect(received).toEqual(['created', 'title'])
+  })
+})
+
+describe('note font', () => {
+  test('defaults to sans-serif; saved and read; an unknown value goes back to the default', async () => {
+    expect((await readSettings()).noteFont).toBe('sans')
+    await saveSettings({ noteFont: 'mono' })
+    expect((await readSettings()).noteFont).toBe('mono')
+    await chrome.storage.local.set({ settings: { noteFont: 'comic' } })
+    expect((await readSettings()).noteFont).toBe('sans')
+  })
+
+  test('notifies tabs when the font changes, and only then', async () => {
+    const received: string[] = []
+    onNoteFontChanged((font) => received.push(font))
+    await saveSettings({ noteFont: 'serif' })
+    await saveSettings({ noteSort: 'title' })
+    await saveSettings({ noteFont: 'mono' })
+    expect(received).toEqual(['serif', 'mono'])
   })
 })

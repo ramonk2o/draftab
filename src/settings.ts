@@ -9,7 +9,7 @@ import {
   validInterval,
 } from './storage'
 import type { NoteSort } from './notes'
-import type { Theme } from './theme'
+import type { NoteFont, Theme } from './theme'
 
 // Settings lightbox: manual backup, automatic backup, appearance and deleting all notes
 
@@ -29,6 +29,7 @@ const backupMessage = element<HTMLParagraphElement>('#backup-message')
 const intervalSelect = element<HTMLSelectElement>('#interval')
 const themeSelect = element<HTMLSelectElement>('#theme')
 const sortSelect = element<HTMLSelectElement>('#note-sort')
+const fontSelect = element<HTMLSelectElement>('#note-font')
 const lastBackup = element<HTMLParagraphElement>('#last-backup')
 const confirmField = element<HTMLInputElement>('#confirm-delete')
 const deleteButton = element<HTMLButtonElement>('#delete-all')
@@ -37,10 +38,11 @@ closeButton.innerHTML = ICON_CLOSE
 
 export async function openSettings() {
   // Always opens with the current values and nothing left over from last time
-  const { autoBackupMinutes, theme, noteSort } = await readSettings()
+  const { autoBackupMinutes, theme, noteSort, noteFont } = await readSettings()
   intervalSelect.value = String(autoBackupMinutes)
   themeSelect.value = theme
   sortSelect.value = noteSort
+  fontSelect.value = noteFont
   showLastBackup((await readMeta()).lastBackupAt)
   showMessage('')
   confirmField.value = ''
@@ -96,6 +98,11 @@ onLastBackupChanged(showLastBackup)
 themeSelect.addEventListener('change', () => {
   // Every tab (this one included) applies the theme when it notices the change (onThemeChanged)
   saveSettings({ theme: themeSelect.value as Theme })
+})
+
+fontSelect.addEventListener('change', () => {
+  // Every tab (this one included) switches the font when it notices the change (onNoteFontChanged)
+  saveSettings({ noteFont: fontSelect.value as NoteFont })
 })
 
 sortSelect.addEventListener('change', () => {

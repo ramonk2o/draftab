@@ -27,7 +27,8 @@ export const ListHandle = Extension.create({
           let dragging = false
 
           function onMouseMove(event: MouseEvent) {
-            if (dragging) return
+            // While dragging, or with the button pressed (a drag about to start), keep the handle where it is
+            if (dragging || event.buttons !== 0) return
             list = listAtHeight(view, event.clientX, event.clientY)
             if (!list || !parent) {
               handle.style.display = 'none'

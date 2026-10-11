@@ -1,6 +1,8 @@
-// Light/dark theme: sets data-theme="light|dark" on <html>; the CSS does the rest.
+// Appearance: light/dark theme (data-theme="light|dark" on <html>) and the note font
+// (data-note-font="sans|serif|mono"); the CSS does the rest.
 
 export type Theme = 'auto' | 'light' | 'dark'
+export type NoteFont = 'sans' | 'serif' | 'mono'
 
 const systemDark = matchMedia('(prefers-color-scheme: dark)')
 let chosen: Theme = 'auto'
@@ -35,3 +37,13 @@ function update() {
 
 // When automatic, follows the system mode switching while the page is open
 systemDark.addEventListener('change', update)
+
+export function applyNoteFont(font: NoteFont) {
+  document.documentElement.dataset.noteFont = font
+  // Copy for theme-init.js, like the theme
+  try {
+    localStorage.setItem('noteFont', font)
+  } catch {
+    // no localStorage: the default font may just flash on open
+  }
+}

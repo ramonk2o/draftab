@@ -1,5 +1,5 @@
 import type { Note, NoteSort } from './notes'
-import type { Theme } from './theme'
+import type { NoteFont, Theme } from './theme'
 
 // All chrome.storage access goes through here.
 // Keys: "note:<id>" (one per note), "settings" and "meta".
@@ -15,6 +15,7 @@ export type Settings = {
   sidebarCollapsed: boolean
   theme: Theme
   noteSort: NoteSort
+  noteFont: NoteFont
 }
 
 export type Meta = {
@@ -23,7 +24,13 @@ export type Meta = {
   lastImportAt: number // last import (open tabs reload)
 }
 
-const DEFAULT_SETTINGS: Settings = { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated' }
+const DEFAULT_SETTINGS: Settings = {
+  autoBackupMinutes: 0,
+  sidebarCollapsed: false,
+  theme: 'auto',
+  noteSort: 'updated',
+  noteFont: 'sans',
+}
 const DEFAULT_META: Meta = { lastChangeAt: 0, lastBackupAt: 0, lastImportAt: 0 }
 
 // ---------- Notes ----------
@@ -111,6 +118,7 @@ export async function readSettings(): Promise<Settings> {
   result.autoBackupMinutes = validInterval(result.autoBackupMinutes)
   if (!['auto', 'light', 'dark'].includes(result.theme)) result.theme = 'auto'
   if (!['updated', 'title', 'created'].includes(result.noteSort)) result.noteSort = 'updated'
+  if (!['sans', 'serif', 'mono'].includes(result.noteFont)) result.noteFont = 'sans'
   return result
 }
 
@@ -165,6 +173,16 @@ export function onNoteSortChanged(callback: (order: NoteSort) => void) {
     if (area !== 'local' || !changes.settings) return
     const before = (changes.settings.oldValue as Partial<Settings> | undefined)?.noteSort
     const after = (changes.settings.newValue as Partial<Settings> | undefined)?.noteSort
+    if (after && after !== before) callback(after)
+  })
+}
+
+// Notifies when the note font changes (in this tab or another)
+export function onNoteFontChanged(callback: (font: NoteFont) => void) {
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area !== 'local' || !changes.settings) return
+    const before = (changes.settings.oldValue as Partial<Settings> | undefined)?.noteFont
+    const after = (changes.settings.newValue as Partial<Settings> | undefined)?.noteFont
     if (after && after !== before) callback(after)
   })
 }

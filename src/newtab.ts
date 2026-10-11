@@ -3,7 +3,7 @@ import { EditorState } from '@tiptap/pm/state'
 import { createEditor } from './editor'
 import { exportBackup, importBackup } from './backup-ui'
 import { openSettings } from './settings'
-import { applyTheme, isDark, onScreenThemeChange } from './theme'
+import { applyNoteFont, applyTheme, isDark, onScreenThemeChange } from './theme'
 import { ICON_EXPORT, ICON_GEAR, ICON_IMPORT, ICON_MOON, ICON_PENCIL, ICON_SUN, ICON_TRASH } from './icons'
 import {
   displayTitle,
@@ -21,6 +21,7 @@ import {
   deleteNote,
   listNotes,
   onImport,
+  onNoteFontChanged,
   onNoteSortChanged,
   onNotesChanged,
   onThemeChanged,
@@ -333,8 +334,9 @@ sidebarButton.addEventListener('click', () => {
 
 // ---------- Theme ----------
 
-// A theme chosen in any tab applies to all of them
+// A theme or note font chosen in any tab applies to all of them
 onThemeChanged(applyTheme)
+onNoteFontChanged(applyNoteFont)
 
 const themeButton = element<HTMLButtonElement>('#toggle-theme')
 
@@ -359,6 +361,7 @@ themeButton.addEventListener('click', () => {
 async function start() {
   const settings = await readSettings()
   applyTheme(settings.theme)
+  applyNoteFont(settings.noteFont)
   applySidebarCollapsed(settings.sidebarCollapsed)
   noteSort = settings.noteSort
   notes = await listNotes()

@@ -36,7 +36,7 @@ Feature idea backlog: what may come to Draftab in the future, with the status of
 - **Motivation:** not recorded (came from the SPEC.md "Out of scope" list, marked "to be evaluated").
 
 ### Typographic themes for notes
-- **Status:** Idea
+- **Status:** Approved
 - **Description:** a settings section to choose the note theme. Each theme defines the font and the size hierarchy. Starts with two themes: a serif one and a sans-serif one.
 - **Motivation:** not recorded.
 
