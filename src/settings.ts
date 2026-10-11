@@ -8,6 +8,7 @@ import {
   saveSettings,
   validInterval,
 } from './storage'
+import type { NoteSort } from './notes'
 import type { Theme } from './theme'
 
 // Settings lightbox: manual backup, automatic backup, appearance and deleting all notes
@@ -27,6 +28,7 @@ const importButton = element<HTMLButtonElement>('#settings-import')
 const backupMessage = element<HTMLParagraphElement>('#backup-message')
 const intervalSelect = element<HTMLSelectElement>('#interval')
 const themeSelect = element<HTMLSelectElement>('#theme')
+const sortSelect = element<HTMLSelectElement>('#note-sort')
 const lastBackup = element<HTMLParagraphElement>('#last-backup')
 const confirmField = element<HTMLInputElement>('#confirm-delete')
 const deleteButton = element<HTMLButtonElement>('#delete-all')
@@ -35,9 +37,10 @@ closeButton.innerHTML = ICON_CLOSE
 
 export async function openSettings() {
   // Always opens with the current values and nothing left over from last time
-  const { autoBackupMinutes, theme } = await readSettings()
+  const { autoBackupMinutes, theme, noteSort } = await readSettings()
   intervalSelect.value = String(autoBackupMinutes)
   themeSelect.value = theme
+  sortSelect.value = noteSort
   showLastBackup((await readMeta()).lastBackupAt)
   showMessage('')
   confirmField.value = ''
@@ -93,6 +96,11 @@ onLastBackupChanged(showLastBackup)
 themeSelect.addEventListener('change', () => {
   // Every tab (this one included) applies the theme when it notices the change (onThemeChanged)
   saveSettings({ theme: themeSelect.value as Theme })
+})
+
+sortSelect.addEventListener('change', () => {
+  // Every tab (this one included) re-sorts its sidebar when it notices the change (onNoteSortChanged)
+  saveSettings({ noteSort: sortSelect.value as NoteSort })
 })
 
 // ---------- Delete all notes ----------

@@ -1,4 +1,4 @@
-import type { Note } from './notes'
+import type { Note, NoteSort } from './notes'
 import type { Theme } from './theme'
 
 // All chrome.storage access goes through here.
@@ -14,6 +14,7 @@ export type Settings = {
   autoBackupMinutes: BackupInterval
   sidebarCollapsed: boolean
   theme: Theme
+  noteSort: NoteSort
 }
 
 export type Meta = {
@@ -22,7 +23,7 @@ export type Meta = {
   lastImportAt: number // last import (open tabs reload)
 }
 
-const DEFAULT_SETTINGS: Settings = { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' }
+const DEFAULT_SETTINGS: Settings = { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated' }
 const DEFAULT_META: Meta = { lastChangeAt: 0, lastBackupAt: 0, lastImportAt: 0 }
 
 // ---------- Notes ----------
@@ -109,6 +110,7 @@ export async function readSettings(): Promise<Settings> {
   const result = { ...DEFAULT_SETTINGS, ...(settings as Partial<Settings> | undefined) }
   result.autoBackupMinutes = validInterval(result.autoBackupMinutes)
   if (!['auto', 'light', 'dark'].includes(result.theme)) result.theme = 'auto'
+  if (!['updated', 'title', 'created'].includes(result.noteSort)) result.noteSort = 'updated'
   return result
 }
 
@@ -153,6 +155,16 @@ export function onThemeChanged(callback: (theme: Theme) => void) {
     if (area !== 'local' || !changes.settings) return
     const before = (changes.settings.oldValue as Partial<Settings> | undefined)?.theme
     const after = (changes.settings.newValue as Partial<Settings> | undefined)?.theme
+    if (after && after !== before) callback(after)
+  })
+}
+
+// Notifies when the note sort order changes (in this tab or another)
+export function onNoteSortChanged(callback: (order: NoteSort) => void) {
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area !== 'local' || !changes.settings) return
+    const before = (changes.settings.oldValue as Partial<Settings> | undefined)?.noteSort
+    const after = (changes.settings.newValue as Partial<Settings> | undefined)?.noteSort
     if (after && after !== before) callback(after)
   })
 }

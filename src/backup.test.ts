@@ -41,9 +41,9 @@ beforeEach(() => {
 
 describe('createBackup', () => {
   test('follows the SPEC format and includes each note in markdown', () => {
-    const backup = createBackup([fullNote()], { autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto' }, 999)
+    const backup = createBackup([fullNote()], { autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated' }, 999)
     expect(backup).toMatchObject({ app: 'draftab', version: 1, exportedAt: 999 })
-    expect(backup.settings).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto' })
+    expect(backup.settings).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated' })
     expect(backup.notes[0].markdown).toBe('# Ideas\n\none **bold**\n\n- [x] done\n\n---')
   })
 })
@@ -51,7 +51,7 @@ describe('createBackup', () => {
 describe('round trip', () => {
   test('exporting and importing returns exactly the same notes', () => {
     const notes = [fullNote(), simpleNote('another', 50)]
-    const file = JSON.stringify(createBackup(notes, { autoBackupMinutes: 0, sidebarCollapsed: true, theme: 'auto' }))
+    const file = JSON.stringify(createBackup(notes, { autoBackupMinutes: 0, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated' }))
     expect(notesFromBackup(parseBackup(file))).toEqual(notes)
   })
 
@@ -75,7 +75,7 @@ describe('round trip', () => {
 describe('settings in the backup', () => {
   test('every setting goes into the file and comes back on import', async () => {
     // Non-default values in every field
-    const chosen = { autoBackupMinutes: 10080, sidebarCollapsed: true, theme: 'dark' } as const
+    const chosen = { autoBackupMinutes: 10080, sidebarCollapsed: true, theme: 'dark', noteSort: 'title' } as const
     await saveSettings(chosen)
     await saveNote(simpleNote('x', 1))
     const file = JSON.stringify(createBackup(await listNotes(), await readSettings()))
@@ -83,7 +83,7 @@ describe('settings in the backup', () => {
 
     // Reset everything to the defaults and import
     await replaceAll([], {})
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated' })
     const backup = parseBackup(file)
     await replaceAll(notesFromBackup(backup), backup.settings)
     expect(await readSettings()).toEqual(chosen)
@@ -94,12 +94,12 @@ describe('settings in the backup', () => {
     const settings = await readSettings()
     const backup = createBackup([], settings)
     expect(Object.keys(backup.settings).sort()).toEqual(Object.keys(settings).sort())
-    expect(Object.keys(settings).sort()).toEqual(['autoBackupMinutes', 'sidebarCollapsed', 'theme'])
+    expect(Object.keys(settings).sort()).toEqual(['autoBackupMinutes', 'noteSort', 'sidebarCollapsed', 'theme'])
   })
 })
 
 describe('parseBackup rejects invalid files', () => {
-  const valid = () => createBackup([simpleNote('a', 1)], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' })
+  const valid = () => createBackup([simpleNote('a', 1)], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated' })
   const withNote = (change: Record<string, unknown>) => {
     const b = valid()
     return JSON.stringify({ ...b, notes: [{ ...b.notes[0], ...change }] })
@@ -124,7 +124,7 @@ describe('parseBackup rejects invalid files', () => {
   })
 
   test('a backup with no notes is valid', () => {
-    const empty = createBackup([], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' })
+    const empty = createBackup([], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated' })
     expect(parseBackup(JSON.stringify(empty)).notes).toEqual([])
   })
 })

@@ -18,6 +18,7 @@ Success: ~2 weeks of real use without losing a single note and without going bac
   - Conversions when changing level: an item that leaves a list stays an item, in a list of its own; a paragraph that enters a list becomes an item; list item ↔ checklist item depending on the target list. Adjacent lists of the same type are merged.
   - Headings, quotes, code, dividers and whole lists don't go into lists (they only move among the note's blocks).
 - The sidebar lists notes by last edit, with search (title and content), a "new note" button, rename (double-click the title or the ✎ button) and delete with confirmation.
+  - Sort order, chosen in Settings: last modified (default, newest first), title A–Z (ignoring case and accents, numbers in natural order, untitled notes last) or date created (newest first). The date shown next to each note follows the order: the creation date when sorting by date created, the last edit otherwise. Applies immediately to every open tab.
   - The sidebar can be collapsed; its state (open/collapsed) is remembered.
 - Note title: while the user hasn't set a title, it follows the first line of text. Renaming fixes the title; renaming to empty goes back to the automatic title.
 - An empty note (no text and no user-set title) isn't saved: opening and closing a tab leaves no clutter, and a saved note that becomes empty leaves the list.
@@ -62,7 +63,7 @@ Everything not in the scope above. Ideas for after the MVP go to the backlog, in
 - `Note { id: string (uuid), doc: TiptapJSON, title: string, titleManual: boolean, createdAt: number, updatedAt: number }`
   `titleManual` = the user renamed the note; while it's `false`, `title` follows the first line.
   The Tiptap JSON is the source of truth (no conversion losses).
-- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark' }` (0 = off)
+- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark', noteSort: 'updated' | 'title' | 'created' }` (0 = off)
 - `meta { lastChangeAt: number, lastBackupAt: number, lastImportAt: number }` (`lastImportAt` marks an import or the deletion of all notes, and tells open tabs to reload)
 - Backup file:
   `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, titleManual, markdown, doc, createdAt, updatedAt }] }`

@@ -18,7 +18,7 @@ A Chrome extension that turns the **new tab** into a local notepad. The editor i
 - **Drag to reorder**: hover a block and drag the handle (⠿) on its left. The other blocks slide to make room.
   - List items have their own handle; a thin bar to the left of a list moves the whole list.
   - Items and paragraphs move in and out of lists: at the edge of a list, pulling the mouse left takes the item out, pulling right puts it in.
-- **Collapsible sidebar** with notes sorted by last edit, search across title and content (accent-insensitive), rename and delete.
+- **Collapsible sidebar** with your notes sorted by last edit, title or creation date (your choice in Settings), search across title and content (accent-insensitive), rename and delete.
 - **Automatic title**: until the note is renamed, its title follows the first line.
 - **Several tabs at once**: what you write in one tab shows up in the others.
 - **Backup**: export and import a JSON file with all notes and settings (each note also goes in markdown, readable without Draftab).

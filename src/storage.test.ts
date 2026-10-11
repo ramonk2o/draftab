@@ -5,6 +5,7 @@ import {
   deleteAllNotes,
   deleteNote,
   listNotes,
+  onNoteSortChanged,
   onNotesChanged,
   onThemeChanged,
   readMeta,
@@ -92,13 +93,13 @@ describe('notes', () => {
 
 describe('settings', () => {
   test('with nothing saved, uses the defaults', async () => {
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated' })
   })
 
   test('saving one part keeps the rest', async () => {
     await saveSettings({ autoBackupMinutes: 60 })
     await saveSettings({ sidebarCollapsed: true })
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated' })
   })
 })
 
@@ -127,7 +128,7 @@ describe('deleteAllNotes', () => {
     await saveSettings({ autoBackupMinutes: 60, sidebarCollapsed: true })
     await deleteAllNotes()
     expect(await listNotes()).toEqual([])
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated' })
   })
 })
 
@@ -146,5 +147,24 @@ describe('theme', () => {
     await saveSettings({ sidebarCollapsed: true })
     await saveSettings({ theme: 'light' })
     expect(received).toEqual(['dark', 'light'])
+  })
+})
+
+describe('note sort order', () => {
+  test('defaults to last modified; saved and read; an unknown value goes back to the default', async () => {
+    expect((await readSettings()).noteSort).toBe('updated')
+    await saveSettings({ noteSort: 'title' })
+    expect((await readSettings()).noteSort).toBe('title')
+    await chrome.storage.local.set({ settings: { noteSort: 'random' } })
+    expect((await readSettings()).noteSort).toBe('updated')
+  })
+
+  test('notifies tabs when the order changes, and only then', async () => {
+    const received: string[] = []
+    onNoteSortChanged((order) => received.push(order))
+    await saveSettings({ noteSort: 'created' })
+    await saveSettings({ theme: 'dark' })
+    await saveSettings({ noteSort: 'title' })
+    expect(received).toEqual(['created', 'title'])
   })
 })

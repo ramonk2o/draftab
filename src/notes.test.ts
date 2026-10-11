@@ -4,8 +4,10 @@ import {
   filterNotes,
   firstLine,
   isEmptyNote,
+  listDate,
   newBlankNote,
   renamed,
+  sortNotes,
   textOf,
   withUpdatedTitle,
   type Note,
@@ -91,5 +93,43 @@ describe('filterNotes', () => {
 
   test('no results', () => {
     expect(filterNotes(notes, 'xyz')).toEqual([])
+  })
+})
+
+describe('sortNotes', () => {
+  // created and updated in different orders, to tell the options apart
+  const notes = [
+    noteWith(doc(paragraph('b')), { title: 'banana', createdAt: 3, updatedAt: 10 }),
+    noteWith(doc(paragraph('a')), { title: 'Apple', createdAt: 1, updatedAt: 30 }),
+    noteWith(doc(paragraph()), { title: '', createdAt: 5, updatedAt: 50 }),
+    noteWith(doc(paragraph('c')), { title: 'Çaju', createdAt: 4, updatedAt: 20 }),
+    noteWith(doc(paragraph('n')), { title: 'Note 10', createdAt: 2, updatedAt: 40 }),
+    noteWith(doc(paragraph('n')), { title: 'Note 2', createdAt: 6, updatedAt: 5 }),
+  ]
+  const titles = (list: Note[]) => list.map((n) => n.title || '(untitled)')
+
+  test('last modified: newest edit first', () => {
+    expect(titles(sortNotes(notes, 'updated'))).toEqual(['(untitled)', 'Note 10', 'Apple', 'Çaju', 'banana', 'Note 2'])
+  })
+
+  test('date created: newest first', () => {
+    expect(titles(sortNotes(notes, 'created'))).toEqual(['Note 2', '(untitled)', 'Çaju', 'banana', 'Note 10', 'Apple'])
+  })
+
+  test('title: A–Z ignoring case and accents, numbers in natural order, untitled last', () => {
+    expect(titles(sortNotes(notes, 'title'))).toEqual(['Apple', 'banana', 'Çaju', 'Note 2', 'Note 10', '(untitled)'])
+  })
+
+  test('returns a copy and leaves the original list untouched', () => {
+    const before = titles(notes)
+    sortNotes(notes, 'title')
+    expect(titles(notes)).toEqual(before)
+  })
+
+  test('the date shown follows the order', () => {
+    const note = noteWith(doc(paragraph('x')), { createdAt: 1, updatedAt: 2 })
+    expect(listDate(note, 'created')).toBe(1)
+    expect(listDate(note, 'updated')).toBe(2)
+    expect(listDate(note, 'title')).toBe(2)
   })
 })

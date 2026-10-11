@@ -9,15 +9,19 @@ import {
   displayTitle,
   filterNotes,
   isEmptyNote,
+  listDate,
   newBlankNote,
   renamed,
+  sortNotes,
   withUpdatedTitle,
   type Note,
+  type NoteSort,
 } from './notes'
 import {
   deleteNote,
   listNotes,
   onImport,
+  onNoteSortChanged,
   onNotesChanged,
   onThemeChanged,
   readNote,
@@ -48,6 +52,7 @@ let notes: Note[] = [] // copy of the list, for the sidebar
 let timer: ReturnType<typeof setTimeout> | undefined
 let lastSaveFromThisTab = 0 // updatedAt of the last note saved by this tab
 let renaming = false // while renaming, the list isn't redrawn
+let noteSort: NoteSort = 'updated' // sidebar order, from Settings
 
 // ---------- Saving ----------
 
@@ -161,7 +166,7 @@ searchField.addEventListener('input', drawList)
 
 function drawList() {
   if (renaming) return
-  const visible = filterNotes(notes, searchField.value)
+  const visible = sortNotes(filterNotes(notes, searchField.value), noteSort)
   if (visible.length === 0) {
     const empty = document.createElement('li')
     empty.className = 'empty-list'
@@ -184,7 +189,7 @@ function createItem(note: Note): HTMLLIElement {
 
   const date = document.createElement('span')
   date.className = 'note-date'
-  date.textContent = formatDate(note.updatedAt)
+  date.textContent = formatDate(listDate(note, noteSort))
 
   const rename = actionButton(ICON_PENCIL, 'Rename', () => startRename(item, note))
   const remove = actionButton(ICON_TRASH, 'Delete', () => confirmDelete(note))
@@ -274,6 +279,12 @@ function formatDate(moment: number): string {
   return date.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit', year: '2-digit' })
 }
 
+// The sort order chosen in any tab applies to all of them
+onNoteSortChanged((order) => {
+  noteSort = order
+  drawList()
+})
+
 // ---------- Backup and settings (top of the sidebar) ----------
 
 const exportButton = element<HTMLButtonElement>('#export')
@@ -349,6 +360,7 @@ async function start() {
   const settings = await readSettings()
   applyTheme(settings.theme)
   applySidebarCollapsed(settings.sidebarCollapsed)
+  noteSort = settings.noteSort
   notes = await listNotes()
 
   const openId = sessionStorage.getItem('openNoteId')

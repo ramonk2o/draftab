@@ -69,6 +69,29 @@ export function filterNotes(notes: Note[], search: string): Note[] {
   return notes.filter((note) => normalize(note.title).includes(term) || normalize(textOf(note.doc)).includes(term))
 }
 
+// How the sidebar sorts notes (chosen in Settings)
+export type NoteSort = 'updated' | 'title' | 'created'
+
+// Returns a sorted copy: last modified or date created (newest first), or title A–Z
+// (ignoring case and accents, numbers in natural order, untitled notes last)
+export function sortNotes(notes: Note[], order: NoteSort): Note[] {
+  const copy = [...notes]
+  if (order === 'created') return copy.sort((a, b) => b.createdAt - a.createdAt)
+  if (order === 'title') {
+    return copy.sort((a, b) => {
+      if (!a.title !== !b.title) return a.title ? -1 : 1 // untitled last
+      const byTitle = a.title.localeCompare(b.title, undefined, { sensitivity: 'base', numeric: true })
+      return byTitle || b.updatedAt - a.updatedAt
+    })
+  }
+  return copy.sort((a, b) => b.updatedAt - a.updatedAt)
+}
+
+// The date shown next to a note in the sidebar follows the sort order
+export function listDate(note: Note, order: NoteSort): number {
+  return order === 'created' ? note.createdAt : note.updatedAt
+}
+
 function normalize(text: string): string {
   return text.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase()
 }
