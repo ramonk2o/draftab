@@ -45,9 +45,15 @@ const ChecklistDentroDeLista = Extension.create({
 function abrirLinkComModificador(evento: MouseEvent) {
   if (!evento.metaKey && !evento.ctrlKey) return
   const link = (evento.target as HTMLElement).closest('a')
-  if (!link || !link.href) return
+  if (!link) return
+  let endereco = link.getAttribute('href') ?? ''
+  if (!endereco) return
+  // Sem protocolo ("google.com"), o Chrome abriria um arquivo da própria extensão
+  if (!/^[a-z][a-z0-9+.-]*:/i.test(endereco)) {
+    endereco = 'https://' + endereco
+  }
   evento.preventDefault()
-  window.open(link.href, '_blank', 'noopener')
+  window.open(endereco, '_blank', 'noopener')
 }
 
 // Cria o editor com todos os blocos do MVP e a alça de arrastar
@@ -77,7 +83,15 @@ export function criarEditor(elemento: HTMLElement): Editor {
         render: criarAlca,
         // Itens de lista também ganham alça própria
         nested: {
-          allowedContainers: ['bulletList', 'orderedList', 'taskList'],
+          // Sem isso, a alça some quando o mouse está na parte de cima de um item de lista
+          edgeDetection: 'none',
+          rules: [
+            {
+              // Dentro de uma citação, a alça move a citação inteira
+              id: 'citacaoInteira',
+              evaluate: ({ parent }) => (parent?.type.name === 'blockquote' ? 1000 : 0),
+            },
+          ],
         },
       }),
     ],
