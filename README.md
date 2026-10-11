@@ -153,6 +153,7 @@ The editor and the interface (shortcuts, dragging, appearance) are checked in Ch
 | [SPEC.md](SPEC.md) | What Draftab does and why: scope, technical decisions, data model |
 | [PLAN.md](PLAN.md) | Development stages, how to verify each one and their status |
 | [FEATURES.md](FEATURES.md) | Feature idea backlog, by area, with status |
+| [CHANGELOG.md](CHANGELOG.md) | What changed in each version |
 | [STORE.md](STORE.md) | Chrome Web Store listing texts (en-US and pt-BR), privacy answers and how to submit or update |
 | [PRIVACY.md](PRIVACY.md) | Privacy policy (English and Portuguese) |
 | [CLAUDE.md](CLAUDE.md) | Project instructions and conventions for [Claude Code](https://claude.com/claude-code) (they apply to humans too) |
