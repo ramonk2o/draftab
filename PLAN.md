@@ -25,7 +25,7 @@ Etapas em ordem de risco: o que pode invalidar a ideia vem primeiro.
 ## Etapa 5: Backup automático
 - **Entrega:** seletor de intervalo nas Configurações (desligado, a cada minuto, a cada hora, diário, semanal, mensal), `chrome.alarms` + `chrome.downloads` no service worker, pula quando nada mudou, mostra data do último backup. Configurações em lightbox, com a seção "Apagar todas as notas" (confirmação digitada).
 - **Como verificar:** com o intervalo "a cada minuto", editar uma nota e ver o arquivo em `Downloads/draftab-backups/`; sem editar, nenhum arquivo novo aparece. Lightbox fecha pelo ×, Esc e clique fora; apagar tudo só com "apagar tudo" digitado.
-- **Status:** implementada (`npm test`: 52 testes ok; no Chrome com a extensão: backup real a cada minuto — 8 verificações ok; lightbox, intervalos e apagar tudo — 18 verificações ok); falta seu teste no Chrome.
+- **Status:** concluída. `npm test`: 52 testes ok; no Chrome com a extensão: backup real a cada minuto (8 verificações ok) e lightbox, intervalos e apagar tudo (18 verificações ok); aprovado no uso.
 
 ## Etapa 6: Pronto para uso diário
 - **Entrega:** ícones, atalho de teclado para nova nota, estados vazios, script `npm run zip`, rascunho de política de privacidade para publicação futura.
