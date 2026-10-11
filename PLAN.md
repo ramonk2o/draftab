@@ -10,7 +10,7 @@ Etapas em ordem de risco: o que pode invalidar a ideia vem primeiro.
 ## Etapa 2: Editor de blocos completo + arrastar
 - **Entrega:** todos os blocos do escopo (títulos, listas, checklist, código, citação, divisor, marcas inline, links), alça DragHandle à esquerda de cada bloco e CSS dos blocos.
 - **Como verificar:** checklist manual — cada atalho markdown do SPEC vira o bloco certo; arrastar um bloco para o topo e para o fim da nota funciona; checklist é clicável.
-- **Status:** implementada (build ok; atalhos conferidos num teste automático temporário); falta o checklist manual no Chrome.
+- **Status:** concluída. Build ok; atalhos e arraste testados no Chrome (script automatizado) e checklist manual aprovado. Além do previsto: reordenação animada, arrastar lista inteira e blocos entre níveis (ver SPEC).
 
 ## Etapa 3: Persistência e lista de notas
 - **Entrega:** `src/storage.ts` (CRUD em `chrome.storage.local`), nova nota por aba, descarte de nota vazia, título pela primeira linha, barra lateral com busca e exclusão, sincronização entre abas via `chrome.storage.onChanged`.
