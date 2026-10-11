@@ -19,6 +19,7 @@ Success: ~2 weeks of real use without losing a single note and without going bac
   - Headings, quotes, code, dividers and whole lists don't go into lists (they only move among the note's blocks).
   - Double-clicking a block's handle selects the block's content and copies it to the clipboard, exactly like selecting it and pressing Cmd/Ctrl+C (formatted for apps that accept it, plain text for the others; plain text has one line per block, for Cmd/Ctrl+C too). Double-clicking the whole-list bar does the same for the whole list. Blocks without text (a divider) are selected and copied whole. A small "Copied" label shows above the handle for about a second.
 - The sidebar lists notes (sorted as chosen in Settings, see below), with search (title and content), a "new note" button, rename (double-click the title or the ✎ button) and delete with confirmation.
+  - Export a note as Markdown: a button on each note in the list (between rename and delete, shown on hover) downloads that note as a `.md` file through a normal browser download. The file name is the note's title, without characters that aren't allowed in file names (`/ \ : * ? " < > |` and control characters), at most 100 characters, or `Untitled.md` when nothing is left. The content is the same markdown the backup's `markdown` field gets; if the open note has unsaved typing, it's saved first so the file has everything.
   - Sort order, chosen in Settings: last modified (default, newest first), title A–Z (ignoring case and accents, numbers in natural order, untitled notes last) or date created (newest first). The date shown next to each note follows the order: the creation date when sorting by date created, the last edit otherwise. Applies immediately to every open tab.
   - The sidebar can be collapsed; its state (open/collapsed) is remembered.
 - Note title: while the user hasn't set a title, it follows the first line of text. Renaming fixes the title; renaming to empty goes back to the automatic title.
@@ -40,7 +41,7 @@ Success: ~2 weeks of real use without losing a single note and without going bac
 ## Publishing (Chrome Web Store)
 - Published right away, before the 2-week test (the test continues with the store version).
 - Store listing in English (en-US) and Brazilian Portuguese (pt-BR); the extension UI stays English-only.
-- Versions: 1.0.0 submitted to the store; 1.1.0 (note sort order, note fonts and typography, double-click to copy) ready to upload as an update. Icons at 16, 32, 48 and 128 px in `public/icons/` (the 128 px one is also the store icon).
+- Versions: 1.0.0 submitted to the store; 1.1.0 (note sort order, note fonts and typography, double-click to copy, export a note as Markdown) ready to upload as an update. Icons at 16, 32, 48 and 128 px in `public/icons/` (the 128 px one is also the store icon).
 - Privacy policy in `PRIVACY.md` in the repository; its public GitHub URL is the policy URL in the store. Nothing is collected or sent anywhere.
 - Store texts (descriptions, single purpose, permission justifications, data disclosure) in `STORE.md`, in both languages.
 - Store images: 1280×800 screenshots generated from the real extension, and a 440×280 small promo tile from the user's artwork (en and pt-BR).

@@ -1,4 +1,6 @@
 import { backupFileName, createBackup, notesFromBackup, parseBackup } from './backup'
+import { markdownFileName, noteToMarkdown } from './markdown'
+import type { Note } from './notes'
 import { listNotes, readSettings, replaceAll } from './storage'
 
 // Export and import a backup from a page (sidebar or Settings)
@@ -7,14 +9,23 @@ import { listNotes, readSettings, replaceAll } from './storage'
 export async function exportBackup(): Promise<number> {
   const notes = await listNotes()
   const backup = createBackup(notes, await readSettings())
-  const file = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' })
+  download(JSON.stringify(backup, null, 2), 'application/json', backupFileName(new Date()))
+  return notes.length
+}
+
+// Downloads one note as a .md file
+export function exportMarkdown(note: Note) {
+  download(noteToMarkdown(note), 'text/markdown', markdownFileName(note))
+}
+
+function download(text: string, type: string, fileName: string) {
+  const file = new Blob([text], { type: `${type};charset=utf-8` })
   const url = URL.createObjectURL(file)
   const link = document.createElement('a')
   link.href = url
-  link.download = backupFileName(new Date())
+  link.download = fileName
   link.click()
   setTimeout(() => URL.revokeObjectURL(url), 1000)
-  return notes.length
 }
 
 // Result of an import attempt, with the message for the user

@@ -10,6 +10,7 @@ Ready to upload to the Chrome Web Store as an update.
 - **Note sort order** in Settings: last modified (default), title A–Z (ignoring case and accents, numbers in natural order, untitled notes last) or date created. The date next to each note follows the order, and every open tab re-sorts immediately.
 - **Note font** in Settings: sans-serif (default), serif or monospace, using system fonts (SF Pro / New York / SF Mono on macOS). Applies to note content only, in every open tab, without a flash of the wrong font on open.
 - **Double-click a handle to copy**: double-clicking a block's handle selects its content and copies it like Cmd/Ctrl+C (formatted and plain text); double-clicking the whole-list bar copies the whole list. A small "Copied" label confirms it.
+- **Export a note as Markdown**: a button on each note in the sidebar (on hover, between rename and delete) downloads it as a `.md` file named after its title. Unsaved typing in the open note is included.
 - The new settings are included in backups.
 
 ### Changed

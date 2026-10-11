@@ -1,6 +1,6 @@
-import { flattenExtensions, getSchema } from '@tiptap/core'
-import { MarkdownManager } from '@tiptap/markdown'
+import { getSchema } from '@tiptap/core'
 import { contentExtensions } from './extensions'
+import { noteToMarkdown } from './markdown'
 import type { Note } from './notes'
 import type { Settings } from './storage'
 
@@ -19,14 +19,8 @@ export type Backup = {
 
 const VERSION = 1
 
-// Converter and schema created once, when first needed
-let markdown: MarkdownManager | undefined
+// Schema created once, when first needed
 let schema: ReturnType<typeof getSchema> | undefined
-
-function toMarkdown(note: Note): string {
-  markdown ??= new MarkdownManager({ extensions: flattenExtensions(contentExtensions) })
-  return markdown.serialize(note.doc)
-}
 
 export function createBackup(notes: Note[], settings: Settings, now = Date.now()): Backup {
   return {
@@ -38,7 +32,7 @@ export function createBackup(notes: Note[], settings: Settings, now = Date.now()
       id: note.id,
       title: note.title,
       titleManual: note.titleManual,
-      markdown: toMarkdown(note), // for humans to read only
+      markdown: noteToMarkdown(note), // for humans to read only
       doc: note.doc,
       createdAt: note.createdAt,
       updatedAt: note.updatedAt,

@@ -1,10 +1,19 @@
 import type { JSONContent } from '@tiptap/core'
 import { EditorState } from '@tiptap/pm/state'
 import { createEditor } from './editor'
-import { exportBackup, importBackup } from './backup-ui'
+import { exportBackup, exportMarkdown, importBackup } from './backup-ui'
 import { openSettings } from './settings'
 import { applyNoteFont, applyTheme, isDark, onScreenThemeChange } from './theme'
-import { ICON_EXPORT, ICON_GEAR, ICON_IMPORT, ICON_MOON, ICON_PENCIL, ICON_SUN, ICON_TRASH } from './icons'
+import {
+  ICON_EXPORT,
+  ICON_GEAR,
+  ICON_IMPORT,
+  ICON_MARKDOWN,
+  ICON_MOON,
+  ICON_PENCIL,
+  ICON_SUN,
+  ICON_TRASH,
+} from './icons'
 import {
   displayTitle,
   filterNotes,
@@ -193,9 +202,10 @@ function createItem(note: Note): HTMLLIElement {
   date.textContent = formatDate(listDate(note, noteSort))
 
   const rename = actionButton(ICON_PENCIL, 'Rename', () => startRename(item, note))
+  const toMarkdown = actionButton(ICON_MARKDOWN, 'Export as Markdown', () => exportNote(note))
   const remove = actionButton(ICON_TRASH, 'Delete', () => confirmDelete(note))
 
-  item.append(title, date, rename, remove)
+  item.append(title, date, rename, toMarkdown, remove)
   item.addEventListener('click', () => {
     if (note.id !== currentNote.id) open(note, true)
   })
@@ -257,6 +267,16 @@ async function applyNewTitle(note: Note, title: string) {
   }
   const stored = await readNote(note.id)
   if (stored) await saveNote({ ...renamed(stored, title), updatedAt: Date.now() })
+}
+
+async function exportNote(note: Note) {
+  if (note.id === currentNote.id) {
+    // Include what was typed and not saved yet
+    if (hasPendingChanges()) await saveNow()
+    exportMarkdown(currentNote)
+    return
+  }
+  exportMarkdown(note)
 }
 
 async function confirmDelete(note: Note) {
