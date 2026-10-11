@@ -3,6 +3,7 @@ import DragHandle from '@tiptap/extension-drag-handle'
 import { Reorder, endDrag, startDrag } from './reorder'
 import { ListHandle } from './list-handle'
 import { contentExtensions } from './extensions'
+import { selectAndCopyBlock } from './copy-block'
 
 // Handle icon: six dots in two columns
 const HANDLE_ICON = `
@@ -22,8 +23,9 @@ function createHandle(): HTMLElement {
   return handle
 }
 
-// Block currently under the mouse (the handle is positioned relative to it)
+// Block currently under the mouse (the handle is positioned relative to it) and its position
 let handleBlock: HTMLElement | null = null
+let handlePos: number | null = null
 
 // Rectangle of the block's first line: the handle is centered on it.
 // Without this the handle aligns to the top and looks off on headings and dividers.
@@ -79,9 +81,14 @@ function openLinkWithModifier(event: MouseEvent) {
 export function createEditor(element: HTMLElement): Editor {
   element.addEventListener('click', openLinkWithModifier)
 
-  return new Editor({
+  const editor = new Editor({
     element,
     autofocus: true,
+    editorProps: {
+      // Plain-text copies put one line per block (by default ProseMirror separates blocks
+      // with a blank line, which turns a copied list into "item, blank, blank, item")
+      clipboardTextSerializer: (slice) => slice.content.textBetween(0, slice.content.size, '\n'),
+    },
     extensions: [
       ...contentExtensions,
       ChecklistInsideList,
@@ -98,6 +105,7 @@ export function createEditor(element: HTMLElement): Editor {
           const { pos } = data as { pos?: number }
           const el = pos !== undefined && pos >= 0 ? data.editor.view.nodeDOM(pos) : null
           handleBlock = el instanceof HTMLElement ? el : null
+          handlePos = pos !== undefined && pos >= 0 ? pos : null
         },
         // Handle on the left, centered on the block's first line
         computePositionConfig: { placement: 'left', strategy: 'absolute' },
@@ -120,4 +128,11 @@ export function createEditor(element: HTMLElement): Editor {
       }),
     ],
   })
+
+  // Double-clicking the handle selects the block's content and copies it
+  handle.addEventListener('dblclick', () => {
+    if (handlePos !== null) selectAndCopyBlock(editor.view, handlePos, handle)
+  })
+
+  return editor
 }

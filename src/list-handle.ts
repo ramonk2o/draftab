@@ -2,6 +2,7 @@ import { Extension } from '@tiptap/core'
 import { NodeSelection, Plugin } from '@tiptap/pm/state'
 import type { EditorView } from '@tiptap/pm/view'
 import { endDrag, startDrag } from './reorder'
+import { selectAndCopyBlock } from './copy-block'
 
 // Whole-list handle: a thin bar to the left of the list, further out than the
 // item handles. Shows up when the mouse is at the height of a list.
@@ -69,7 +70,14 @@ export const ListHandle = Extension.create({
             view.dragging = null
           }
 
+          // Double-click: select and copy the whole list
+          function onDoubleClick() {
+            const pos = list ? blockPosition(view, list) : null
+            if (pos !== null) selectAndCopyBlock(view, pos, handle)
+          }
+
           document.addEventListener('mousemove', onMouseMove)
+          handle.addEventListener('dblclick', onDoubleClick)
           handle.addEventListener('dragstart', onDragStart)
           handle.addEventListener('dragend', onDragEnd)
           return {

@@ -556,6 +556,29 @@ body.reordering .drop-cursor {
   .block-dropped { animation: none; }
 }
 
+/* "Copied" label after double-clicking a handle */
+.copied-label {
+  position: fixed;
+  z-index: 30;
+  transform: translate(-50%, -100%);
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--text);
+  color: var(--bg);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  pointer-events: none;
+  animation: copied-fade 1100ms ease-out forwards;
+}
+
+@keyframes copied-fade {
+  0% { opacity: 0; margin-top: 0; }
+  15% { opacity: 1; margin-top: -4px; }
+  70% { opacity: 1; margin-top: -4px; }
+  100% { opacity: 0; margin-top: -4px; }
+}
+
 /* Whole-list handle: thin bar to the left of the list */
 .list-handle {
   position: absolute;
