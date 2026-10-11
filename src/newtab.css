@@ -1,16 +1,27 @@
+:root {
+  --texto: #222;
+  --texto-suave: #888;
+  --borda: #e3e3e3;
+  --fundo-codigo: #f4f4f2;
+  --link: #2563eb;
+  --selecao-bloco: rgba(37, 99, 235, 0.12);
+}
+
 body {
   margin: 0;
   background: #fff;
-  color: #222;
+  color: var(--texto);
   font-family: system-ui, -apple-system, sans-serif;
   font-size: 16px;
   line-height: 1.6;
 }
 
 #editor {
+  /* position: relative serve de referência para a alça de arrastar */
+  position: relative;
   max-width: 720px;
   margin: 0 auto;
-  padding: 48px 24px;
+  padding: 48px 24px 48px 48px;
 }
 
 /* Área editável ocupa a tela e não mostra o contorno de foco */
@@ -18,3 +29,150 @@ body {
   min-height: 80vh;
   outline: none;
 }
+
+.tiptap > * + * {
+  margin-top: 0.5em;
+}
+
+.tiptap p {
+  margin: 0;
+}
+
+/* ---------- Títulos ---------- */
+
+.tiptap h1,
+.tiptap h2,
+.tiptap h3 {
+  line-height: 1.25;
+  margin: 1.2em 0 0.3em;
+}
+
+.tiptap h1 { font-size: 2em; }
+.tiptap h2 { font-size: 1.5em; }
+.tiptap h3 { font-size: 1.2em; }
+
+.tiptap > :first-child {
+  margin-top: 0;
+}
+
+/* ---------- Listas ---------- */
+
+.tiptap ul,
+.tiptap ol {
+  margin: 0;
+  padding-left: 1.5em;
+}
+
+.tiptap li > p {
+  margin: 0.15em 0;
+}
+
+/* Checklist: caixinha à esquerda, texto à direita */
+.tiptap ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0.25em;
+}
+
+.tiptap ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5em;
+}
+
+.tiptap ul[data-type="taskList"] li > label {
+  flex: 0 0 auto;
+  user-select: none;
+  margin-top: 0.3em;
+}
+
+.tiptap ul[data-type="taskList"] li > label input {
+  width: 1em;
+  height: 1em;
+  margin: 0;
+  cursor: pointer;
+}
+
+.tiptap ul[data-type="taskList"] li > div {
+  flex: 1 1 auto;
+}
+
+.tiptap ul[data-type="taskList"] li[data-checked="true"] > div {
+  color: var(--texto-suave);
+  text-decoration: line-through;
+}
+
+/* ---------- Citação, código e divisor ---------- */
+
+.tiptap blockquote {
+  margin: 0;
+  padding: 0.1em 0 0.1em 1em;
+  border-left: 3px solid var(--borda);
+  color: #555;
+}
+
+.tiptap code {
+  background: var(--fundo-codigo);
+  border-radius: 4px;
+  padding: 0.1em 0.3em;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 0.9em;
+}
+
+.tiptap pre {
+  margin: 0.5em 0;
+  padding: 0.8em 1em;
+  background: var(--fundo-codigo);
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.tiptap pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.875em;
+}
+
+.tiptap hr {
+  border: none;
+  border-top: 1px solid var(--borda);
+  margin: 1.2em 0;
+}
+
+/* ---------- Links ---------- */
+
+.tiptap a {
+  color: var(--link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ---------- Arrastar blocos ---------- */
+
+.alca-arrastar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 26px;
+  margin-right: 4px;
+  border-radius: 4px;
+  color: #bbb;
+  cursor: grab;
+}
+
+.alca-arrastar:hover {
+  background: #f0f0f0;
+  color: #666;
+}
+
+.alca-arrastar:active {
+  cursor: grabbing;
+}
+
+/* Bloco selecionado pela alça (ou o divisor clicado) */
+.tiptap .ProseMirror-selectednode,
+.tiptap .ProseMirror-selectednoderange {
+  background: var(--selecao-bloco);
+  border-radius: 4px;
+}
+
