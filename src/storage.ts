@@ -1,4 +1,5 @@
 import type { Nota } from './notas'
+import type { Tema } from './tema'
 
 // Todo acesso ao chrome.storage passa por aqui.
 // Chaves: "note:<id>" (uma por nota), "settings" e "meta".
@@ -12,6 +13,7 @@ export type IntervaloDeBackup = (typeof INTERVALOS_DE_BACKUP)[number]
 export type Configuracoes = {
   autoBackupMinutes: IntervaloDeBackup
   sidebarCollapsed: boolean
+  theme: Tema
 }
 
 export type Meta = {
@@ -20,7 +22,7 @@ export type Meta = {
   lastImportAt: number // última importação (as abas abertas recarregam)
 }
 
-const CONFIGURACOES_PADRAO: Configuracoes = { autoBackupMinutes: 0, sidebarCollapsed: false }
+const CONFIGURACOES_PADRAO: Configuracoes = { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' }
 const META_PADRAO: Meta = { lastChangeAt: 0, lastBackupAt: 0, lastImportAt: 0 }
 
 // ---------- Notas ----------
@@ -106,6 +108,7 @@ export async function lerConfiguracoes(): Promise<Configuracoes> {
   const { settings } = await chrome.storage.local.get('settings')
   const configuracoes = { ...CONFIGURACOES_PADRAO, ...(settings as Partial<Configuracoes> | undefined) }
   configuracoes.autoBackupMinutes = intervaloValido(configuracoes.autoBackupMinutes)
+  if (!['auto', 'light', 'dark'].includes(configuracoes.theme)) configuracoes.theme = 'auto'
   return configuracoes
 }
 
@@ -141,6 +144,16 @@ export function aoMudarUltimoBackup(callback: (momento: number) => void) {
     const antes = (mudancas.meta.oldValue as Partial<Meta> | undefined)?.lastBackupAt ?? 0
     const depois = (mudancas.meta.newValue as Partial<Meta> | undefined)?.lastBackupAt ?? 0
     if (depois !== antes) callback(depois)
+  })
+}
+
+// Avisa quando o tema muda (nesta aba ou em outra)
+export function aoMudarTema(callback: (tema: Tema) => void) {
+  chrome.storage.onChanged.addListener((mudancas, area) => {
+    if (area !== 'local' || !mudancas.settings) return
+    const antes = (mudancas.settings.oldValue as Partial<Configuracoes> | undefined)?.theme
+    const depois = (mudancas.settings.newValue as Partial<Configuracoes> | undefined)?.theme
+    if (depois && depois !== antes) callback(depois)
   })
 }
 

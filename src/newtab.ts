@@ -3,6 +3,7 @@ import { EditorState } from '@tiptap/pm/state'
 import { criarEditor } from './editor'
 import { exportarBackup, importarBackup } from './backup-ui'
 import { abrirConfiguracoes } from './configuracoes'
+import { aplicarTema } from './tema'
 import { ICONE_ENGRENAGEM, ICONE_EXPORTAR, ICONE_IMPORTAR, ICONE_LAPIS, ICONE_LIXEIRA } from './icones'
 import {
   comTituloAtualizado,
@@ -16,6 +17,7 @@ import {
 import {
   aoImportar,
   aoMudarNotas,
+  aoMudarTema,
   excluirNota,
   lerConfiguracoes,
   lerNota,
@@ -325,8 +327,12 @@ botaoAlternar.addEventListener('click', () => {
 
 // ---------- Início ----------
 
+// Tema escolhido em qualquer aba vale para todas
+aoMudarTema(aplicarTema)
+
 async function iniciar() {
   const configuracoes = await lerConfiguracoes()
+  aplicarTema(configuracoes.theme)
   aplicarLateralRecolhida(configuracoes.sidebarCollapsed)
   notas = await listarNotas()
 

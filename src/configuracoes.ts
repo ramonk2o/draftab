@@ -8,6 +8,7 @@ import {
   salvarConfiguracoes,
   intervaloValido,
 } from './storage'
+import type { Tema } from './tema'
 
 // Lightbox de Configurações: backup manual, backup automático e apagar todas as notas
 
@@ -25,6 +26,7 @@ const botaoExportar = elemento<HTMLButtonElement>('#config-exportar')
 const botaoImportar = elemento<HTMLButtonElement>('#config-importar')
 const mensagemBackup = elemento<HTMLParagraphElement>('#mensagem-backup')
 const seletorIntervalo = elemento<HTMLSelectElement>('#intervalo')
+const seletorTema = elemento<HTMLSelectElement>('#tema')
 const ultimoBackup = elemento<HTMLParagraphElement>('#ultimo-backup')
 const campoConfirmar = elemento<HTMLInputElement>('#confirmar-apagar')
 const botaoApagar = elemento<HTMLButtonElement>('#apagar-tudo')
@@ -33,8 +35,9 @@ botaoFechar.innerHTML = ICONE_FECHAR
 
 export async function abrirConfiguracoes() {
   // Sempre abre com os valores atuais e sem restos da última vez
-  const { autoBackupMinutes } = await lerConfiguracoes()
+  const { autoBackupMinutes, theme } = await lerConfiguracoes()
   seletorIntervalo.value = String(autoBackupMinutes)
+  seletorTema.value = theme
   mostrarUltimoBackup((await lerMeta()).lastBackupAt)
   mostrarMensagem('')
   campoConfirmar.value = ''
@@ -84,6 +87,13 @@ seletorIntervalo.addEventListener('change', () => {
 })
 
 aoMudarUltimoBackup(mostrarUltimoBackup)
+
+// ---------- Aparência ----------
+
+seletorTema.addEventListener('change', () => {
+  // Todas as abas (inclusive esta) aplicam o tema ao perceber a mudança (aoMudarTema)
+  salvarConfiguracoes({ theme: seletorTema.value as Tema })
+})
 
 // ---------- Apagar todas as notas ----------
 

@@ -27,7 +27,12 @@ Etapas em ordem de risco: o que pode invalidar a ideia vem primeiro.
 - **Como verificar:** com o intervalo "a cada minuto", editar uma nota e ver o arquivo em `Downloads/draftab-backups/`; sem editar, nenhum arquivo novo aparece. Lightbox fecha pelo ×, Esc e clique fora; apagar tudo só com "apagar tudo" digitado.
 - **Status:** concluída. `npm test`: 52 testes ok; no Chrome com a extensão: backup real a cada minuto (8 verificações ok) e lightbox, intervalos e apagar tudo (18 verificações ok); aprovado no uso.
 
-## Etapa 6: Pronto para uso diário
+## Etapa 6: Tema escuro
+- **Entrega:** cores da interface em variáveis CSS, tema escuro, opção "Tema" nas Configurações (Automático / Claro / Escuro), aplicada na hora em todas as abas e sem piscar o tema errado ao abrir.
+- **Como verificar:** `npm test` passa. No Chrome: com o macOS no modo escuro e o tema Automático, a página abre escura; Claro e Escuro forçam o tema; mudar numa aba muda nas outras; todos os elementos (editor, blocos, barra lateral, alças, lightbox, campos) legíveis nos dois temas.
+- **Status:** implementada (`npm test`: 54 testes ok; no Chrome com a extensão: automático, claro e escuro, sincronização entre abas e abertura sem piscar — 7 verificações ok; contraste WCAG de 11 textos no escuro, todos acima do mínimo); falta seu teste no Chrome.
+
+## Etapa 7: Pronto para uso diário
 - **Entrega:** ícones, atalho de teclado para nova nota, estados vazios, script `npm run zip`, rascunho de política de privacidade para publicação futura.
 - **Como verificar:** `npm run zip` gera o .zip instalável; uso por um dia sem fricção. Começa o teste de 2 semanas.
 - **Status:** pendente

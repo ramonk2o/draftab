@@ -48,9 +48,9 @@ beforeEach(() => {
 
 describe('criarBackup', () => {
   test('segue o formato do SPEC e inclui o markdown de cada nota', () => {
-    const backup = criarBackup([notaCompleta()], { autoBackupMinutes: 60, sidebarCollapsed: false }, 999)
+    const backup = criarBackup([notaCompleta()], { autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto' }, 999)
     expect(backup).toMatchObject({ app: 'draftab', version: 1, exportedAt: 999 })
-    expect(backup.settings).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: false })
+    expect(backup.settings).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto' })
     expect(backup.notes[0].markdown).toBe('# Ideias\n\num **negrito**\n\n- [x] feito\n\n---')
   })
 })
@@ -58,7 +58,7 @@ describe('criarBackup', () => {
 describe('ida e volta', () => {
   test('exportar e importar devolve exatamente as mesmas notas', () => {
     const notas = [notaCompleta(), notaSimples('outra', 50)]
-    const arquivo = JSON.stringify(criarBackup(notas, { autoBackupMinutes: 0, sidebarCollapsed: true }))
+    const arquivo = JSON.stringify(criarBackup(notas, { autoBackupMinutes: 0, sidebarCollapsed: true, theme: 'auto' }))
     expect(notasDoBackup(lerBackup(arquivo))).toEqual(notas)
   })
 
@@ -80,7 +80,7 @@ describe('ida e volta', () => {
 })
 
 describe('lerBackup recusa arquivos inválidos', () => {
-  const valido = () => criarBackup([notaSimples('a', 1)], { autoBackupMinutes: 0, sidebarCollapsed: false })
+  const valido = () => criarBackup([notaSimples('a', 1)], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' })
   const comNota = (mudanca: Record<string, unknown>) => {
     const b = valido()
     return JSON.stringify({ ...b, notes: [{ ...b.notes[0], ...mudanca }] })
@@ -105,7 +105,7 @@ describe('lerBackup recusa arquivos inválidos', () => {
   })
 
   test('backup sem notas é válido', () => {
-    expect(lerBackup(JSON.stringify(criarBackup([], { autoBackupMinutes: 0, sidebarCollapsed: false }))).notes).toEqual([])
+    expect(lerBackup(JSON.stringify(criarBackup([], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' }))).notes).toEqual([])
   })
 })
 

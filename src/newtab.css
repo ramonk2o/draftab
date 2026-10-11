@@ -1,15 +1,76 @@
+/* ---------- Cores (temas) ----------
+   Todas as cores da interface ficam aqui. O tema escuro só troca os valores.
+   data-tema="claro|escuro" no <html> é aplicado por tema-inicial.js e src/tema.ts. */
+
 :root {
-  --texto: #222;
-  --texto-suave: #888;
-  --borda: #e3e3e3;
+  color-scheme: light; /* caixinhas, seletores e barras de rolagem do navegador */
+  --fundo: #fff;
+  --fundo-lateral: #f7f7f5;
+  --fundo-campo: #fff;
+  --fundo-dialogo: #fff;
   --fundo-codigo: #f4f4f2;
+  --texto: #222;
+  --texto-secundario: #666;
+  --texto-citacao: #555;
+  --texto-suave: #888;
+  --icone: #888;
+  --icone-fraco: #999;
+  --alca: #bbb;
+  --borda: #e3e3e3;
+  --borda-campo: #d6d6d6;
+  --borda-foco: #bbb;
+  --linha-lista: #e2e2e2;
+  --hover: #e6e6e4;
+  --hover-item: #ebebea;
+  --hover-alca: #f0f0f0;
+  --hover-botao: #f5f5f4;
+  --item-atual: #e3e3e1;
   --link: #2563eb;
   --selecao-bloco: rgba(37, 99, 235, 0.12);
+  --erro: #b42318;
+  --ok: #1a7f37;
+  --texto-sobre-perigo: #fff;
+  --sombra-dialogo: rgba(0, 0, 0, 0.2);
+  --fundo-escurecido: rgba(20, 20, 20, 0.35);
+
+  --largura-lateral: 260px;
+}
+
+:root[data-tema="escuro"] {
+  color-scheme: dark;
+  --fundo: #1b1b1d;
+  --fundo-lateral: #222225;
+  --fundo-campo: #2a2a2d;
+  --fundo-dialogo: #242427;
+  --fundo-codigo: #2b2b2e;
+  --texto: #e6e6e6;
+  --texto-secundario: #a5a5aa;
+  --texto-citacao: #b5b5b9;
+  --texto-suave: #8a8a8f;
+  --icone: #9a9a9f;
+  --icone-fraco: #7a7a7f;
+  --alca: #5f5f64;
+  --borda: #343437;
+  --borda-campo: #46464a;
+  --borda-foco: #6a6a6f;
+  --linha-lista: #3c3c40;
+  --hover: #323235;
+  --hover-item: #2d2d30;
+  --hover-alca: #303033;
+  --hover-botao: #323235;
+  --item-atual: #37373a;
+  --link: #6ea8fe;
+  --selecao-bloco: rgba(110, 168, 254, 0.18);
+  --erro: #ff7b72;
+  --ok: #56d364;
+  --texto-sobre-perigo: #1b1b1d;
+  --sombra-dialogo: rgba(0, 0, 0, 0.6);
+  --fundo-escurecido: rgba(0, 0, 0, 0.55);
 }
 
 body {
   margin: 0;
-  background: #fff;
+  background: var(--fundo);
   color: var(--texto);
   font-family: system-ui, -apple-system, sans-serif;
   font-size: 16px;
@@ -18,10 +79,6 @@ body {
 
 /* ---------- Layout: barra lateral + área do editor ---------- */
 
-:root {
-  --largura-lateral: 260px;
-  --fundo-lateral: #f7f7f5;
-}
 
 body {
   display: flex;
@@ -83,13 +140,13 @@ body.lateral-recolhida #lateral {
   padding: 0 8px;
   border: 1px solid var(--borda);
   border-radius: 6px;
-  background: #fff;
-  color: #999;
+  background: var(--fundo-campo);
+  color: var(--icone-fraco);
   cursor: text;
 }
 
 .campo-busca:focus-within {
-  border-color: #bbb;
+  border-color: var(--borda-foco);
 }
 
 .campo-busca svg {
@@ -134,7 +191,7 @@ body.lateral-recolhida #lateral {
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #888;
+  color: var(--icone);
   cursor: pointer;
 }
 
@@ -145,8 +202,8 @@ body.lateral-recolhida #lateral {
 
 .botao-icone:hover,
 .acao-nota:hover {
-  background: #e6e6e4;
-  color: #222;
+  background: var(--hover);
+  color: var(--texto);
 }
 
 #lista-notas {
@@ -165,11 +222,11 @@ body.lateral-recolhida #lateral {
 }
 
 .item-nota:hover {
-  background: #ebebea;
+  background: var(--hover-item);
 }
 
 .item-nota.atual {
-  background: #e3e3e1;
+  background: var(--item-atual);
   font-weight: 600;
 }
 
@@ -326,7 +383,7 @@ body.lateral-recolhida #lateral {
   margin: 0;
   padding: 0.1em 0 0.1em 1em;
   border-left: 3px solid var(--borda);
-  color: #555;
+  color: var(--texto-citacao);
 }
 
 .tiptap code {
@@ -375,13 +432,13 @@ body.lateral-recolhida #lateral {
   height: 26px;
   margin-right: 4px;
   border-radius: 4px;
-  color: #bbb;
+  color: var(--alca);
   cursor: grab;
 }
 
 .alca-arrastar:hover {
-  background: #f0f0f0;
-  color: #666;
+  background: var(--hover-alca);
+  color: var(--texto-secundario);
 }
 
 .alca-arrastar:active {
@@ -454,15 +511,15 @@ body.reordenando .cursor-soltar {
   bottom: 3px;
   width: 2px;
   border-radius: 1px;
-  background: #e2e2e2;
+  background: var(--linha-lista);
 }
 
 .alca-lista:hover {
-  background: #f0f0f0;
+  background: var(--hover-alca);
 }
 
 .alca-lista:hover::before {
-  background: #999;
+  background: var(--icone-fraco);
 }
 
 .alca-lista:active {
@@ -471,10 +528,6 @@ body.reordenando .cursor-soltar {
 
 /* ---------- Configurações (lightbox) ---------- */
 
-:root {
-  --erro: #b42318;
-  --ok: #1a7f37;
-}
 
 #configuracoes {
   box-sizing: border-box;
@@ -483,15 +536,15 @@ body.reordenando .cursor-soltar {
   padding: 0;
   border: none;
   border-radius: 12px;
-  background: #fff;
+  background: var(--fundo-dialogo);
   color: var(--texto);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 60px var(--sombra-dialogo);
   font-size: 15px;
   line-height: 1.5;
 }
 
 #configuracoes::backdrop {
-  background: rgba(20, 20, 20, 0.35);
+  background: var(--fundo-escurecido);
 }
 
 #configuracoes[open] {
@@ -543,7 +596,7 @@ body.reordenando .cursor-soltar {
 
 .explicacao {
   margin: 0 0 12px;
-  color: #666;
+  color: var(--texto-secundario);
 }
 
 .explicacao.pequena {
@@ -566,16 +619,16 @@ body.reordenando .cursor-soltar {
 
 .botao {
   padding: 7px 14px;
-  border: 1px solid #d6d6d6;
+  border: 1px solid var(--borda-campo);
   border-radius: 6px;
-  background: #fff;
+  background: var(--fundo-campo);
   color: var(--texto);
   font: inherit;
   cursor: pointer;
 }
 
 .botao:hover {
-  background: #f5f5f4;
+  background: var(--hover-botao);
 }
 
 .botao.perigo {
@@ -585,7 +638,7 @@ body.reordenando .cursor-soltar {
 
 .botao.perigo:hover:not(:disabled) {
   background: var(--erro);
-  color: #fff;
+  color: var(--texto-sobre-perigo);
 }
 
 .botao:disabled {
@@ -596,9 +649,9 @@ body.reordenando .cursor-soltar {
 #configuracoes select,
 #confirmar-apagar {
   padding: 6px 8px;
-  border: 1px solid #d6d6d6;
+  border: 1px solid var(--borda-campo);
   border-radius: 6px;
-  background: #fff;
+  background: var(--fundo-campo);
   font: inherit;
 }
 

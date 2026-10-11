@@ -3,6 +3,7 @@ import { criarChromeFalso } from './chrome-falso'
 import { novaNotaEmBranco, type Nota } from './notas'
 import {
   aoMudarNotas,
+  aoMudarTema,
   excluirTodasAsNotas,
   intervaloValido,
   excluirNota,
@@ -91,13 +92,13 @@ describe('notas', () => {
 
 describe('configurações', () => {
   test('sem nada salvo, usa os valores padrão', async () => {
-    expect(await lerConfiguracoes()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false })
+    expect(await lerConfiguracoes()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' })
   })
 
   test('salvar uma parte mantém o resto', async () => {
     await salvarConfiguracoes({ autoBackupMinutes: 60 })
     await salvarConfiguracoes({ sidebarCollapsed: true })
-    expect(await lerConfiguracoes()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true })
+    expect(await lerConfiguracoes()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto' })
   })
 })
 
@@ -126,6 +127,24 @@ describe('excluirTodasAsNotas', () => {
     await salvarConfiguracoes({ autoBackupMinutes: 60, sidebarCollapsed: true })
     await excluirTodasAsNotas()
     expect(await listarNotas()).toEqual([])
-    expect(await lerConfiguracoes()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true })
+    expect(await lerConfiguracoes()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto' })
+  })
+})
+
+describe('tema', () => {
+  test('salvo e lido; valor desconhecido volta ao automático', async () => {
+    await salvarConfiguracoes({ theme: 'dark' })
+    expect((await lerConfiguracoes()).theme).toBe('dark')
+    await chrome.storage.local.set({ settings: { theme: 'roxo' } })
+    expect((await lerConfiguracoes()).theme).toBe('auto')
+  })
+
+  test('avisa as abas quando o tema muda, e só nesse caso', async () => {
+    const recebidos: string[] = []
+    aoMudarTema((tema) => recebidos.push(tema))
+    await salvarConfiguracoes({ theme: 'dark' })
+    await salvarConfiguracoes({ sidebarCollapsed: true })
+    await salvarConfiguracoes({ theme: 'light' })
+    expect(recebidos).toEqual(['dark', 'light'])
   })
 })

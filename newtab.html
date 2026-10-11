@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <title>Nova aba</title>
+    <!-- Antes do CSS: define o tema antes de a página aparecer -->
+    <script src="/tema-inicial.js"></script>
     <link rel="stylesheet" href="/src/newtab.css" />
   </head>
   <body class="carregando">
@@ -83,6 +85,18 @@
             Se o Chrome estiver configurado para "Perguntar onde salvar cada arquivo", ele vai abrir essa
             pergunta a cada backup automático.
           </p>
+        </section>
+
+        <section>
+          <h2>Aparência</h2>
+          <label class="linha">
+            <span>Tema</span>
+            <select id="tema">
+              <option value="auto">Automático (segue o sistema)</option>
+              <option value="light">Claro</option>
+              <option value="dark">Escuro</option>
+            </select>
+          </label>
         </section>
 
         <section class="zona-perigo">

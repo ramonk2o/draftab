@@ -29,6 +29,7 @@ Sucesso: ~2 semanas de uso real sem perder nenhuma nota e sem voltar ao New Tab 
   - Importar backup: valida o arquivo, pede confirmação e substitui tudo. As abas abertas do Draftab recarregam sozinhas depois da importação (nenhuma grava conteúdo antigo por cima).
   - Backup automático: desligado / a cada minuto / a cada hora / diário / semanal / mensal (30 dias), mostrando a data do último backup automático (exportações manuais não contam). Valores antigos fora dessa lista passam para o intervalo mais próximo.
   - Apagar todas as notas: o botão só funciona depois de digitar "apagar tudo" num campo de confirmação. As abas abertas recarregam, como na importação.
+  - Tema: Automático (segue o modo claro/escuro do sistema), Claro ou Escuro. Padrão: Automático. Vale na hora para todas as abas abertas, e a página já abre no tema certo (sem piscar o tema errado).
 - Nome do arquivo de backup (manual e automático): `draftab_AAAA-MM-DD-HHhMM.json` (ex.: `draftab_2026-10-11-15h05.json`).
 - Backup automático salva em `Downloads/draftab-backups/` sem perguntar, e só se houve mudança desde o último backup.
 
@@ -49,7 +50,7 @@ Tudo o que não está no escopo acima. Ideias para depois do MVP ficam no backlo
 - `Note { id: string (uuid), doc: TiptapJSON, title: string, titleManual: boolean, createdAt: number, updatedAt: number }`
   `titleManual` = o usuário renomeou a nota; enquanto for `false`, `title` acompanha a primeira linha.
   O JSON do Tiptap é a fonte da verdade (sem perdas de conversão).
-- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean }` (0 = desligado)
+- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark' }` (0 = desligado)
 - `meta { lastChangeAt: number, lastBackupAt: number, lastImportAt: number }` (`lastImportAt` marca importação ou exclusão de todas as notas e avisa as abas abertas para recarregar)
 - Arquivo de backup:
   `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, titleManual, markdown, doc, createdAt, updatedAt }] }`

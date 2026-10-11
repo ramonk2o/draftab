@@ -31,7 +31,7 @@ Backlog de ideias de features: o que pode entrar no Draftab no futuro, com statu
 ## Aparência
 
 ### Tema escuro
-- **Status:** Ideia
+- **Status:** Aprovada
 - **Descrição:** versão escura da interface.
 - **Motivação:** não registrada (veio da lista "Fora do escopo" do SPEC.md, marcado como "a avaliar").
 
