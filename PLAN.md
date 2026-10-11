@@ -15,7 +15,7 @@ Etapas em ordem de risco: o que pode invalidar a ideia vem primeiro.
 ## Etapa 3: Persistência e lista de notas
 - **Entrega:** `src/storage.ts` (CRUD em `chrome.storage.local`), nova nota por aba, descarte de nota vazia, título automático pela primeira linha até a nota ser renomeada, barra lateral recolhível com busca, renomear e exclusão, sincronização entre abas via `chrome.storage.onChanged`.
 - **Como verificar:** `npm test` passa (CRUD com `chrome.storage` simulado). Manual: recarregar mantém notas e ordem dos blocos; abrir e fechar aba sem digitar não cria nota; duas abas na mesma nota se atualizam; renomear fixa o título; recolher a barra persiste ao recarregar.
-- **Status:** implementada (`npm test`: 23 testes ok; roteiro manual executado no Chrome com a extensão carregada: 18 verificações ok); falta seu teste no Chrome.
+- **Status:** concluída. `npm test`: 23 testes ok; roteiro manual executado no Chrome com a extensão carregada (18 verificações ok) e aprovado no uso. Ajustes extras: ícones minimalistas, busca com lupa, alinhamento de checkboxes e alças.
 
 ## Etapa 4: Backup manual
 - **Entrega:** página de Configurações com Exportar (JSON no formato do SPEC, incluindo markdown) e Importar (valida `app`/`version`, confirma, substitui tudo).
