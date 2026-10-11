@@ -13,7 +13,10 @@ Sucesso: ~2 semanas de uso real sem perder nenhuma nota e sem voltar ao New Tab 
 - Cada bloco mostra uma alça à esquerda ao passar o mouse; arrastar a alça move o bloco e a nova ordem é salva.
   - Itens de lista têm alça própria, antes do marcador.
   - Durante o arraste, os vizinhos deslizam com animação para abrir espaço onde o bloco vai cair; o bloco aparece apagado nesse espaço.
-  - O bloco só troca de lugar entre irmãos: blocos da nota entre si, itens de uma lista dentro da mesma lista. (Mover um parágrafo para dentro de uma lista, ou um item para fora dela, fica fora do MVP.)
+  - Ao passar o mouse sobre uma lista, uma barra fina à esquerda permite arrastar a lista inteira.
+  - Itens e parágrafos podem mudar de nível: a altura do mouse escolhe a posição; nas bordas de uma lista, o movimento horizontal decide se o bloco fica dentro (direita) ou fora (esquerda) dela.
+  - Conversões ao mudar de nível: item que sai da lista continua item, numa lista própria; parágrafo que entra numa lista vira item; item de lista ↔ item de checklist conforme a lista de destino. Listas vizinhas do mesmo tipo se juntam.
+  - Títulos, citações, código, divisores e listas inteiras não entram em listas (movem-se só entre os blocos da nota).
 - Barra lateral lista as notas por última edição, com busca (título e conteúdo), botão "nova nota" e excluir com confirmação.
 - Título da nota = primeira linha de texto. Nota vazia não é salva (abrir e fechar a aba não deixa lixo).
 - Salvamento automático com debounce de ~500 ms. Mudança feita em outra aba aparece nesta (última gravação vence).

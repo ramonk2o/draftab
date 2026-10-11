@@ -217,3 +217,35 @@ body.reordenando .cursor-soltar {
   .bloco-movel { transition: none; }
   .bloco-solto { animation: none; }
 }
+
+/* Alça da lista inteira: barra fina à esquerda da lista */
+.alca-lista {
+  position: absolute;
+  display: none;
+  width: 16px;
+  border-radius: 4px;
+  cursor: grab;
+}
+
+.alca-lista::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 3px;
+  bottom: 3px;
+  width: 2px;
+  border-radius: 1px;
+  background: #e2e2e2;
+}
+
+.alca-lista:hover {
+  background: #f0f0f0;
+}
+
+.alca-lista:hover::before {
+  background: #999;
+}
+
+.alca-lista:active {
+  cursor: grabbing;
+}

@@ -3,6 +3,7 @@ import StarterKit from '@tiptap/starter-kit'
 import { TaskList, TaskItem } from '@tiptap/extension-list'
 import DragHandle from '@tiptap/extension-drag-handle'
 import { Reordenacao, comecarArraste, terminarArraste } from './reordenar'
+import { AlcaDeLista } from './alca-lista'
 
 // Ícone da alça: seis pontinhos em duas colunas
 const ICONE_ALCA = `
@@ -84,6 +85,7 @@ export function criarEditor(elemento: HTMLElement): Editor {
       TaskItem.configure({ nested: true }),
       ChecklistDentroDeLista,
       Reordenacao,
+      AlcaDeLista,
       DragHandle.configure({
         render: () => alca,
         onElementDragStart: comecarArraste,
