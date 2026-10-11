@@ -17,3 +17,7 @@ Em `chrome://extensions`, ative o Modo do desenvolvedor, clique em "Carregar sem
 Os backups vão para `Downloads/draftab-backups/`. Se a opção do Chrome "Perguntar onde salvar cada arquivo" estiver ativa, o Chrome abrirá o diálogo de salvar a cada backup.
 
 Veja `SPEC.md` e `PLAN.md` para detalhes.
+
+## Licença
+
+[MIT](LICENSE): qualquer pessoa pode usar, copiar, modificar e redistribuir o Draftab, inclusive em projetos comerciais, desde que mantenha o aviso de copyright e o texto da licença nas cópias do código.

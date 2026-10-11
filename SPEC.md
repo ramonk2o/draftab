@@ -46,6 +46,7 @@ Tudo o que não está no escopo acima. Ideias para depois do MVP ficam no backlo
 - Uma chave por nota (`note:<id>`): evita regravar tudo a cada tecla.
 - `chrome.alarms` + `chrome.downloads` no service worker: backup roda mesmo com a aba fechada. Arquivo gerado como `data:` URL (não há `URL.createObjectURL` no service worker).
 - Vitest para as camadas de dados e backup; o editor é verificado manualmente.
+- Licença MIT (open source): uso, modificação e redistribuição livres, exigindo só manter o aviso de copyright (créditos). Todas as dependências que vão na extensão também são MIT.
 
 ## Modelo de dados
 - `Note { id: string (uuid), doc: TiptapJSON, title: string, titleManual: boolean, createdAt: number, updatedAt: number }`
