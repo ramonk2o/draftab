@@ -141,3 +141,9 @@ Dica: desinstalar a extensão apaga as notas, então exporte um backup antes.
 5. **Privacy tab:** paste the single purpose, the four permission justifications, answer "No" to remote code, leave every data category unchecked, check the three certifications and paste the privacy policy URL.
 6. **Distribution tab:** Public, all regions.
 7. **Submit for review.** Reviews usually take from a few days to a few weeks; the dashboard emails you when it's done.
+
+## Publishing an update
+
+1. Bump `version` in both `package.json` and `public/manifest.json` (the zip script refuses mismatched versions).
+2. Run `npm run zip`.
+3. In the dashboard, open Draftab → **Package** → **Upload new package**, choose the new zip, update the listing texts or screenshots if something visible changed, and **Submit for review**.
