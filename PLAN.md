@@ -30,7 +30,7 @@ Etapas em ordem de risco: o que pode invalidar a ideia vem primeiro.
 ## Etapa 6: Tema escuro
 - **Entrega:** cores da interface em variáveis CSS, tema escuro, opção "Tema" nas Configurações (Automático / Claro / Escuro) e botão de tema ao lado do botão da barra, aplicada na hora em todas as abas e sem piscar o tema errado ao abrir.
 - **Como verificar:** `npm test` passa. No Chrome: com o macOS no modo escuro e o tema Automático, a página abre escura; Claro e Escuro forçam o tema; mudar numa aba muda nas outras; todos os elementos (editor, blocos, barra lateral, alças, lightbox, campos) legíveis nos dois temas.
-- **Status:** implementada (`npm test`: 56 testes ok; no Chrome com a extensão: automático, claro e escuro, sincronização entre abas e abertura sem piscar — 7 verificações ok; contraste WCAG de 11 textos no escuro acima do mínimo; botão de tema ao lado do botão da barra e backup real com todas as configurações — 12 verificações ok); falta seu teste no Chrome.
+- **Status:** concluída. `npm test`: 56 testes ok; no Chrome com a extensão: temas, sincronização, abertura sem piscar, contraste WCAG, botão de tema e backup com todas as configurações verificados; aprovado no uso.
 
 ## Etapa 7: Pronto para uso diário
 - **Entrega:** ícones, atalho de teclado para nova nota, estados vazios, script `npm run zip`, rascunho de política de privacidade para publicação futura.
