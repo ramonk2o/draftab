@@ -79,6 +79,32 @@ describe('ida e volta', () => {
   })
 })
 
+describe('configurações no backup', () => {
+  test('todas as configurações vão no arquivo e voltam ao importar', async () => {
+    // Valores diferentes do padrão em todos os campos
+    const escolhidas = { autoBackupMinutes: 10080, sidebarCollapsed: true, theme: 'dark' } as const
+    await salvarConfiguracoes(escolhidas)
+    await salvarNota(notaSimples('x', 1))
+    const arquivo = JSON.stringify(criarBackup(await listarNotas(), await lerConfiguracoes()))
+    expect(JSON.parse(arquivo).settings).toEqual(escolhidas)
+
+    // Volta tudo ao padrão e importa
+    await substituirTudo([], {})
+    expect(await lerConfiguracoes()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' })
+    const backup = lerBackup(arquivo)
+    await substituirTudo(notasDoBackup(backup), backup.settings)
+    expect(await lerConfiguracoes()).toEqual(escolhidas)
+  })
+
+  test('nenhuma configuração fica de fora do backup', async () => {
+    // Se um campo novo for criado em Configuracoes, este teste lembra de conferir o backup
+    const configuracoes = await lerConfiguracoes()
+    const backup = criarBackup([], configuracoes)
+    expect(Object.keys(backup.settings).sort()).toEqual(Object.keys(configuracoes).sort())
+    expect(Object.keys(configuracoes).sort()).toEqual(['autoBackupMinutes', 'sidebarCollapsed', 'theme'])
+  })
+})
+
 describe('lerBackup recusa arquivos inválidos', () => {
   const valido = () => criarBackup([notaSimples('a', 1)], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' })
   const comNota = (mudanca: Record<string, unknown>) => {

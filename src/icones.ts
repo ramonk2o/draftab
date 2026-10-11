@@ -19,3 +19,9 @@ export const ICONE_ENGRENAGEM = icone(
 )
 
 export const ICONE_FECHAR = icone('<path d="M4 4l8 8" /><path d="M12 4l-8 8" />')
+
+export const ICONE_LUA = icone('<path d="M13 9.5A5.5 5.5 0 1 1 6.5 3a4.5 4.5 0 0 0 6.5 6.5z" />')
+
+export const ICONE_SOL = icone(
+  '<circle cx="8" cy="8" r="2.75" /><path d="M8 1.5v1.25M8 13.25v1.25M1.5 8h1.25M13.25 8h1.25M3.4 3.4l.9.9M11.7 11.7l.9.9M3.4 12.6l.9-.9M11.7 4.3l.9-.9" />',
+)

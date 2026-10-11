@@ -23,9 +23,10 @@ Sucesso: ~2 semanas de uso real sem perder nenhuma nota e sem voltar ao New Tab 
 - Nota vazia (sem texto e sem título definido) não é salva: abrir e fechar a aba não deixa lixo, e uma nota salva que fica vazia sai da lista.
 - Recarregar a aba reabre a mesma nota (o id fica no `sessionStorage` da aba, que sobrevive à recarga e some ao fechá-la).
 - Salvamento automático com debounce de ~500 ms. Mudança feita em outra aba aparece nesta (última gravação vence).
-- Topo da barra lateral (visível só com ela aberta): ícones de exportar e importar backup ao lado do botão de recolher, e uma engrenagem à direita que abre as Configurações.
+- Ao lado do botão de recolher a barra (sempre visível): botão de tema (lua no claro, sol no escuro) que troca para o tema oposto ao que está na tela; o "Automático" fica nas Configurações.
+- Topo da barra lateral (visível só com ela aberta): ícones de exportar e importar backup ao lado dos botões de recolher e de tema, e uma engrenagem à direita que abre as Configurações.
 - Configurações num lightbox sobre a página de notas (fecha pelo botão ×, com Esc ou clicando fora):
-  - Exportar backup agora (baixa um JSON).
+  - Exportar backup agora (baixa um JSON com todas as notas e todas as configurações; importar restaura as duas coisas).
   - Importar backup: valida o arquivo, pede confirmação e substitui tudo. As abas abertas do Draftab recarregam sozinhas depois da importação (nenhuma grava conteúdo antigo por cima).
   - Backup automático: desligado / a cada minuto / a cada hora / diário / semanal / mensal (30 dias), mostrando a data do último backup automático (exportações manuais não contam). Valores antigos fora dessa lista passam para o intervalo mais próximo.
   - Apagar todas as notas: o botão só funciona depois de digitar "apagar tudo" num campo de confirmação. As abas abertas recarregam, como na importação.

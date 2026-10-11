@@ -3,8 +3,16 @@ import { EditorState } from '@tiptap/pm/state'
 import { criarEditor } from './editor'
 import { exportarBackup, importarBackup } from './backup-ui'
 import { abrirConfiguracoes } from './configuracoes'
-import { aplicarTema } from './tema'
-import { ICONE_ENGRENAGEM, ICONE_EXPORTAR, ICONE_IMPORTAR, ICONE_LAPIS, ICONE_LIXEIRA } from './icones'
+import { aoTrocarTemaNaTela, aplicarTema, estaEscuro } from './tema'
+import {
+  ICONE_ENGRENAGEM,
+  ICONE_EXPORTAR,
+  ICONE_IMPORTAR,
+  ICONE_LAPIS,
+  ICONE_LIXEIRA,
+  ICONE_LUA,
+  ICONE_SOL,
+} from './icones'
 import {
   comTituloAtualizado,
   filtrarNotas,
@@ -329,6 +337,26 @@ botaoAlternar.addEventListener('click', () => {
 
 // Tema escolhido em qualquer aba vale para todas
 aoMudarTema(aplicarTema)
+
+// ---------- Botão de tema (ao lado do botão da barra) ----------
+
+const botaoTema = elemento<HTMLButtonElement>('#alternar-tema')
+
+// Lua no claro (vai para o escuro), sol no escuro (vai para o claro)
+function desenharBotaoTema(escuro: boolean) {
+  botaoTema.innerHTML = escuro ? ICONE_SOL : ICONE_LUA
+  const rotulo = escuro ? 'Mudar para o tema claro' : 'Mudar para o tema escuro'
+  botaoTema.title = rotulo
+  botaoTema.setAttribute('aria-label', rotulo)
+}
+
+desenharBotaoTema(estaEscuro()) // tema-inicial.js já aplicou o tema
+aoTrocarTemaNaTela(desenharBotaoTema)
+
+// Troca para o oposto do que está na tela; todas as abas acompanham (aoMudarTema)
+botaoTema.addEventListener('click', () => {
+  salvarConfiguracoes({ theme: estaEscuro() ? 'light' : 'dark' })
+})
 
 async function iniciar() {
   const configuracoes = await lerConfiguracoes()
