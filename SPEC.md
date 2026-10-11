@@ -11,6 +11,9 @@ Sucesso: ~2 semanas de uso real sem perder nenhuma nota e sem voltar ao New Tab 
 - Nova aba abre uma nota em branco com o cursor no editor.
 - Atalhos markdown viram blocos formatados enquanto se digita: `#`/`##`/`###`, `-`, `1.`, `- [ ]`, `>`, ` ``` `, `---`, `**negrito**`, `*itálico*`, `` `código` ``, links.
 - Cada bloco mostra uma alça à esquerda ao passar o mouse; arrastar a alça move o bloco e a nova ordem é salva.
+  - Itens de lista têm alça própria, antes do marcador.
+  - Durante o arraste, os vizinhos deslizam com animação para abrir espaço onde o bloco vai cair; o bloco aparece apagado nesse espaço.
+  - O bloco só troca de lugar entre irmãos: blocos da nota entre si, itens de uma lista dentro da mesma lista. (Mover um parágrafo para dentro de uma lista, ou um item para fora dela, fica fora do MVP.)
 - Barra lateral lista as notas por última edição, com busca (título e conteúdo), botão "nova nota" e excluir com confirmação.
 - Título da nota = primeira linha de texto. Nota vazia não é salva (abrir e fechar a aba não deixa lixo).
 - Salvamento automático com debounce de ~500 ms. Mudança feita em outra aba aparece nesta (última gravação vence).

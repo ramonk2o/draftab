@@ -176,3 +176,44 @@ body {
   border-radius: 4px;
 }
 
+
+/* Em itens de lista, a alça fica antes do marcador (• ou 1.) */
+.alca-arrastar.alca-em-lista {
+  transform: translateX(-24px);
+}
+
+/* ---------- Reordenação animada ---------- */
+
+:root {
+  --suave: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Vizinhos deslizam para abrir espaço */
+.bloco-movel {
+  transition: transform 220ms var(--suave);
+}
+
+/* O bloco arrastado aparece apagado no lugar onde vai cair */
+.bloco-arrastado {
+  opacity: 0.35;
+}
+
+/* A linha de destino é desnecessária quando os blocos já abrem espaço */
+body.reordenando .cursor-soltar {
+  display: none;
+}
+
+/* Destaque rápido no bloco recém-movido */
+.bloco-solto {
+  animation: destaque-solto 700ms ease-out;
+}
+
+@keyframes destaque-solto {
+  from { background-color: var(--selecao-bloco); }
+  to { background-color: transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bloco-movel { transition: none; }
+  .bloco-solto { animation: none; }
+}

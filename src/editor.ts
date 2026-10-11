@@ -2,6 +2,7 @@ import { Editor, Extension, InputRule } from '@tiptap/core'
 import StarterKit from '@tiptap/starter-kit'
 import { TaskList, TaskItem } from '@tiptap/extension-list'
 import DragHandle from '@tiptap/extension-drag-handle'
+import { Reordenacao, comecarArraste, terminarArraste } from './reordenar'
 
 // Ícone da alça: seis pontinhos em duas colunas
 const ICONE_ALCA = `
@@ -10,6 +11,8 @@ const ICONE_ALCA = `
   <circle cx="2" cy="8" r="1.5" /><circle cx="8" cy="8" r="1.5" />
   <circle cx="2" cy="13" r="1.5" /><circle cx="8" cy="13" r="1.5" />
 </svg>`
+
+const alca = criarAlca()
 
 function criarAlca(): HTMLElement {
   const alca = document.createElement('div')
@@ -67,7 +70,8 @@ export function criarEditor(elemento: HTMLElement): Editor {
       StarterKit.configure({
         heading: { levels: [1, 2, 3] },
         // Linha azul que mostra onde o bloco arrastado vai cair
-        dropcursor: { color: '#2563eb', width: 2 },
+        // (escondida durante a reordenação pela alça, que tem animação própria)
+        dropcursor: { color: '#2563eb', width: 2, class: 'cursor-soltar' },
         link: {
           // Clicar edita o texto; abrir o link é com Cmd/Ctrl + clique
           openOnClick: false,
@@ -79,8 +83,15 @@ export function criarEditor(elemento: HTMLElement): Editor {
       TaskList,
       TaskItem.configure({ nested: true }),
       ChecklistDentroDeLista,
+      Reordenacao,
       DragHandle.configure({
-        render: criarAlca,
+        render: () => alca,
+        onElementDragStart: comecarArraste,
+        onElementDragEnd: terminarArraste,
+        // Em itens de lista a alça vai mais para a esquerda, antes do marcador
+        onNodeChange: ({ node }) => {
+          alca.classList.toggle('alca-em-lista', node?.type.name === 'listItem')
+        },
         // Itens de lista também ganham alça própria
         nested: {
           // Sem isso, a alça some quando o mouse está na parte de cima de um item de lista
