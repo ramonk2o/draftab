@@ -32,11 +32,7 @@ Sucesso: ~2 semanas de uso real sem perder nenhuma nota e sem voltar ao New Tab 
 - Backup automático salva em `Downloads/draftab-backups/` sem perguntar, e só se houve mudança desde o último backup.
 
 ## Fora do escopo (por enquanto)
-- Sincronização entre computadores (o backup JSON cobre a transferência manual).
-- Pastas e tags, tabelas, imagens, menu "/".
-- Publicação na Chrome Web Store.
-- Limpeza automática de backups antigos.
-- Tema escuro (a avaliar).
+Tudo o que não está no escopo acima. Ideias para depois do MVP ficam no backlog, em `FEATURES.md`.
 
 ## Stack e decisões técnicas
 - Manifest V3 com `chrome_url_overrides.newtab`: padrão atual de extensões.
