@@ -4,7 +4,7 @@ Everything the Chrome Web Store developer dashboard asks for, ready to copy. The
 
 ## Package
 
-- **File:** `draftab-1.0.0.zip` (run `npm run zip`)
+- **File:** `draftab-1.1.0.zip` (run `npm run zip`)
 - **Default language:** English (`default_locale: en`); the listing is also localized to Portuguese (Brazil)
 
 ## Store listing — English (en-US)
@@ -131,7 +131,7 @@ Dica: desinstalar a extensão apaga as notas, então exporte um backup antes.
 
 1. **Before submitting:** push the repository to GitHub (the privacy policy URL must be public) and run `npm run zip`.
 2. **Developer account:** go to <https://chrome.google.com/webstore/devconsole>, sign in with your Google account, accept the agreement and pay the one-time US$ 5 registration fee. Verify the contact email the dashboard asks for.
-3. **New item:** click **New item** and upload `draftab-1.0.0.zip`.
+3. **New item:** click **New item** and upload `draftab-1.1.0.zip`.
 4. **Store listing tab:**
    - Description: paste the English description above.
    - Category and language: as in "Other listing fields".
