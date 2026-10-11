@@ -51,7 +51,7 @@ O Draftab ainda não está na Chrome Web Store. Para usar, gere a extensão a pa
 1. Instale o [Node.js](https://nodejs.org) (20.19+ ou 22.12+; a versão LTS atual serve) e tenha o Google Chrome.
 2. Baixe o código e gere a extensão:
    ```sh
-   git clone <endereço-deste-repositório>
+   git clone https://github.com/ramonk2o/draftab.git
    cd draftab
    npm install
    npm run build
