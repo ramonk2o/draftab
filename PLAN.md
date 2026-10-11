@@ -32,7 +32,7 @@ Stages ordered by risk: whatever could invalidate the idea comes first.
 - **How to verify:** `npm test` passes. In Chrome: with macOS in dark mode and the Automatic theme, the page opens dark; Light and Dark force the theme; changing it in one tab changes the others; every element (editor, blocks, sidebar, handles, lightbox, fields) is readable in both themes.
 - **Status:** done. `npm test`: 56 tests ok; in Chrome with the extension: themes, sync, no flash on open, WCAG contrast, theme button and backup with all settings verified; approved in use.
 
-## Stage 7: Ready for daily use
-- **Deliverable:** icons, keyboard shortcut for a new note, empty states, `npm run zip` script, draft privacy policy for future publishing.
-- **How to verify:** `npm run zip` produces the installable .zip; one day of use without friction. The 2-week test starts.
+## Stage 7: Ready to publish
+- **Deliverable:** extension icons in the manifest, version 1.0.0, `npm run zip` (package + third-party license notices), `PRIVACY.md`, `STORE.md` (en-US and pt-BR listing texts, single purpose, permission justifications, data disclosure), store images (1280×800 screenshots in both languages, 440×280 promo tile), and a step-by-step submission guide.
+- **How to verify:** `npm test` passes; `npm run zip` produces a .zip that loads in Chrome with the icons showing and everything working; store images have the exact required sizes; every field the store asks for has a ready text. Then the user submits it in the Chrome Web Store dashboard.
 - **Status:** pending

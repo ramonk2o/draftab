@@ -43,7 +43,7 @@ Feature idea backlog: what may come to Draftab in the future, with the status of
 ## Administrative
 
 ### Publishing on the Chrome Web Store
-- **Status:** Idea
+- **Status:** Approved
 - **Description:** publish Draftab on the Chrome Web Store.
 - **Motivation:** not recorded (came from the SPEC.md "Out of scope" list).
 

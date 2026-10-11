@@ -1,7 +1,7 @@
 # Draftab
 
 ## Goal
-Chrome extension that replaces the new tab with a local notepad, with a markdown-friendly block editor and drag-to-reorder blocks. Personal use; publishing on the Chrome Web Store comes later.
+Chrome extension that replaces the new tab with a local notepad, with a markdown-friendly block editor and drag-to-reorder blocks. Published on the Chrome Web Store as open source.
 
 ## Hypothesis to test
 A reorderable block editor with reliable backups replaces New Tab Draft in daily use.
@@ -33,6 +33,15 @@ Success: ~2 weeks of real use without losing a single note and without going bac
   - Theme: Automatic (follows the system's light/dark mode), Light or Dark. Default: Automatic. Applies immediately to all open tabs, and the page opens in the right theme (no flash of the wrong theme).
 - Backup file name (manual and automatic): `draftab_YYYY-MM-DD-HHhMM.json` (e.g. `draftab_2026-10-11-15h05.json`).
 - Automatic backup saves to `Downloads/draftab-backups/` without asking, and only if something changed since the last backup.
+
+## Publishing (Chrome Web Store)
+- Published right away, before the 2-week test (the test continues with the store version).
+- Store listing in English (en-US) and Brazilian Portuguese (pt-BR); the extension UI stays English-only.
+- Version 1.0.0. Icons at 16, 32, 48 and 128 px in `public/icons/` (the 128 px one is also the store icon).
+- Privacy policy in `PRIVACY.md` in the repository; its public GitHub URL is the policy URL in the store. Nothing is collected or sent anywhere.
+- Store texts (descriptions, single purpose, permission justifications, data disclosure) in `STORE.md`, in both languages.
+- Store images: 1280×800 screenshots and a 440×280 small promo tile, generated from the real extension.
+- `npm run zip` builds the package for upload, including a notices file with the licenses of the bundled dependencies (required by their MIT licenses).
 
 ## Out of scope (for now)
 Everything not in the scope above. Ideas for after the MVP go to the backlog, in `FEATURES.md`.
