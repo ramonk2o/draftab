@@ -98,6 +98,7 @@ Dica: desinstalar a extensão apaga as notas, então exporte um backup antes.
 | Store icon | 128×128 | `public/icons/icon-128.png` |
 | Screenshots (1 to 5) | 1280×800 | `docs/store/en/screenshot-*.png` and `docs/store/pt-BR/screenshot-*.png` |
 | Small promo tile | 440×280 | `docs/store/en/promo-small.png` and `docs/store/pt-BR/promo-small.png` |
+| Promo artwork (source) | 1570×1001 | `docs/store/promo-source.png` — high-resolution original the promo tiles are scaled from (not uploaded) |
 
 ## Privacy practices
 
