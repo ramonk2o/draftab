@@ -9,6 +9,11 @@ Backlog de ideias de features: o que pode entrar no Draftab no futuro, com statu
 - **Descrição:** bloco de tabela nas notas.
 - **Motivação:** não registrada (veio da lista "Fora do escopo" do SPEC.md).
 
+### Correção: Shift+Tab para recuar blocos
+- **Status:** Ideia
+- **Descrição:** Tab avança (indenta) o bloco, mas Shift+Tab não recua: em vez disso, o Chrome troca de aba. Shift+Tab deve recuar o bloco.
+- **Motivação:** corrigir o comportamento atual, que é inconsistente com o Tab.
+
 ## Notas e barra lateral
 
 ### Pastas e tags
@@ -29,6 +34,11 @@ Backlog de ideias de features: o que pode entrar no Draftab no futuro, com statu
 - **Status:** Ideia
 - **Descrição:** versão escura da interface.
 - **Motivação:** não registrada (veio da lista "Fora do escopo" do SPEC.md, marcado como "a avaliar").
+
+### Temas tipográficos das notas
+- **Status:** Ideia
+- **Descrição:** seção de configuração para escolher o tema da anotação. Cada tema define a fonte e a hierarquia de tamanhos. Começa com dois temas: um serifado e um sem serifa.
+- **Motivação:** não registrada.
 
 ## Administrativo
 
