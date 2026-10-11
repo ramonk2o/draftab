@@ -23,7 +23,9 @@ A Chrome extension that turns the **new tab** into a local notepad. The editor i
 - **Several tabs at once**: what you write in one tab shows up in the others.
 - **Backup**: export and import a JSON file with all notes and settings (each note also goes in markdown, readable without Draftab).
 - **Automatic backup** to `Downloads/draftab-backups/`: every minute, hour, day, week or month, only when some note changed. Works with the tab closed, as long as Chrome is open.
+- **Copy a block with a double-click** on its handle (or a whole list on its bar): it's selected and copied, formatted and as plain text.
 - **Light, dark or automatic theme** (follows the system), with a button for quick switching.
+- **Note font**: sans-serif, serif or monospace, with typography modeled on [Tailwind Typography](https://github.com/tailwindlabs/tailwindcss-typography).
 - **Privacy**: nothing leaves your computer. The extension doesn't access the internet, has no account and collects no data.
 
 ### Markdown shortcuts
@@ -46,7 +48,7 @@ Pasted or typed addresses (`https://...`) also become links. In lists, **Tab** i
 
 ## Install
 
-Draftab isn't on the Chrome Web Store yet. To use it, build the extension from the source:
+Draftab has been submitted to the Chrome Web Store and will be linked here once it's live. Meanwhile, build the extension from the source:
 
 1. Install [Node.js](https://nodejs.org) (20.19+ or 22.12+; the current LTS works) and have Google Chrome.
 2. Get the code and build the extension:
@@ -84,13 +86,16 @@ If Chrome's **"Ask where to save each file before downloading"** option is on (`
 | `npm run dev` | Build in *watch* mode: rebuilds on every change (then ↻ on the extension and reopen the tab) |
 | `npm run build` | Type-checks and builds the extension into `dist/` |
 | `npm test` | Runs the tests (Vitest) |
+| `npm run zip` | Builds `draftab-<version>.zip` for the Chrome Web Store, with license notices (see [STORE.md](STORE.md)) |
 
 ### Structure
 
 ```
 public/
   manifest.json          extension manifest (copied to dist/)
-  theme-init.js          applies the theme before the page shows up (avoids flashing)
+  theme-init.js          applies the theme and note font before the page shows up (avoids flashing)
+  icons/                 extension icons (16, 32, 48, 128 px)
+  _locales/              extension description in English and Portuguese (store summary)
 newtab.html              new tab page (editor, sidebar, Settings lightbox)
 src/
   newtab.ts              tab logic: opening/saving notes, sidebar, sync across tabs
@@ -98,6 +103,7 @@ src/
   extensions.ts          content extensions (blocks and marks), shared with the backup
   reorder.ts             animated drag and drop, across levels (lists, items, paragraphs)
   list-handle.ts         handle that moves a whole list
+  copy-block.ts          double-click on a handle: select and copy the block
   notes.ts               note model and pure rules (title, empty note, search)
   storage.ts             the single access point to chrome.storage
   backup.ts              backup file format: create, validate, restore
@@ -105,18 +111,21 @@ src/
   auto-backup.ts         decides on and makes the automatic backup (runs in the service worker)
   background.ts          service worker: automatic backup alarms
   settings.ts            Settings lightbox
-  theme.ts               light/dark/automatic theme
+  theme.ts               light/dark/automatic theme and note font
   icons.ts               SVG icons
   newtab.css             styles (colors are variables at the top, once per theme)
   *.test.ts              tests; fake-chrome.ts simulates the chrome APIs in tests
+scripts/zip.mjs          builds the store package (npm run zip)
 docs/screenshots/        images for this README
+docs/store/              Chrome Web Store images (en and pt-BR)
 ```
 
 ### How data is stored
 
 - Everything goes to `chrome.storage.local` (with the `unlimitedStorage` permission), always through `src/storage.ts`.
 - **One key per note** (`note:<id>`), so not everything is rewritten on every keystroke. The note stores the **Tiptap JSON**, which is the source of truth; markdown only exists on export.
-- `settings` holds the settings (automatic backup interval, collapsed sidebar, theme) and `meta` holds timestamps: last change, last automatic backup and last import (which makes open tabs reload).
+- `settings` holds the settings (automatic backup interval, collapsed sidebar, theme, note sort order, note font) and `meta` holds timestamps: last change, last automatic backup and last import (which makes open tabs reload).
+- The theme and note font are also copied to the page's `localStorage`, so they're applied before the first paint; the note open in each tab is kept in its `sessionStorage`, so a reload reopens it.
 - Saving is automatic, after ~500 ms without typing. Other tabs get the change through `chrome.storage.onChanged`; if two tabs edit the same note, the last write wins.
 - The full format (note, settings, backup file) is described in [SPEC.md](SPEC.md).
 
@@ -135,7 +144,7 @@ New permissions are only added with a reason recorded in SPEC.md.
 
 `npm test` covers the data layer and backups: saving/reading/listing/deleting notes, settings, title and search rules, lossless export → import, rejection of invalid backup files and the automatic backup decisions. `chrome.storage`, alarms and downloads are simulated in `src/fake-chrome.ts`.
 
-The editor (shortcuts, dragging, appearance) is checked by hand in Chrome, following each stage's "How to verify" in [PLAN.md](PLAN.md).
+The editor and the interface (shortcuts, dragging, appearance) are checked in Chrome, following each stage's "How to verify" in [PLAN.md](PLAN.md).
 
 ### Project documents
 
@@ -144,6 +153,8 @@ The editor (shortcuts, dragging, appearance) is checked by hand in Chrome, follo
 | [SPEC.md](SPEC.md) | What Draftab does and why: scope, technical decisions, data model |
 | [PLAN.md](PLAN.md) | Development stages, how to verify each one and their status |
 | [FEATURES.md](FEATURES.md) | Feature idea backlog, by area, with status |
+| [STORE.md](STORE.md) | Chrome Web Store listing texts (en-US and pt-BR), privacy answers and how to submit or update |
+| [PRIVACY.md](PRIVACY.md) | Privacy policy (English and Portuguese) |
 | [CLAUDE.md](CLAUDE.md) | Project instructions and conventions for [Claude Code](https://claude.com/claude-code) (they apply to humans too) |
 
 ### Conventions

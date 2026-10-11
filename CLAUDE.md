@@ -8,6 +8,7 @@ Chrome extension (Manifest V3) that replaces the new tab with a notepad with a m
 - Install: `npm install`
 - Develop (build in watch mode): `npm run dev`
 - Build: `npm run build` (output in `dist/`)
+- Store package: `npm run zip` (builds `draftab-<version>.zip`; bump the version in `package.json` and `public/manifest.json` first, see STORE.md)
 - Tests: `npm test` (Vitest)
 - Load in Chrome: chrome://extensions → Developer mode → "Load unpacked" → `dist/`. After a rebuild, click ↻ on the extension and reopen the tab.
 

@@ -6,7 +6,7 @@ Draftab is a Chrome extension that turns the new tab into a notepad. It is built
 
 ## What Draftab stores
 
-- **Your notes and settings**, saved with Chrome's extension storage (`chrome.storage.local`) **on your own device**.
+- **Your notes and settings**, saved with Chrome's extension storage (`chrome.storage.local`) **on your own device**. A copy of your theme and font choice is also kept in the extension page's local storage, so the page opens with the right look.
 - **Backup files**, only when you export a backup or turn on automatic backups. They are saved to your `Downloads` folder, like any other download.
 
 ## What Draftab does not do
@@ -45,7 +45,7 @@ O Draftab é uma extensão do Chrome que transforma a nova aba num bloco de nota
 
 ## O que o Draftab guarda
 
-- **Suas notas e configurações**, salvas no armazenamento de extensões do Chrome (`chrome.storage.local`) **no seu próprio dispositivo**.
+- **Suas notas e configurações**, salvas no armazenamento de extensões do Chrome (`chrome.storage.local`) **no seu próprio dispositivo**. Uma cópia da sua escolha de tema e fonte também fica no armazenamento local da página da extensão, para ela já abrir com a aparência certa.
 - **Arquivos de backup**, só quando você exporta um backup ou liga o backup automático. Eles são salvos na sua pasta `Downloads`, como qualquer outro download.
 
 ## O que o Draftab não faz

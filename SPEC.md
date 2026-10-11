@@ -17,8 +17,8 @@ Success: ~2 weeks of real use without losing a single note and without going bac
   - Items and paragraphs can change level: the mouse height picks the position; at the edges of a list, horizontal movement decides whether the block goes inside (right) or outside (left) of it.
   - Conversions when changing level: an item that leaves a list stays an item, in a list of its own; a paragraph that enters a list becomes an item; list item ↔ checklist item depending on the target list. Adjacent lists of the same type are merged.
   - Headings, quotes, code, dividers and whole lists don't go into lists (they only move among the note's blocks).
-  - Double-clicking a block's handle selects the block's content and copies it to the clipboard, exactly like selecting it and pressing Cmd/Ctrl+C (formatted for apps that accept it, plain text for the others; plain text has one line per block, for Cmd/Ctrl+C too). Double-clicking the whole-list bar does the same for the whole list. Blocks without text (a divider) are selected and copied whole. A small "Copied" label shows next to the handle for about a second.
-- The sidebar lists notes by last edit, with search (title and content), a "new note" button, rename (double-click the title or the ✎ button) and delete with confirmation.
+  - Double-clicking a block's handle selects the block's content and copies it to the clipboard, exactly like selecting it and pressing Cmd/Ctrl+C (formatted for apps that accept it, plain text for the others; plain text has one line per block, for Cmd/Ctrl+C too). Double-clicking the whole-list bar does the same for the whole list. Blocks without text (a divider) are selected and copied whole. A small "Copied" label shows above the handle for about a second.
+- The sidebar lists notes (sorted as chosen in Settings, see below), with search (title and content), a "new note" button, rename (double-click the title or the ✎ button) and delete with confirmation.
   - Sort order, chosen in Settings: last modified (default, newest first), title A–Z (ignoring case and accents, numbers in natural order, untitled notes last) or date created (newest first). The date shown next to each note follows the order: the creation date when sorting by date created, the last edit otherwise. Applies immediately to every open tab.
   - The sidebar can be collapsed; its state (open/collapsed) is remembered.
 - Note title: while the user hasn't set a title, it follows the first line of text. Renaming fixes the title; renaming to empty goes back to the automatic title.
@@ -40,10 +40,10 @@ Success: ~2 weeks of real use without losing a single note and without going bac
 ## Publishing (Chrome Web Store)
 - Published right away, before the 2-week test (the test continues with the store version).
 - Store listing in English (en-US) and Brazilian Portuguese (pt-BR); the extension UI stays English-only.
-- Version 1.0.0. Icons at 16, 32, 48 and 128 px in `public/icons/` (the 128 px one is also the store icon).
+- Versions: 1.0.0 submitted to the store; 1.1.0 (note sort order, note fonts and typography, double-click to copy) ready to upload as an update. Icons at 16, 32, 48 and 128 px in `public/icons/` (the 128 px one is also the store icon).
 - Privacy policy in `PRIVACY.md` in the repository; its public GitHub URL is the policy URL in the store. Nothing is collected or sent anywhere.
 - Store texts (descriptions, single purpose, permission justifications, data disclosure) in `STORE.md`, in both languages.
-- Store images: 1280×800 screenshots and a 440×280 small promo tile, generated from the real extension.
+- Store images: 1280×800 screenshots generated from the real extension, and a 440×280 small promo tile from the user's artwork (en and pt-BR).
 - `npm run zip` builds the package for upload, including a notices file with the licenses of the bundled dependencies (required by their MIT licenses).
 
 ## Out of scope (for now)
@@ -54,10 +54,11 @@ Everything not in the scope above. Ideas for after the MVP go to the backlog, in
 - Vite + TypeScript: simple build, types catch errors, libraries via npm.
 - Tiptap 3 (StarterKit, TaskList/TaskItem, DragHandle, Markdown): mature, ready-made markdown shortcuts and drag handle.
 - No React or other UI framework: the interface around the editor is small; fewer layers to read.
-- `chrome.storage.local` + the `unlimitedStorage` permission: no ~5 MB localStorage limit, not wiped when clearing cookies, and reachable from the service worker.
+- `chrome.storage.local` + the `unlimitedStorage` permission (the source of truth for notes and settings): no ~5 MB localStorage limit, not wiped when clearing cookies, and reachable from the service worker.
 - One key per note (`note:<id>`): avoids rewriting everything on every keystroke.
+- The theme and note font are also copied to the page's `localStorage`, which can be read synchronously, so `theme-init.js` applies them before the first paint (no flash). `chrome.storage` remains the source of truth.
 - `chrome.alarms` + `chrome.downloads` in the service worker: backups run even with the tab closed. The file is generated as a `data:` URL (there's no `URL.createObjectURL` in the service worker).
-- Vitest for the data and backup layers; the editor is checked manually.
+- Vitest for the data and backup layers; the editor and the UI are checked in Chrome (by hand, plus automated browser scripts during development).
 - Note typography modeled on Tailwind Typography ("prose", MIT): its proportions for headings, quotes, lists, code blocks and dividers, adapted for notes — paragraphs stay close together, because in the editor every Enter creates a paragraph (prose's 1.25em paragraph spacing would look double-spaced).
 - MIT license (open source): free use, modification and redistribution, only requiring the copyright notice to be kept (credit). Every dependency shipped in the extension is MIT too.
 - Language: English everywhere in the project (code, comments, UI, docs).

@@ -23,7 +23,7 @@ WRITE IN MARKDOWN, SEE IT FORMATTED
 Type # for a heading, - for a list, [ ] for a checklist, > for a quote, ``` for code, --- for a divider, **bold**, *italic*, `code` and [links](https://example.com). Everything becomes formatting as you type.
 
 DRAG ANY BLOCK TO REORDER
-Hover a block and drag its handle. The other blocks slide out of the way so you can see where it will land. Move list items, whole lists, and take items in and out of lists.
+Hover a block and drag its handle. The other blocks slide out of the way so you can see where it will land. Move list items, whole lists, and take items in and out of lists. Double-click a handle to copy that block.
 
 ALL YOUR NOTES, ONE CLICK AWAY
 A collapsible sidebar lists your notes — by last edit, title or creation date — with instant search across titles and content. Rename, delete, and keep several tabs open at once: what you write in one shows up in the others.
@@ -31,8 +31,8 @@ A collapsible sidebar lists your notes — by last edit, title or creation date 
 BACKUPS YOU CAN TRUST
 Export and import a JSON backup of all notes and settings (each note also comes in plain markdown). Turn on automatic backups — every minute, hour, day, week or month — saved to Downloads/draftab-backups/, only when something changed.
 
-LIGHT AND DARK
-Light, dark, or automatic theme that follows your system.
+YOUR LOOK
+Light, dark, or automatic theme that follows your system. Write in a sans-serif, serif or monospace font, with clean, comfortable typography.
 
 PRIVATE BY DESIGN
 Your notes are stored only in your browser, on your computer. Draftab has no account, no server, no analytics and no tracking. It never sends your data anywhere.
@@ -59,7 +59,7 @@ ESCREVA EM MARKDOWN, VEJA FORMATADO
 Digite # para um título, - para uma lista, [ ] para um checklist, > para uma citação, ``` para código, --- para um divisor, **negrito**, *itálico*, `código` e [links](https://example.com). Tudo vira formatação enquanto você digita.
 
 ARRASTE QUALQUER BLOCO PARA REORDENAR
-Passe o mouse num bloco e arraste a alça. Os outros blocos abrem espaço para você ver onde ele vai cair. Mova itens de lista, listas inteiras e tire itens de listas ou coloque dentro delas.
+Passe o mouse num bloco e arraste a alça. Os outros blocos abrem espaço para você ver onde ele vai cair. Mova itens de lista, listas inteiras e tire itens de listas ou coloque dentro delas. Dê dois cliques na alça para copiar aquele bloco.
 
 TODAS AS NOTAS A UM CLIQUE
 Uma barra lateral recolhível lista as notas — pela última edição, pelo título ou pela data de criação — com busca instantânea no título e no conteúdo. Renomeie, exclua e use várias abas ao mesmo tempo: o que você escreve numa aparece nas outras.
@@ -67,8 +67,8 @@ Uma barra lateral recolhível lista as notas — pela última edição, pelo tí
 BACKUP CONFIÁVEL
 Exporte e importe um backup em JSON com todas as notas e configurações (cada nota vem também em markdown). Ligue o backup automático — a cada minuto, hora, dia, semana ou mês — salvo em Downloads/draftab-backups/, só quando algo mudou.
 
-CLARO E ESCURO
-Tema claro, escuro ou automático, que segue o sistema.
+DO SEU JEITO
+Tema claro, escuro ou automático, que segue o sistema. Escreva com fonte sem serifa, serifada ou monoespaçada, numa tipografia limpa e confortável.
 
 PRIVADO DE VERDADE
 Suas notas ficam só no seu navegador, no seu computador. O Draftab não tem conta, servidor, estatísticas de uso nem rastreamento. Ele nunca envia seus dados para lugar nenhum.

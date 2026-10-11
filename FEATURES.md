@@ -36,14 +36,14 @@ Feature idea backlog: what may come to Draftab in the future, with the status of
 - **Motivation:** not recorded (came from the SPEC.md "Out of scope" list, marked "to be evaluated").
 
 ### Typographic themes for notes
-- **Status:** Approved
+- **Status:** Implemented
 - **Description:** a settings section to choose the note theme. Each theme defines the font and the size hierarchy. Starts with two themes: a serif one and a sans-serif one.
 - **Motivation:** not recorded.
 
 ## Administrative
 
 ### Publishing on the Chrome Web Store
-- **Status:** Approved
+- **Status:** Approved (1.0.0 submitted; becomes Implemented once it's live on the store)
 - **Description:** publish Draftab on the Chrome Web Store.
 - **Motivation:** not recorded (came from the SPEC.md "Out of scope" list).
 
