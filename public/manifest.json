@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Draftab",
+  "description": "Bloco de notas em blocos markdown na nova aba.",
+  "version": "0.1.0",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "permissions": ["storage", "unlimitedStorage", "alarms", "downloads"]
+}

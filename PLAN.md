@@ -5,7 +5,7 @@ Etapas em ordem de risco: o que pode invalidar a ideia vem primeiro.
 ## Etapa 1: Esqueleto andando
 - **Entrega:** projeto Vite + TypeScript, manifest MV3 sobrescrevendo a nova aba, página com editor Tiptap básico (StarterKit). Versões das libs fixadas consultando a documentação atual do Tiptap 3.
 - **Como verificar:** `npm install && npm run build` sem erros; em chrome://extensions, "Carregar sem compactação" apontando para `dist/`; abrir nova aba, digitar `# oi` e ver um título.
-- **Status:** pendente
+- **Status:** concluída (install, build e `npm test` sem erros; falta o teste manual no Chrome). Versões fixadas: Tiptap 3.31.4, Vite 8.3.4, TypeScript 7.0.2, Vitest 5.0.3.
 
 ## Etapa 2: Editor de blocos completo + arrastar
 - **Entrega:** todos os blocos do escopo (títulos, listas, checklist, código, citação, divisor, marcas inline, links), alça DragHandle à esquerda de cada bloco e CSS dos blocos.

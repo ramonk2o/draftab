@@ -1,0 +1,20 @@
+body {
+  margin: 0;
+  background: #fff;
+  color: #222;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+#editor {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+/* Área editável ocupa a tela e não mostra o contorno de foco */
+.tiptap {
+  min-height: 80vh;
+  outline: none;
+}
