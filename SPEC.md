@@ -23,9 +23,10 @@ Sucesso: ~2 semanas de uso real sem perder nenhuma nota e sem voltar ao New Tab 
 - Nota vazia (sem texto e sem título definido) não é salva: abrir e fechar a aba não deixa lixo, e uma nota salva que fica vazia sai da lista.
 - Recarregar a aba reabre a mesma nota (o id fica no `sessionStorage` da aba, que sobrevive à recarga e some ao fechá-la).
 - Salvamento automático com debounce de ~500 ms. Mudança feita em outra aba aparece nesta (última gravação vence).
+- Topo da barra lateral (visível só com ela aberta): ícones de exportar e importar backup ao lado do botão de recolher, e uma engrenagem à direita que abre a página de Configurações (também acessível em chrome://extensions → Opções).
 - Página de Configurações:
   - Exportar backup agora (baixa um JSON).
-  - Importar backup: valida o arquivo, pede confirmação e substitui tudo.
+  - Importar backup: valida o arquivo, pede confirmação e substitui tudo. As abas abertas do Draftab recarregam sozinhas depois da importação (nenhuma grava conteúdo antigo por cima).
   - Backup automático: desligado / 1 h / 6 h / 12 h / 24 h, mostrando a data do último backup.
 - Backup automático salva `Downloads/draftab-backups/draftab-AAAA-MM-DD-HHmm.json` sem perguntar, e só se houve mudança desde o último backup.
 
@@ -51,7 +52,7 @@ Sucesso: ~2 semanas de uso real sem perder nenhuma nota e sem voltar ao New Tab 
   `titleManual` = o usuário renomeou a nota; enquanto for `false`, `title` acompanha a primeira linha.
   O JSON do Tiptap é a fonte da verdade (sem perdas de conversão).
 - `settings { autoBackupMinutes: 0 | 60 | 360 | 720 | 1440, sidebarCollapsed: boolean }`
-- `meta { lastChangeAt: number, lastBackupAt: number }`
+- `meta { lastChangeAt: number, lastBackupAt: number, lastImportAt: number }` (`lastImportAt` avisa as abas abertas para recarregar)
 - Arquivo de backup:
   `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, titleManual, markdown, doc, createdAt, updatedAt }] }`
   `markdown` é para leitura humana; a importação restaura a partir de `doc`.

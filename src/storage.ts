@@ -13,10 +13,11 @@ export type Configuracoes = {
 export type Meta = {
   lastChangeAt: number // última mudança em qualquer nota
   lastBackupAt: number // último backup automático
+  lastImportAt: number // última importação (as abas abertas recarregam)
 }
 
 const CONFIGURACOES_PADRAO: Configuracoes = { autoBackupMinutes: 0, sidebarCollapsed: false }
-const META_PADRAO: Meta = { lastChangeAt: 0, lastBackupAt: 0 }
+const META_PADRAO: Meta = { lastChangeAt: 0, lastBackupAt: 0, lastImportAt: 0 }
 
 // ---------- Notas ----------
 
@@ -60,6 +61,33 @@ export function aoMudarNotas(callback: (mudancas: { id: string; nota: Nota | nul
         nota: (mudanca.newValue as Nota | undefined) ?? null,
       }))
     if (deNotas.length > 0) callback(deNotas)
+  })
+}
+
+// Importação: apaga todas as notas e grava as do backup, com as configurações dele
+export async function substituirTudo(notas: Nota[], configuracoes: Partial<Configuracoes>): Promise<void> {
+  const tudo = await chrome.storage.local.get(null)
+  const chavesDeNotas = Object.keys(tudo).filter((chave) => chave.startsWith(PREFIXO_NOTA))
+  await chrome.storage.local.remove(chavesDeNotas)
+
+  const meta = await lerMeta()
+  const agora = Date.now()
+  const novos: Record<string, unknown> = {
+    settings: { ...CONFIGURACOES_PADRAO, ...configuracoes },
+    meta: { ...meta, lastChangeAt: agora, lastImportAt: agora },
+  }
+  for (const nota of notas) novos[PREFIXO_NOTA + nota.id] = nota
+  await chrome.storage.local.set(novos)
+}
+
+// Avisa quando uma importação acontece (nesta aba ou em outra)
+export function aoImportar(callback: () => void) {
+  chrome.storage.onChanged.addListener((mudancas, area) => {
+    if (area !== 'local' || !mudancas.meta) return
+    // Sem meta gravado ainda conta como 0 (a primeira gravação não é importação)
+    const antes = (mudancas.meta.oldValue as Partial<Meta> | undefined)?.lastImportAt ?? 0
+    const depois = (mudancas.meta.newValue as Partial<Meta> | undefined)?.lastImportAt ?? 0
+    if (depois !== antes) callback()
   })
 }
 

@@ -1,9 +1,8 @@
 import { Editor, Extension, InputRule } from '@tiptap/core'
-import StarterKit from '@tiptap/starter-kit'
-import { TaskList, TaskItem } from '@tiptap/extension-list'
 import DragHandle from '@tiptap/extension-drag-handle'
 import { Reordenacao, comecarArraste, terminarArraste } from './reordenar'
 import { AlcaDeLista } from './alca-lista'
+import { extensoesDoConteudo } from './extensoes'
 
 // Ícone da alça: seis pontinhos em duas colunas
 const ICONE_ALCA = `
@@ -84,21 +83,7 @@ export function criarEditor(elemento: HTMLElement): Editor {
     element: elemento,
     autofocus: true,
     extensions: [
-      StarterKit.configure({
-        heading: { levels: [1, 2, 3] },
-        // Linha azul que mostra onde o bloco arrastado vai cair
-        // (escondida durante a reordenação pela alça, que tem animação própria)
-        dropcursor: { color: '#2563eb', width: 2, class: 'cursor-soltar' },
-        link: {
-          // Clicar edita o texto; abrir o link é com Cmd/Ctrl + clique
-          openOnClick: false,
-          defaultProtocol: 'https',
-          // Digitar [texto](url) vira link
-          markdownLinks: true,
-        },
-      }),
-      TaskList,
-      TaskItem.configure({ nested: true }),
+      ...extensoesDoConteudo,
       ChecklistDentroDeLista,
       Reordenacao,
       AlcaDeLista,

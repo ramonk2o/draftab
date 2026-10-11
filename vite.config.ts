@@ -10,9 +10,10 @@ export default defineConfig({
     // pesa. A DragHandle traz junto a biblioteca de colaboração (yjs).
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
-      // Uma entrada por página da extensão (Configurações entra na Etapa 4)
+      // Uma entrada por página da extensão
       input: {
         newtab: 'newtab.html',
+        opcoes: 'opcoes.html',
       },
     },
   },

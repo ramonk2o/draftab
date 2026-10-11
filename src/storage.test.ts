@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { criarChromeFalso } from './chrome-falso'
 import { novaNotaEmBranco, type Nota } from './notas'
 import {
   aoMudarNotas,
@@ -10,43 +11,6 @@ import {
   salvarConfiguracoes,
   salvarNota,
 } from './storage'
-
-type Ouvinte = (mudancas: Record<string, { oldValue?: unknown; newValue?: unknown }>, area: string) => void
-
-// chrome.storage.local simulado em memória, copiando os valores como o Chrome faz
-function criarChromeFalso() {
-  const dados: Record<string, unknown> = {}
-  const ouvintes: Ouvinte[] = []
-  const avisar = (mudancas: Record<string, { oldValue?: unknown; newValue?: unknown }>) =>
-    ouvintes.forEach((ouvinte) => ouvinte(mudancas, 'local'))
-
-  return {
-    storage: {
-      local: {
-        async get(chaves: string | null) {
-          if (chaves === null) return structuredClone(dados)
-          return chaves in dados ? { [chaves]: structuredClone(dados[chaves]) } : {}
-        },
-        async set(itens: Record<string, unknown>) {
-          const mudancas: Record<string, { oldValue?: unknown; newValue?: unknown }> = {}
-          for (const [chave, valor] of Object.entries(itens)) {
-            mudancas[chave] = { oldValue: dados[chave], newValue: structuredClone(valor) }
-            dados[chave] = structuredClone(valor)
-          }
-          avisar(mudancas)
-        },
-        async remove(chave: string) {
-          const mudancas = { [chave]: { oldValue: dados[chave] } }
-          delete dados[chave]
-          avisar(mudancas)
-        },
-      },
-      onChanged: {
-        addListener: (ouvinte: Ouvinte) => ouvintes.push(ouvinte),
-      },
-    },
-  }
-}
 
 function notaCom(texto: string, updatedAt: number): Nota {
   return {

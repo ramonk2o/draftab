@@ -6,13 +6,19 @@
     <link rel="stylesheet" href="/src/newtab.css" />
   </head>
   <body class="carregando">
-    <button id="alternar-lateral" type="button" title="Recolher barra lateral" aria-label="Recolher barra lateral">
+    <button id="alternar-lateral" class="botao-icone" type="button" title="Recolher barra lateral" aria-label="Recolher barra lateral">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <rect x="2" y="2.5" width="12" height="11" rx="2" /><path d="M6 2.5v11" />
       </svg>
     </button>
 
     <aside id="lateral">
+      <!-- Ícones preenchidos pelo newtab.ts (src/icones.ts) -->
+      <div class="topo-lateral">
+        <button id="exportar" class="botao-icone" type="button" title="Exportar backup" aria-label="Exportar backup"></button>
+        <button id="importar" class="botao-icone" type="button" title="Importar backup" aria-label="Importar backup"></button>
+        <button id="abrir-configuracoes" class="botao-icone" type="button" title="Configurações" aria-label="Configurações"></button>
+      </div>
       <div class="linha-busca">
         <label class="campo-busca">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
@@ -20,7 +26,7 @@
           </svg>
           <input id="busca" type="search" placeholder="Buscar" aria-label="Buscar notas" />
         </label>
-        <button id="nova-nota" type="button" title="Nova nota" aria-label="Nova nota">
+        <button id="nova-nota" class="botao-icone" type="button" title="Nova nota" aria-label="Nova nota">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
             <path d="M8 3v10" /><path d="M3 8h10" />
           </svg>

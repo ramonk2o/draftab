@@ -41,7 +41,7 @@ body.carregando * {
   position: sticky;
   top: 0;
   overflow-y: auto;
-  padding: 56px 10px 16px;
+  padding: 12px 10px 16px;
   background: var(--fundo-lateral);
   border-right: 1px solid var(--borda);
   font-size: 14px;
@@ -107,9 +107,26 @@ body.lateral-recolhida #lateral {
   font: inherit;
 }
 
-/* Botões só com ícone (nova nota, recolher, ações das notas) */
-#nova-nota,
-#alternar-lateral,
+/* Topo da barra: espaço para o botão de recolher (fixo), exportar, importar e,
+   à direita, a engrenagem */
+.topo-lateral {
+  display: flex;
+  gap: 2px;
+  height: 28px;
+  margin-bottom: 16px;
+  padding-left: 32px;
+}
+
+.topo-lateral .botao-icone {
+  width: 28px;
+}
+
+#abrir-configuracoes {
+  margin-left: auto;
+}
+
+/* Botões só com ícone */
+.botao-icone,
 .acao-nota {
   display: flex;
   align-items: center;
@@ -126,8 +143,7 @@ body.lateral-recolhida #lateral {
   width: 32px;
 }
 
-#nova-nota:hover,
-#alternar-lateral:hover,
+.botao-icone:hover,
 .acao-nota:hover {
   background: #e6e6e4;
   color: #222;

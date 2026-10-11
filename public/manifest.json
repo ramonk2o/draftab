@@ -6,5 +6,11 @@
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
-  "permissions": ["storage", "unlimitedStorage", "alarms", "downloads"]
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "alarms",
+    "downloads"
+  ],
+  "options_page": "opcoes.html"
 }

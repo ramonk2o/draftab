@@ -1,7 +1,8 @@
 import type { JSONContent } from '@tiptap/core'
 import { EditorState } from '@tiptap/pm/state'
 import { criarEditor } from './editor'
-import { ICONE_LAPIS, ICONE_LIXEIRA } from './icones'
+import { exportarBackup, importarBackup } from './backup-ui'
+import { ICONE_ENGRENAGEM, ICONE_EXPORTAR, ICONE_IMPORTAR, ICONE_LAPIS, ICONE_LIXEIRA } from './icones'
 import {
   comTituloAtualizado,
   filtrarNotas,
@@ -12,6 +13,7 @@ import {
   type Nota,
 } from './notas'
 import {
+  aoImportar,
   aoMudarNotas,
   excluirNota,
   lerConfiguracoes,
@@ -272,6 +274,36 @@ function formatarData(momento: number): string {
   }
   return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' })
 }
+
+// ---------- Backup e configurações (topo da barra) ----------
+
+const botaoExportar = elemento<HTMLButtonElement>('#exportar')
+const botaoImportar = elemento<HTMLButtonElement>('#importar')
+const botaoConfiguracoes = elemento<HTMLButtonElement>('#abrir-configuracoes')
+botaoExportar.innerHTML = ICONE_EXPORTAR
+botaoImportar.innerHTML = ICONE_IMPORTAR
+botaoConfiguracoes.innerHTML = ICONE_ENGRENAGEM
+
+botaoExportar.addEventListener('click', async () => {
+  if (temAlteracaoPendente()) await salvarAgora() // inclui o que acabou de ser digitado
+  await exportarBackup()
+})
+
+botaoImportar.addEventListener('click', async () => {
+  const resultado = await importarBackup()
+  if (resultado && !resultado.ok) alert(`Não foi possível importar: ${resultado.mensagem}`)
+  // Se deu certo, aoImportar recarrega a aba
+})
+
+botaoConfiguracoes.addEventListener('click', () => chrome.runtime.openOptionsPage())
+
+// Depois de uma importação (nesta aba ou em outra), recarrega com os dados novos,
+// descartando a digitação pendente para não gravar por cima do backup
+aoImportar(() => {
+  clearTimeout(temporizador)
+  temporizador = undefined
+  location.reload()
+})
 
 // ---------- Recolher a barra lateral ----------
 

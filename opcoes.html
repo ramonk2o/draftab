@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Configurações do Draftab</title>
+    <link rel="stylesheet" href="/src/opcoes.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Configurações</h1>
+
+      <section>
+        <h2>Backup</h2>
+        <p class="explicacao">
+          Um arquivo JSON com todas as notas e configurações. Cada nota vai também em markdown, para dar
+          para ler o arquivo sem o Draftab.
+        </p>
+        <div class="botoes">
+          <button id="exportar" type="button">Exportar backup</button>
+          <button id="importar" type="button">Importar backup…</button>
+        </div>
+        <p class="explicacao">Importar substitui todas as notas atuais pelas do arquivo.</p>
+        <p id="mensagem" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+    <script type="module" src="/src/opcoes.ts"></script>
+  </body>
+</html>
