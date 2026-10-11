@@ -1,118 +1,118 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Nova aba</title>
-    <!-- Antes do CSS: define o tema antes de a página aparecer -->
-    <script src="/tema-inicial.js"></script>
+    <title>New tab</title>
+    <!-- Before the CSS: sets the theme before the page shows up -->
+    <script src="/theme-init.js"></script>
     <link rel="stylesheet" href="/src/newtab.css" />
   </head>
-  <body class="carregando">
-    <button id="alternar-lateral" class="botao-icone" type="button" title="Recolher barra lateral" aria-label="Recolher barra lateral">
+  <body class="loading">
+    <button id="toggle-sidebar" class="icon-button" type="button" title="Collapse sidebar" aria-label="Collapse sidebar">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <rect x="2" y="2.5" width="12" height="11" rx="2" /><path d="M6 2.5v11" />
       </svg>
     </button>
 
-    <!-- Troca entre claro e escuro; ícone preenchido pelo newtab.ts -->
-    <button id="alternar-tema" class="botao-icone" type="button"></button>
+    <!-- Switches between light and dark; icon filled in by newtab.ts -->
+    <button id="toggle-theme" class="icon-button" type="button"></button>
 
-    <aside id="lateral">
-      <!-- Ícones preenchidos pelo newtab.ts (src/icones.ts) -->
-      <div class="topo-lateral">
-        <button id="exportar" class="botao-icone" type="button" title="Exportar backup" aria-label="Exportar backup"></button>
-        <button id="importar" class="botao-icone" type="button" title="Importar backup" aria-label="Importar backup"></button>
-        <button id="abrir-configuracoes" class="botao-icone" type="button" title="Configurações" aria-label="Configurações"></button>
+    <aside id="sidebar">
+      <!-- Icons filled in by newtab.ts (src/icons.ts) -->
+      <div class="sidebar-top">
+        <button id="export" class="icon-button" type="button" title="Export backup" aria-label="Export backup"></button>
+        <button id="import" class="icon-button" type="button" title="Import backup" aria-label="Import backup"></button>
+        <button id="open-settings" class="icon-button" type="button" title="Settings" aria-label="Settings"></button>
       </div>
-      <div class="linha-busca">
-        <label class="campo-busca">
+      <div class="search-row">
+        <label class="search-field">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
             <circle cx="7" cy="7" r="4.25" /><path d="m10.25 10.25 3.25 3.25" />
           </svg>
-          <input id="busca" type="search" placeholder="Buscar" aria-label="Buscar notas" />
+          <input id="search" type="search" placeholder="Search" aria-label="Search notes" />
         </label>
-        <button id="nova-nota" class="botao-icone" type="button" title="Nova nota" aria-label="Nova nota">
+        <button id="new-note" class="icon-button" type="button" title="New note" aria-label="New note">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
             <path d="M8 3v10" /><path d="M3 8h10" />
           </svg>
         </button>
       </div>
-      <ul id="lista-notas"></ul>
+      <ul id="note-list"></ul>
     </aside>
 
-    <main id="area">
+    <main id="main">
       <div id="editor"></div>
     </main>
 
-    <!-- Configurações (lightbox): fecha pelo ×, com Esc ou clicando fora -->
-    <dialog id="configuracoes" aria-labelledby="titulo-configuracoes">
-      <div class="conteudo-dialogo">
-        <header class="cabecalho-dialogo">
-          <h1 id="titulo-configuracoes">Configurações</h1>
-          <button id="fechar-configuracoes" class="botao-icone" type="button" title="Fechar" aria-label="Fechar"></button>
+    <!-- Settings (lightbox): closes with ×, Esc or a click outside -->
+    <dialog id="settings" aria-labelledby="settings-title">
+      <div class="dialog-content">
+        <header class="dialog-header">
+          <h1 id="settings-title">Settings</h1>
+          <button id="close-settings" class="icon-button" type="button" title="Close" aria-label="Close"></button>
         </header>
 
         <section>
           <h2>Backup</h2>
-          <p class="explicacao">
-            Um arquivo JSON com todas as notas e configurações. Cada nota vai também em markdown, para dar
-            para ler o arquivo sem o Draftab.
+          <p class="hint">
+            A JSON file with all notes and settings. Each note also goes in markdown, so the file can be read
+            without Draftab.
           </p>
-          <div class="botoes">
-            <button id="config-exportar" class="botao" type="button">Exportar backup</button>
-            <button id="config-importar" class="botao" type="button">Importar backup…</button>
+          <div class="buttons">
+            <button id="settings-export" class="button" type="button">Export backup</button>
+            <button id="settings-import" class="button" type="button">Import backup…</button>
           </div>
-          <p class="explicacao">Importar substitui todas as notas atuais pelas do arquivo.</p>
-          <p id="mensagem-backup" class="mensagem" role="status" aria-live="polite"></p>
+          <p class="hint">Importing replaces all current notes with the ones in the file.</p>
+          <p id="backup-message" class="message" role="status" aria-live="polite"></p>
         </section>
 
         <section>
-          <h2>Backup automático</h2>
-          <p class="explicacao">
-            Salva um backup em <code>Downloads/draftab-backups/</code> sem perguntar, só quando alguma nota mudou
-            desde o último. Funciona mesmo com a aba fechada, enquanto o Chrome estiver aberto.
+          <h2>Automatic backup</h2>
+          <p class="hint">
+            Saves a backup to <code>Downloads/draftab-backups/</code> without asking, only when some note changed
+            since the last one. Works even with the tab closed, as long as Chrome is open.
           </p>
-          <label class="linha">
-            <span>Fazer backup</span>
-            <select id="intervalo">
-              <option value="0">Desligado</option>
-              <option value="1">A cada minuto</option>
-              <option value="60">A cada hora</option>
-              <option value="1440">Diário</option>
-              <option value="10080">Semanal</option>
-              <option value="43200">Mensal</option>
+          <label class="row">
+            <span>Back up</span>
+            <select id="interval">
+              <option value="0">Off</option>
+              <option value="1">Every minute</option>
+              <option value="60">Hourly</option>
+              <option value="1440">Daily</option>
+              <option value="10080">Weekly</option>
+              <option value="43200">Monthly</option>
             </select>
           </label>
-          <p id="ultimo-backup" class="explicacao"></p>
-          <p class="explicacao pequena">
-            Se o Chrome estiver configurado para "Perguntar onde salvar cada arquivo", ele vai abrir essa
-            pergunta a cada backup automático.
+          <p id="last-backup" class="hint"></p>
+          <p class="hint small">
+            If Chrome is set to "Ask where to save each file before downloading", it will ask on every automatic
+            backup.
           </p>
         </section>
 
         <section>
-          <h2>Aparência</h2>
-          <label class="linha">
-            <span>Tema</span>
-            <select id="tema">
-              <option value="auto">Automático (segue o sistema)</option>
-              <option value="light">Claro</option>
-              <option value="dark">Escuro</option>
+          <h2>Appearance</h2>
+          <label class="row">
+            <span>Theme</span>
+            <select id="theme">
+              <option value="auto">Automatic (follows the system)</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
             </select>
           </label>
         </section>
 
-        <section class="zona-perigo">
-          <h2>Apagar todas as notas</h2>
-          <p class="explicacao">
-            Remove todas as notas deste navegador. Não dá para desfazer; exporte um backup antes se quiser
-            guardar algo. As configurações são mantidas.
+        <section class="danger-zone">
+          <h2>Delete all notes</h2>
+          <p class="hint">
+            Removes every note from this browser. This can't be undone; export a backup first if you want to
+            keep anything. Settings are kept.
           </p>
-          <label class="linha">
-            <span>Para confirmar, digite <strong>apagar tudo</strong>:</span>
-            <input id="confirmar-apagar" type="text" autocomplete="off" spellcheck="false" />
+          <label class="row">
+            <span>To confirm, type <strong>delete everything</strong>:</span>
+            <input id="confirm-delete" type="text" autocomplete="off" spellcheck="false" />
           </label>
-          <button id="apagar-tudo" class="botao perigo" type="button" disabled>Apagar todas as notas</button>
+          <button id="delete-all" class="button danger" type="button" disabled>Delete all notes</button>
         </section>
       </div>
     </dialog>

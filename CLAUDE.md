@@ -1,37 +1,37 @@
 # Draftab
 
-Extensão do Chrome (Manifest V3) que substitui a nova aba por um bloco de notas com editor de blocos markdown (Tiptap 3) e reordenação por arrastar.
-- Especificação e decisões: `SPEC.md`
-- Etapas e status: `PLAN.md`
+Chrome extension (Manifest V3) that replaces the new tab with a notepad with a markdown block editor (Tiptap 3) and drag-to-reorder.
+- Specification and decisions: `SPEC.md`
+- Stages and status: `PLAN.md`
 
-## Comandos
-- Instalar: `npm install`
-- Desenvolver (build em watch): `npm run dev`
-- Build: `npm run build` (saída em `dist/`)
-- Testes: `npm test` (Vitest)
-- Carregar no Chrome: chrome://extensions → Modo do desenvolvedor → "Carregar sem compactação" → `dist/`. Após rebuild, clicar em ↻ na extensão e reabrir a aba.
+## Commands
+- Install: `npm install`
+- Develop (build in watch mode): `npm run dev`
+- Build: `npm run build` (output in `dist/`)
+- Tests: `npm test` (Vitest)
+- Load in Chrome: chrome://extensions → Developer mode → "Load unpacked" → `dist/`. After a rebuild, click ↻ on the extension and reopen the tab.
 
-## Convenções
-- TypeScript estrito; sem React ou outro framework de UI.
-- Todo acesso a `chrome.storage` passa por `src/storage.ts`.
-- O JSON do Tiptap é a fonte da verdade das notas; markdown só na exportação.
-- Permissões mínimas no manifest: `storage`, `unlimitedStorage`, `alarms`, `downloads`. Não adicionar outras sem registrar no SPEC.md.
-- Comentários e textos da interface em português.
-- O usuário lê JS básico: preferir código direto e legível a abstrações.
+## Conventions
+- Strict TypeScript; no React or other UI framework.
+- All `chrome.storage` access goes through `src/storage.ts`.
+- The Tiptap JSON is the source of truth for notes; markdown only on export.
+- Minimal manifest permissions: `storage`, `unlimitedStorage`, `alarms`, `downloads`. Don't add others without recording it in SPEC.md.
+- Everything in the project is in English: code, identifiers, comments, UI text and docs.
+- The user reads basic JS: prefer direct, readable code over abstractions.
 
-## Regras de trabalho
-- Responder sempre em português do Brasil, inclusive mensagens intermediárias.
-- Implementar uma etapa do PLAN.md por vez.
-- Antes de declarar pronto, rodar a verificação da etapa e mostrar o resultado.
-- Ao terminar: atualizar o **Status** no PLAN.md e fazer commit.
-- Qualquer mudança de decisão vai para o SPEC.md antes do código.
+## Working rules
+- Always reply to the user in Brazilian Portuguese, including intermediate messages.
+- Implement one PLAN.md stage at a time.
+- Before declaring something done, run the stage's verification and show the result.
+- When finished: update the **Status** in PLAN.md and commit.
+- Any change of decision goes to SPEC.md before the code.
 
-## Backlog de features
+## Feature backlog
 
-Ideias de features ficam em FEATURES.md, não em SPEC.md nem PLAN.md. Leia o arquivo antes de alterá-lo. Uma ideia só vira etapa do PLAN.md quando eu decidir implementar.
+Feature ideas live in FEATURES.md, not in SPEC.md or PLAN.md. Read the file before changing it. An idea only becomes a PLAN.md stage when I decide to implement it.
 
-- **Adicionar ideia:** se estiver vaga, faça 2 ou 3 perguntas curtas antes de salvar (que problema resolve? como imagino que funcione?); se estiver clara, registre direto. Escreva descrição e motivação com base no que eu disse, sem inventar requisitos. Verifique se já existe feature igual ou parecida e, se existir, pergunte se é para mesclar ou criar separada. Encaixe na área certa; se nenhuma servir, proponha uma nova seção e confirme. Status inicial: Ideia. Apenas registre, não implemente.
-- **Apresentar:** resumo por área, com o nome e o status de cada feature. Aplique o filtro que eu pedir (área, status). Detalhe uma feature só se eu pedir.
-- **Limpar:** identifique duplicadas, parecidas que podem ser mescladas, já implementadas no código e descartadas. Mostre o que pretende mudar e espere meu OK. Mova implementadas e descartadas para "Arquivo", sem apagar; só apague se eu pedir explicitamente.
-- **Reorganizar:** se as áreas deixaram de fazer sentido (seção grande demais, features mal encaixadas), proponha a nova estrutura e aplique só depois de aprovada.
-- **Mudar status:** atualize o campo quando eu disser. Se virar Implementada ou Descartada, pergunte se deve ir para "Arquivo".
+- **Add an idea:** if it's vague, ask 2 or 3 short questions before saving (what problem does it solve? how do I imagine it working?); if it's clear, record it right away. Write the description and motivation based on what I said, without inventing requirements. Check whether an identical or similar feature already exists and, if so, ask whether to merge it or create a separate one. Put it in the right area; if none fits, propose a new section and confirm. Initial status: Idea. Only record it, don't implement it.
+- **Present:** summary by area, with the name and status of each feature. Apply the filter I ask for (area, status). Detail a feature only if I ask.
+- **Clean up:** identify duplicates, similar ones that could be merged, ones already implemented in the code, and discarded ones. Show what you intend to change and wait for my OK. Move implemented and discarded ones to "Archive", without deleting; only delete if I explicitly ask.
+- **Reorganize:** if the areas stopped making sense (section too big, features in the wrong place), propose the new structure and apply it only after it's approved.
+- **Change status:** update the field when I say so. If it becomes Implemented or Discarded, ask whether it should go to "Archive".

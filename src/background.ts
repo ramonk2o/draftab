@@ -1,17 +1,20 @@
-import { NOME_DO_ALARME, agendarBackup, fazerBackupSeMudou } from './backup-automatico'
-import { aoMudarIntervaloDeBackup } from './storage'
+import { ALARM_NAME, backupIfChanged, scheduleBackup } from './auto-backup'
+import { onBackupIntervalChanged } from './storage'
 
-// Service worker da extensão: cuida do backup automático, mesmo com a aba fechada.
+// The extension's service worker: handles the automatic backup, even with the tab closed.
 
-// Garante o alarme ao instalar/atualizar a extensão e ao abrir o Chrome
-chrome.runtime.onInstalled.addListener(() => agendarBackup())
-chrome.runtime.onStartup.addListener(() => agendarBackup())
+// Make sure the alarm exists when the extension is installed/updated and when Chrome starts
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.alarms.clear('backup-automatico') // alarm name used by versions before the English rename
+  scheduleBackup()
+})
+chrome.runtime.onStartup.addListener(() => scheduleBackup())
 
-// Mudou o intervalo nas Configurações
-aoMudarIntervaloDeBackup(() => agendarBackup())
+// The interval changed in Settings
+onBackupIntervalChanged(() => scheduleBackup())
 
-chrome.alarms.onAlarm.addListener((alarme) => {
-  if (alarme.name === NOME_DO_ALARME) {
-    fazerBackupSeMudou().catch((erro) => console.error('Falha no backup automático', erro))
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === ALARM_NAME) {
+    backupIfChanged().catch((error) => console.error('Automatic backup failed', error))
   }
 })

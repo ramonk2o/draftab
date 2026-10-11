@@ -1,54 +1,54 @@
 import { Editor, Extension, InputRule } from '@tiptap/core'
 import DragHandle from '@tiptap/extension-drag-handle'
-import { Reordenacao, comecarArraste, terminarArraste } from './reordenar'
-import { AlcaDeLista } from './alca-lista'
-import { extensoesDoConteudo } from './extensoes'
+import { Reorder, endDrag, startDrag } from './reorder'
+import { ListHandle } from './list-handle'
+import { contentExtensions } from './extensions'
 
-// Ícone da alça: seis pontinhos em duas colunas
-const ICONE_ALCA = `
+// Handle icon: six dots in two columns
+const HANDLE_ICON = `
 <svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor" aria-hidden="true">
   <circle cx="2" cy="3" r="1.5" /><circle cx="8" cy="3" r="1.5" />
   <circle cx="2" cy="8" r="1.5" /><circle cx="8" cy="8" r="1.5" />
   <circle cx="2" cy="13" r="1.5" /><circle cx="8" cy="13" r="1.5" />
 </svg>`
 
-const alca = criarAlca()
+const handle = createHandle()
 
-function criarAlca(): HTMLElement {
-  const alca = document.createElement('div')
-  alca.className = 'alca-arrastar'
-  alca.title = 'Arraste para mover'
-  alca.innerHTML = ICONE_ALCA
-  return alca
+function createHandle(): HTMLElement {
+  const handle = document.createElement('div')
+  handle.className = 'drag-handle'
+  handle.title = 'Drag to move'
+  handle.innerHTML = HANDLE_ICON
+  return handle
 }
 
-// Bloco sob o mouse no momento (a alça se posiciona em relação a ele)
-let blocoDaAlca: HTMLElement | null = null
+// Block currently under the mouse (the handle is positioned relative to it)
+let handleBlock: HTMLElement | null = null
 
-// Retângulo da primeira linha do bloco: a alça fica centrada nele.
-// Sem isso a alça se alinha pelo topo e fica torta em títulos e no separador.
-function primeiraLinhaDoBloco(bloco: HTMLElement): DOMRect {
-  const caixa = bloco.getBoundingClientRect()
-  const texto = bloco.matches('p, h1, h2, h3, pre') ? bloco : bloco.querySelector<HTMLElement>('p, h1, h2, h3, pre')
-  if (!texto) return caixa // separador: centraliza na própria linha
+// Rectangle of the block's first line: the handle is centered on it.
+// Without this the handle aligns to the top and looks off on headings and dividers.
+function blockFirstLine(block: HTMLElement): DOMRect {
+  const box = block.getBoundingClientRect()
+  const text = block.matches('p, h1, h2, h3, pre') ? block : block.querySelector<HTMLElement>('p, h1, h2, h3, pre')
+  if (!text) return box // divider: center on the line itself
 
-  const estilo = getComputedStyle(texto)
-  const alturaDaLinha = parseFloat(estilo.lineHeight) || parseFloat(estilo.fontSize) * 1.2
-  const topo = texto.getBoundingClientRect().top + parseFloat(estilo.paddingTop)
-  return new DOMRect(caixa.left, topo, caixa.width, alturaDaLinha)
+  const style = getComputedStyle(text)
+  const lineHeight = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.2
+  const top = text.getBoundingClientRect().top + parseFloat(style.paddingTop)
+  return new DOMRect(box.left, top, box.width, lineHeight)
 }
 
-// "- [ ] " vira checklist. O Tiptap só reconhece "[ ] " fora de listas;
-// aqui o "- " já criou um item de lista, então trocamos a lista por checklist.
-const ChecklistDentroDeLista = Extension.create({
-  name: 'checklistDentroDeLista',
+// "- [ ] " becomes a checklist. Tiptap only recognizes "[ ] " outside lists;
+// here "- " has already created a list item, so we swap the list for a checklist.
+const ChecklistInsideList = Extension.create({
+  name: 'checklistInsideList',
   addInputRules() {
     return [
       new InputRule({
         find: /^\s*\[([ x])?\]\s$/,
         handler: ({ state, range, match, chain }) => {
-          const paiDoParagrafo = state.doc.resolve(range.from).node(-1)
-          if (paiDoParagrafo.type.name !== 'listItem') return null
+          const paragraphParent = state.doc.resolve(range.from).node(-1)
+          if (paragraphParent.type.name !== 'listItem') return null
           chain()
             .deleteRange(range)
             .toggleTaskList()
@@ -60,59 +60,59 @@ const ChecklistDentroDeLista = Extension.create({
   },
 })
 
-// Cmd/Ctrl + clique num link abre o endereço numa nova aba
-function abrirLinkComModificador(evento: MouseEvent) {
-  if (!evento.metaKey && !evento.ctrlKey) return
-  const link = (evento.target as HTMLElement).closest('a')
+// Cmd/Ctrl + click on a link opens the address in a new tab
+function openLinkWithModifier(event: MouseEvent) {
+  if (!event.metaKey && !event.ctrlKey) return
+  const link = (event.target as HTMLElement).closest('a')
   if (!link) return
-  let endereco = link.getAttribute('href') ?? ''
-  if (!endereco) return
-  // Sem protocolo ("google.com"), o Chrome abriria um arquivo da própria extensão
-  if (!/^[a-z][a-z0-9+.-]*:/i.test(endereco)) {
-    endereco = 'https://' + endereco
+  let url = link.getAttribute('href') ?? ''
+  if (!url) return
+  // Without a protocol ("google.com"), Chrome would open a file inside the extension
+  if (!/^[a-z][a-z0-9+.-]*:/i.test(url)) {
+    url = 'https://' + url
   }
-  evento.preventDefault()
-  window.open(endereco, '_blank', 'noopener')
+  event.preventDefault()
+  window.open(url, '_blank', 'noopener')
 }
 
-// Cria o editor com todos os blocos do MVP e a alça de arrastar
-export function criarEditor(elemento: HTMLElement): Editor {
-  elemento.addEventListener('click', abrirLinkComModificador)
+// Creates the editor with every MVP block and the drag handle
+export function createEditor(element: HTMLElement): Editor {
+  element.addEventListener('click', openLinkWithModifier)
 
   return new Editor({
-    element: elemento,
+    element,
     autofocus: true,
     extensions: [
-      ...extensoesDoConteudo,
-      ChecklistDentroDeLista,
-      Reordenacao,
-      AlcaDeLista,
+      ...contentExtensions,
+      ChecklistInsideList,
+      Reorder,
+      ListHandle,
       DragHandle.configure({
-        render: () => alca,
-        onElementDragStart: comecarArraste,
-        onElementDragEnd: terminarArraste,
-        // Em itens de lista a alça vai mais para a esquerda, antes do marcador
-        onNodeChange: (dados) => {
-          alca.classList.toggle('alca-em-lista', dados.node?.type.name === 'listItem')
-          // pos existe em tempo de execução, mas falta nos tipos da extensão
-          const { pos } = dados as { pos?: number }
-          const el = pos !== undefined && pos >= 0 ? dados.editor.view.nodeDOM(pos) : null
-          blocoDaAlca = el instanceof HTMLElement ? el : null
+        render: () => handle,
+        onElementDragStart: startDrag,
+        onElementDragEnd: endDrag,
+        // On list items the handle moves further left, before the marker
+        onNodeChange: (data) => {
+          handle.classList.toggle('in-list', data.node?.type.name === 'listItem')
+          // pos exists at runtime, but is missing from the extension's types
+          const { pos } = data as { pos?: number }
+          const el = pos !== undefined && pos >= 0 ? data.editor.view.nodeDOM(pos) : null
+          handleBlock = el instanceof HTMLElement ? el : null
         },
-        // Alça à esquerda, centrada na primeira linha do bloco
+        // Handle on the left, centered on the block's first line
         computePositionConfig: { placement: 'left', strategy: 'absolute' },
         getReferencedVirtualElement: () => {
-          const bloco = blocoDaAlca
-          return bloco ? { getBoundingClientRect: () => primeiraLinhaDoBloco(bloco) } : null
+          const block = handleBlock
+          return block ? { getBoundingClientRect: () => blockFirstLine(block) } : null
         },
-        // Itens de lista também ganham alça própria
+        // List items get their own handle too
         nested: {
-          // Sem isso, a alça some quando o mouse está na parte de cima de um item de lista
+          // Without this, the handle disappears when the mouse is over the top part of a list item
           edgeDetection: 'none',
           rules: [
             {
-              // Dentro de uma citação, a alça move a citação inteira
-              id: 'citacaoInteira',
+              // Inside a quote, the handle moves the whole quote
+              id: 'wholeQuote',
               evaluate: ({ parent }) => (parent?.type.name === 'blockquote' ? 1000 : 0),
             },
           ],

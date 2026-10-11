@@ -1,70 +1,71 @@
 # Draftab
 
-## Objetivo
-Extensão do Chrome que substitui a nova aba por um bloco de notas local, com editor de blocos compatível com markdown e reordenação de blocos por arrastar. Uso pessoal; publicação na Chrome Web Store fica para depois.
+## Goal
+Chrome extension that replaces the new tab with a local notepad, with a markdown-friendly block editor and drag-to-reorder blocks. Personal use; publishing on the Chrome Web Store comes later.
 
-## Hipótese a testar
-Um editor de blocos reordenáveis, com backup confiável, substitui o New Tab Draft no dia a dia.
-Sucesso: ~2 semanas de uso real sem perder nenhuma nota e sem voltar ao New Tab Draft.
+## Hypothesis to test
+A reorderable block editor with reliable backups replaces New Tab Draft in daily use.
+Success: ~2 weeks of real use without losing a single note and without going back to New Tab Draft.
 
-## Escopo do MVP
-- Nova aba abre uma nota em branco com o cursor no editor.
-- Atalhos markdown viram blocos formatados enquanto se digita: `#`/`##`/`###`, `-`, `1.`, `- [ ]`, `>`, ` ``` `, `---`, `**negrito**`, `*itálico*`, `` `código` ``, links.
-- Cada bloco mostra uma alça à esquerda ao passar o mouse; arrastar a alça move o bloco e a nova ordem é salva.
-  - Itens de lista têm alça própria, antes do marcador.
-  - Durante o arraste, os vizinhos deslizam com animação para abrir espaço onde o bloco vai cair; o bloco aparece apagado nesse espaço.
-  - Ao passar o mouse sobre uma lista, uma barra fina à esquerda permite arrastar a lista inteira.
-  - Itens e parágrafos podem mudar de nível: a altura do mouse escolhe a posição; nas bordas de uma lista, o movimento horizontal decide se o bloco fica dentro (direita) ou fora (esquerda) dela.
-  - Conversões ao mudar de nível: item que sai da lista continua item, numa lista própria; parágrafo que entra numa lista vira item; item de lista ↔ item de checklist conforme a lista de destino. Listas vizinhas do mesmo tipo se juntam.
-  - Títulos, citações, código, divisores e listas inteiras não entram em listas (movem-se só entre os blocos da nota).
-- Barra lateral lista as notas por última edição, com busca (título e conteúdo), botão "nova nota", renomear (duplo clique no título ou botão ✎) e excluir com confirmação.
-  - A barra lateral pode ser recolhida; o estado (aberta/recolhida) é lembrado.
-- Título da nota: enquanto ela não tem título definido pelo usuário, o título acompanha a primeira linha de texto. Renomear fixa o título; renomear para vazio volta ao título automático.
-- Nota vazia (sem texto e sem título definido) não é salva: abrir e fechar a aba não deixa lixo, e uma nota salva que fica vazia sai da lista.
-- Recarregar a aba reabre a mesma nota (o id fica no `sessionStorage` da aba, que sobrevive à recarga e some ao fechá-la).
-- Salvamento automático com debounce de ~500 ms. Mudança feita em outra aba aparece nesta (última gravação vence).
-- Ao lado do botão de recolher a barra (sempre visível): botão de tema (lua no claro, sol no escuro) que troca para o tema oposto ao que está na tela; o "Automático" fica nas Configurações.
-- Topo da barra lateral (visível só com ela aberta): ícones de exportar e importar backup ao lado dos botões de recolher e de tema, e uma engrenagem à direita que abre as Configurações.
-- Configurações num lightbox sobre a página de notas (fecha pelo botão ×, com Esc ou clicando fora):
-  - Exportar backup agora (baixa um JSON com todas as notas e todas as configurações; importar restaura as duas coisas).
-  - Importar backup: valida o arquivo, pede confirmação e substitui tudo. As abas abertas do Draftab recarregam sozinhas depois da importação (nenhuma grava conteúdo antigo por cima).
-  - Backup automático: desligado / a cada minuto / a cada hora / diário / semanal / mensal (30 dias), mostrando a data do último backup automático (exportações manuais não contam). Valores antigos fora dessa lista passam para o intervalo mais próximo.
-  - Apagar todas as notas: o botão só funciona depois de digitar "apagar tudo" num campo de confirmação. As abas abertas recarregam, como na importação.
-  - Tema: Automático (segue o modo claro/escuro do sistema), Claro ou Escuro. Padrão: Automático. Vale na hora para todas as abas abertas, e a página já abre no tema certo (sem piscar o tema errado).
-- Nome do arquivo de backup (manual e automático): `draftab_AAAA-MM-DD-HHhMM.json` (ex.: `draftab_2026-10-11-15h05.json`).
-- Backup automático salva em `Downloads/draftab-backups/` sem perguntar, e só se houve mudança desde o último backup.
+## MVP scope
+- A new tab opens a blank note with the cursor in the editor.
+- Markdown shortcuts turn into formatted blocks while typing: `#`/`##`/`###`, `-`, `1.`, `- [ ]`, `>`, ` ``` `, `---`, `**bold**`, `*italic*`, `` `code` ``, links.
+- Each block shows a handle on the left on hover; dragging the handle moves the block and the new order is saved.
+  - List items have their own handle, before the marker.
+  - While dragging, neighboring blocks slide with an animation to open space where the block will land; the block shows faded in that space.
+  - Hovering over a list shows a thin bar on its left that drags the whole list.
+  - Items and paragraphs can change level: the mouse height picks the position; at the edges of a list, horizontal movement decides whether the block goes inside (right) or outside (left) of it.
+  - Conversions when changing level: an item that leaves a list stays an item, in a list of its own; a paragraph that enters a list becomes an item; list item ↔ checklist item depending on the target list. Adjacent lists of the same type are merged.
+  - Headings, quotes, code, dividers and whole lists don't go into lists (they only move among the note's blocks).
+- The sidebar lists notes by last edit, with search (title and content), a "new note" button, rename (double-click the title or the ✎ button) and delete with confirmation.
+  - The sidebar can be collapsed; its state (open/collapsed) is remembered.
+- Note title: while the user hasn't set a title, it follows the first line of text. Renaming fixes the title; renaming to empty goes back to the automatic title.
+- An empty note (no text and no user-set title) isn't saved: opening and closing a tab leaves no clutter, and a saved note that becomes empty leaves the list.
+- Reloading the tab reopens the same note (the id is kept in the tab's `sessionStorage`, which survives reloads and is cleared when the tab closes).
+- Autosave with a ~500 ms debounce. Changes made in another tab show up in this one (last write wins).
+- Next to the sidebar toggle (always visible): a theme button (moon in light mode, sun in dark mode) that switches to the opposite of the theme on screen; "Automatic" is in Settings.
+- Top of the sidebar (visible only when open): export and import backup icons next to the sidebar and theme buttons, and a gear on the right that opens Settings.
+- Settings in a lightbox over the notes page (closes with the × button, Esc or a click outside):
+  - Export backup now (downloads a JSON with all notes and all settings; importing restores both).
+  - Import backup: validates the file, asks for confirmation and replaces everything. Open Draftab tabs reload by themselves after the import (none writes old content over it).
+  - Automatic backup: off / every minute / hourly / daily / weekly / monthly (30 days), showing the date of the last automatic backup (manual exports don't count). Old values outside this list move to the closest interval.
+  - Delete all notes: the button only works after typing "delete everything" in a confirmation field. Open tabs reload, as with an import.
+  - Theme: Automatic (follows the system's light/dark mode), Light or Dark. Default: Automatic. Applies immediately to all open tabs, and the page opens in the right theme (no flash of the wrong theme).
+- Backup file name (manual and automatic): `draftab_YYYY-MM-DD-HHhMM.json` (e.g. `draftab_2026-10-11-15h05.json`).
+- Automatic backup saves to `Downloads/draftab-backups/` without asking, and only if something changed since the last backup.
 
-## Fora do escopo (por enquanto)
-Tudo o que não está no escopo acima. Ideias para depois do MVP ficam no backlog, em `FEATURES.md`.
+## Out of scope (for now)
+Everything not in the scope above. Ideas for after the MVP go to the backlog, in `FEATURES.md`.
 
-## Stack e decisões técnicas
-- Manifest V3 com `chrome_url_overrides.newtab`: padrão atual de extensões.
-- Vite + TypeScript: build simples, tipos pegam erros, bibliotecas via npm.
-- Tiptap 3 (StarterKit, TaskList/TaskItem, DragHandle, Markdown): atalhos markdown e alça de arrastar prontos e maduros.
-- Sem React nem outro framework de UI: a interface ao redor do editor é pequena; menos camadas para ler.
-- `chrome.storage.local` + permissão `unlimitedStorage`: sem o limite de ~5 MB do localStorage, não some ao limpar cookies e é acessível ao service worker.
-- Uma chave por nota (`note:<id>`): evita regravar tudo a cada tecla.
-- `chrome.alarms` + `chrome.downloads` no service worker: backup roda mesmo com a aba fechada. Arquivo gerado como `data:` URL (não há `URL.createObjectURL` no service worker).
-- Vitest para as camadas de dados e backup; o editor é verificado manualmente.
-- Licença MIT (open source): uso, modificação e redistribuição livres, exigindo só manter o aviso de copyright (créditos). Todas as dependências que vão na extensão também são MIT.
+## Stack and technical decisions
+- Manifest V3 with `chrome_url_overrides.newtab`: the current standard for extensions.
+- Vite + TypeScript: simple build, types catch errors, libraries via npm.
+- Tiptap 3 (StarterKit, TaskList/TaskItem, DragHandle, Markdown): mature, ready-made markdown shortcuts and drag handle.
+- No React or other UI framework: the interface around the editor is small; fewer layers to read.
+- `chrome.storage.local` + the `unlimitedStorage` permission: no ~5 MB localStorage limit, not wiped when clearing cookies, and reachable from the service worker.
+- One key per note (`note:<id>`): avoids rewriting everything on every keystroke.
+- `chrome.alarms` + `chrome.downloads` in the service worker: backups run even with the tab closed. The file is generated as a `data:` URL (there's no `URL.createObjectURL` in the service worker).
+- Vitest for the data and backup layers; the editor is checked manually.
+- MIT license (open source): free use, modification and redistribution, only requiring the copyright notice to be kept (credit). Every dependency shipped in the extension is MIT too.
+- Language: English everywhere in the project (code, comments, UI, docs).
 
-## Modelo de dados
+## Data model
 - `Note { id: string (uuid), doc: TiptapJSON, title: string, titleManual: boolean, createdAt: number, updatedAt: number }`
-  `titleManual` = o usuário renomeou a nota; enquanto for `false`, `title` acompanha a primeira linha.
-  O JSON do Tiptap é a fonte da verdade (sem perdas de conversão).
-- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark' }` (0 = desligado)
-- `meta { lastChangeAt: number, lastBackupAt: number, lastImportAt: number }` (`lastImportAt` marca importação ou exclusão de todas as notas e avisa as abas abertas para recarregar)
-- Arquivo de backup:
+  `titleManual` = the user renamed the note; while it's `false`, `title` follows the first line.
+  The Tiptap JSON is the source of truth (no conversion losses).
+- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark' }` (0 = off)
+- `meta { lastChangeAt: number, lastBackupAt: number, lastImportAt: number }` (`lastImportAt` marks an import or the deletion of all notes, and tells open tabs to reload)
+- Backup file:
   `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, titleManual, markdown, doc, createdAt, updatedAt }] }`
-  `markdown` é para leitura humana; a importação restaura a partir de `doc`.
+  `markdown` is for humans to read; importing restores from `doc`.
 
-## Fluxos principais
-1. **Escrever:** abro nova aba → digito `# Ideias` → vira título → na primeira tecla a nota é criada e aparece na lateral.
-2. **Reordenar:** passo o mouse num parágrafo → arrasto a alça para cima de outro bloco → solto → a ordem persiste ao recarregar.
-3. **Backup automático:** o alarme dispara → o service worker compara `lastChangeAt` com `lastBackupAt` → se mudou, baixa o JSON e atualiza `lastBackupAt` com o momento em que começou a gerar o backup (assim, uma mudança feita durante a geração entra no próximo).
+## Main flows
+1. **Write:** I open a new tab → type `# Ideas` → it becomes a heading → on the first keystroke the note is created and shows up in the sidebar.
+2. **Reorder:** I hover a paragraph → drag the handle above another block → drop → the order persists after reloading.
+3. **Automatic backup:** the alarm fires → the service worker compares `lastChangeAt` with `lastBackupAt` → if something changed, it downloads the JSON and sets `lastBackupAt` to the moment it started generating the backup (so a change made during generation goes into the next one).
 
-## Suposições e questões em aberto
-- Se a opção do Chrome "Perguntar onde salvar cada arquivo" estiver ativa, o backup automático abrirá o diálogo de salvar. Documentar no README.
-- Cada backup automático mostra brevemente o ícone de download do Chrome.
-- Busca em memória basta para algumas centenas de notas.
-- A conversão para markdown só é usada na exportação; perdas pequenas não afetam a restauração.
+## Assumptions and open questions
+- If Chrome's "Ask where to save each file" option is on, the automatic backup will open the save dialog. Documented in the README.
+- Each automatic backup briefly shows Chrome's download icon.
+- In-memory search is enough for a few hundred notes.
+- Markdown conversion is only used for export; small losses don't affect restoring.

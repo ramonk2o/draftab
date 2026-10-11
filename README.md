@@ -1,173 +1,173 @@
 # Draftab
 
-Extensão do Chrome que transforma a **nova aba** num bloco de notas local. O editor é feito de blocos: você digita markdown e ele vira formatação na hora, e pode **arrastar qualquer bloco** para reordenar. Tudo fica guardado no seu navegador, com backup em JSON (manual e automático).
+A Chrome extension that turns the **new tab** into a local notepad. The editor is made of blocks: you type markdown and it becomes formatting right away, and you can **drag any block** to reorder it. Everything is stored in your browser, with JSON backups (manual and automatic).
 
-![Draftab no tema claro](docs/capturas/claro.png)
+![Draftab in the light theme](docs/screenshots/light.png)
 
 <details>
-<summary>Tema escuro</summary>
+<summary>Dark theme</summary>
 
-![Draftab no tema escuro](docs/capturas/escuro.png)
+![Draftab in the dark theme](docs/screenshots/dark.png)
 
 </details>
 
-## Recursos
+## Features
 
-- **Nova aba = nota nova**, com o cursor já no editor. Nota em branco não é salva: abrir e fechar a aba não deixa lixo.
-- **Markdown enquanto digita**: títulos, listas, checklist, citação, código, divisor, negrito, itálico, código inline e links (tabela abaixo).
-- **Arrastar para reordenar**: passe o mouse num bloco e arraste a alça (⠿) à esquerda. Os outros blocos deslizam para abrir espaço.
-  - Itens de lista têm alça própria; uma barra fina à esquerda da lista move a lista inteira.
-  - Itens e parágrafos entram e saem de listas: na borda de uma lista, puxar o mouse para a esquerda tira o item, para a direita põe dentro.
-- **Barra lateral recolhível** com as notas por última edição, busca no título e no conteúdo (sem diferenciar acentos), renomear e excluir.
-- **Título automático**: enquanto a nota não é renomeada, o título acompanha a primeira linha.
-- **Várias abas ao mesmo tempo**: o que você escreve numa aba aparece nas outras.
-- **Backup**: exportar e importar um arquivo JSON com todas as notas e configurações (cada nota vai também em markdown, legível sem o Draftab).
-- **Backup automático** em `Downloads/draftab-backups/`: a cada minuto, hora, dia, semana ou mês, só quando alguma nota mudou. Funciona com a aba fechada, enquanto o Chrome estiver aberto.
-- **Tema claro, escuro ou automático** (segue o sistema), com um botão para trocar rápido.
-- **Privacidade**: nada sai do seu computador. A extensão não acessa a internet, não tem conta nem coleta dados.
+- **New tab = new note**, with the cursor already in the editor. A blank note isn't saved: opening and closing a tab leaves no clutter.
+- **Markdown as you type**: headings, lists, checklists, quotes, code, dividers, bold, italic, inline code and links (table below).
+- **Drag to reorder**: hover a block and drag the handle (⠿) on its left. The other blocks slide to make room.
+  - List items have their own handle; a thin bar to the left of a list moves the whole list.
+  - Items and paragraphs move in and out of lists: at the edge of a list, pulling the mouse left takes the item out, pulling right puts it in.
+- **Collapsible sidebar** with notes sorted by last edit, search across title and content (accent-insensitive), rename and delete.
+- **Automatic title**: until the note is renamed, its title follows the first line.
+- **Several tabs at once**: what you write in one tab shows up in the others.
+- **Backup**: export and import a JSON file with all notes and settings (each note also goes in markdown, readable without Draftab).
+- **Automatic backup** to `Downloads/draftab-backups/`: every minute, hour, day, week or month, only when some note changed. Works with the tab closed, as long as Chrome is open.
+- **Light, dark or automatic theme** (follows the system), with a button for quick switching.
+- **Privacy**: nothing leaves your computer. The extension doesn't access the internet, has no account and collects no data.
 
-### Atalhos de markdown
+### Markdown shortcuts
 
-| Digite | Vira |
+| Type | Becomes |
 |---|---|
-| `# `, `## `, `### ` | Título de nível 1, 2 ou 3 |
-| `- ` ou `* ` | Lista com marcadores |
-| `1. ` | Lista numerada |
-| `[ ] ` ou `- [ ] ` | Checklist (`[x] ` cria o item já marcado) |
-| `> ` | Citação |
-| ` ``` ` + espaço | Bloco de código |
-| `---` | Divisor |
-| `**texto**` | **Negrito** |
-| `*texto*` | *Itálico* |
-| `` `texto` `` | `Código` |
-| `[texto](endereço)` | Link (abre com Cmd/Ctrl + clique) |
+| `# `, `## `, `### ` | Heading level 1, 2 or 3 |
+| `- ` or `* ` | Bulleted list |
+| `1. ` | Numbered list |
+| `[ ] ` or `- [ ] ` | Checklist (`[x] ` creates an already checked item) |
+| `> ` | Quote |
+| ` ``` ` + space | Code block |
+| `---` | Divider |
+| `**text**` | **Bold** |
+| `*text*` | *Italic* |
+| `` `text` `` | `Code` |
+| `[text](address)` | Link (opens with Cmd/Ctrl + click) |
 
-Endereços colados ou digitados (`https://...`) também viram link. Em listas, **Tab** recua o item.
+Pasted or typed addresses (`https://...`) also become links. In lists, **Tab** indents the item.
 
-## Instalar
+## Install
 
-O Draftab ainda não está na Chrome Web Store. Para usar, gere a extensão a partir do código:
+Draftab isn't on the Chrome Web Store yet. To use it, build the extension from the source:
 
-1. Instale o [Node.js](https://nodejs.org) (20.19+ ou 22.12+; a versão LTS atual serve) e tenha o Google Chrome.
-2. Baixe o código e gere a extensão:
+1. Install [Node.js](https://nodejs.org) (20.19+ or 22.12+; the current LTS works) and have Google Chrome.
+2. Get the code and build the extension:
    ```sh
    git clone https://github.com/ramonk2o/draftab.git
    cd draftab
    npm install
    npm run build
    ```
-3. Abra `chrome://extensions`, ligue o **Modo do desenvolvedor** (canto superior direito), clique em **Carregar sem compactação** e escolha a pasta `dist/`.
-4. Abra uma nova aba.
+3. Open `chrome://extensions`, turn on **Developer mode** (top-right corner), click **Load unpacked** and choose the `dist/` folder.
+4. Open a new tab.
 
-Para atualizar depois: `git pull`, `npm run build` e clique em ↻ no cartão do Draftab em `chrome://extensions`.
+To update later: `git pull`, `npm run build` and click ↻ on the Draftab card in `chrome://extensions`.
 
-> **Importante:** as notas ficam guardadas na extensão. **Desinstalar o Draftab apaga todas as notas.** Exporte um backup antes de desinstalar ou trocar de computador.
+> **Important:** notes are stored inside the extension. **Uninstalling Draftab deletes all notes.** Export a backup before uninstalling or switching computers.
 
-### Backup automático e a pergunta de onde salvar
+### Automatic backup and the "where to save" question
 
-Se a opção do Chrome **"Perguntar onde salvar cada arquivo antes de fazer download"** estiver ligada (`chrome://settings/downloads`), o Chrome vai abrir essa pergunta a cada backup automático. Para backups silenciosos, desligue essa opção.
+If Chrome's **"Ask where to save each file before downloading"** option is on (`chrome://settings/downloads`), Chrome will ask on every automatic backup. For silent backups, turn that option off.
 
-## Desenvolvimento
+## Development
 
 ### Stack
 
 - **Chrome Extension Manifest V3** (`chrome_url_overrides.newtab` + service worker).
-- **TypeScript** estrito, **sem framework de UI** (sem React e afins): a interface em volta do editor é pequena e escrita direto no DOM.
-- **[Tiptap 3](https://tiptap.dev)** (sobre ProseMirror) para o editor, com `StarterKit`, `TaskList/TaskItem`, `DragHandle` e `@tiptap/markdown` (só para exportar).
-- **[Vite](https://vite.dev)** para o build e **[Vitest](https://vitest.dev)** para os testes.
+- Strict **TypeScript**, **no UI framework** (no React or similar): the interface around the editor is small and written directly against the DOM.
+- **[Tiptap 3](https://tiptap.dev)** (on top of ProseMirror) for the editor, with `StarterKit`, `TaskList/TaskItem`, `DragHandle` and `@tiptap/markdown` (export only).
+- **[Vite](https://vite.dev)** for the build and **[Vitest](https://vitest.dev)** for tests.
 
-### Comandos
+### Commands
 
-| Comando | O que faz |
+| Command | What it does |
 |---|---|
-| `npm install` | Instala as dependências |
-| `npm run dev` | Build em modo *watch*: reconstrói a cada mudança (depois, ↻ na extensão e reabrir a aba) |
-| `npm run build` | Confere os tipos e gera a extensão em `dist/` |
-| `npm test` | Roda os testes (Vitest) |
+| `npm install` | Installs dependencies |
+| `npm run dev` | Build in *watch* mode: rebuilds on every change (then ↻ on the extension and reopen the tab) |
+| `npm run build` | Type-checks and builds the extension into `dist/` |
+| `npm test` | Runs the tests (Vitest) |
 
-### Estrutura
+### Structure
 
 ```
 public/
-  manifest.json          manifest da extensão (copiado para dist/)
-  tema-inicial.js        aplica o tema antes de a página aparecer (evita piscar)
-newtab.html              página da nova aba (editor, barra lateral, lightbox de Configurações)
+  manifest.json          extension manifest (copied to dist/)
+  theme-init.js          applies the theme before the page shows up (avoids flashing)
+newtab.html              new tab page (editor, sidebar, Settings lightbox)
 src/
-  newtab.ts              lógica da aba: abrir/salvar notas, barra lateral, sincronização entre abas
-  editor.ts              cria o editor Tiptap: atalhos extras, links, alça de arrastar
-  extensoes.ts           extensões de conteúdo (blocos e marcas), compartilhadas com o backup
-  reordenar.ts           arrastar e soltar animado, entre níveis (listas, itens, parágrafos)
-  alca-lista.ts          alça que move uma lista inteira
-  notas.ts               modelo da nota e regras puras (título, nota vazia, busca)
-  storage.ts             único ponto de acesso ao chrome.storage
-  backup.ts              formato do arquivo de backup: criar, validar, restaurar
-  backup-ui.ts           exportar (download) e importar (escolher arquivo) a partir da página
-  backup-automatico.ts   decide e faz o backup automático (roda no service worker)
-  background.ts          service worker: alarmes do backup automático
-  configuracoes.ts       lightbox de Configurações
-  tema.ts                tema claro/escuro/automático
-  icones.ts              ícones SVG
-  newtab.css             estilos (as cores ficam em variáveis no topo, uma vez por tema)
-  *.test.ts              testes; chrome-falso.ts simula o chrome.storage nos testes
-docs/capturas/           imagens deste README
+  newtab.ts              tab logic: opening/saving notes, sidebar, sync across tabs
+  editor.ts              creates the Tiptap editor: extra shortcuts, links, drag handle
+  extensions.ts          content extensions (blocks and marks), shared with the backup
+  reorder.ts             animated drag and drop, across levels (lists, items, paragraphs)
+  list-handle.ts         handle that moves a whole list
+  notes.ts               note model and pure rules (title, empty note, search)
+  storage.ts             the single access point to chrome.storage
+  backup.ts              backup file format: create, validate, restore
+  backup-ui.ts           export (download) and import (choose a file) from a page
+  auto-backup.ts         decides on and makes the automatic backup (runs in the service worker)
+  background.ts          service worker: automatic backup alarms
+  settings.ts            Settings lightbox
+  theme.ts               light/dark/automatic theme
+  icons.ts               SVG icons
+  newtab.css             styles (colors are variables at the top, once per theme)
+  *.test.ts              tests; fake-chrome.ts simulates the chrome APIs in tests
+docs/screenshots/        images for this README
 ```
 
-### Como os dados são guardados
+### How data is stored
 
-- Tudo vai para `chrome.storage.local` (com a permissão `unlimitedStorage`), sempre através de `src/storage.ts`.
-- **Uma chave por nota** (`note:<id>`), para não regravar tudo a cada tecla. A nota guarda o **JSON do Tiptap**, que é a fonte da verdade; markdown só existe na exportação.
-- `settings` guarda as configurações (intervalo do backup automático, barra recolhida, tema) e `meta` guarda horários: última mudança, último backup automático e última importação (que faz as abas abertas recarregarem).
-- O salvamento é automático, com espera de ~500 ms sem digitar. As outras abas recebem a mudança por `chrome.storage.onChanged`; se duas abas editam a mesma nota, a última gravação vence.
-- O formato completo (nota, configurações, arquivo de backup) está descrito no [SPEC.md](SPEC.md).
+- Everything goes to `chrome.storage.local` (with the `unlimitedStorage` permission), always through `src/storage.ts`.
+- **One key per note** (`note:<id>`), so not everything is rewritten on every keystroke. The note stores the **Tiptap JSON**, which is the source of truth; markdown only exists on export.
+- `settings` holds the settings (automatic backup interval, collapsed sidebar, theme) and `meta` holds timestamps: last change, last automatic backup and last import (which makes open tabs reload).
+- Saving is automatic, after ~500 ms without typing. Other tabs get the change through `chrome.storage.onChanged`; if two tabs edit the same note, the last write wins.
+- The full format (note, settings, backup file) is described in [SPEC.md](SPEC.md).
 
-### Permissões
+### Permissions
 
-| Permissão | Para quê |
+| Permission | What for |
 |---|---|
-| `storage` | Guardar notas e configurações no navegador |
-| `unlimitedStorage` | Não ficar preso ao limite de ~10 MB do `chrome.storage.local` |
-| `alarms` | Acordar o service worker no horário do backup automático |
-| `downloads` | Salvar o arquivo do backup automático em `Downloads/draftab-backups/` |
+| `storage` | Store notes and settings in the browser |
+| `unlimitedStorage` | Not be limited to the ~10 MB of `chrome.storage.local` |
+| `alarms` | Wake the service worker at the automatic backup time |
+| `downloads` | Save the automatic backup file to `Downloads/draftab-backups/` |
 
-Novas permissões só entram com motivo registrado no SPEC.md.
+New permissions are only added with a reason recorded in SPEC.md.
 
-### Testes
+### Tests
 
-`npm test` cobre a camada de dados e o backup: salvar/ler/listar/excluir notas, configurações, regras de título e busca, exportar → importar sem perdas, recusa de arquivos de backup inválidos e as decisões do backup automático. O `chrome.storage`, os alarmes e os downloads são simulados em `src/chrome-falso.ts`.
+`npm test` covers the data layer and backups: saving/reading/listing/deleting notes, settings, title and search rules, lossless export → import, rejection of invalid backup files and the automatic backup decisions. `chrome.storage`, alarms and downloads are simulated in `src/fake-chrome.ts`.
 
-O editor (atalhos, arrastar, aparência) é verificado à mão no Chrome, seguindo o "Como verificar" de cada etapa do [PLAN.md](PLAN.md).
+The editor (shortcuts, dragging, appearance) is checked by hand in Chrome, following each stage's "How to verify" in [PLAN.md](PLAN.md).
 
-### Documentos do projeto
+### Project documents
 
-| Arquivo | Conteúdo |
+| File | Contents |
 |---|---|
-| [SPEC.md](SPEC.md) | O que o Draftab faz e por quê: escopo, decisões técnicas, modelo de dados |
-| [PLAN.md](PLAN.md) | Etapas de desenvolvimento, como verificar cada uma e o status |
-| [FEATURES.md](FEATURES.md) | Backlog de ideias de features, por área, com status |
-| [CLAUDE.md](CLAUDE.md) | Instruções e convenções do projeto para o [Claude Code](https://claude.com/claude-code) (também valem para humanos) |
+| [SPEC.md](SPEC.md) | What Draftab does and why: scope, technical decisions, data model |
+| [PLAN.md](PLAN.md) | Development stages, how to verify each one and their status |
+| [FEATURES.md](FEATURES.md) | Feature idea backlog, by area, with status |
+| [CLAUDE.md](CLAUDE.md) | Project instructions and conventions for [Claude Code](https://claude.com/claude-code) (they apply to humans too) |
 
-### Convenções
+### Conventions
 
-- Código direto e legível, preferido a abstrações; comentários e textos da interface em **português**.
-- Todo acesso ao `chrome.storage` passa por `src/storage.ts`.
-- Mudança de decisão vai primeiro para o SPEC.md; ideias novas vão para o FEATURES.md.
+- Direct, readable code over abstractions; everything (code, comments, UI text, docs) in **English**.
+- All `chrome.storage` access goes through `src/storage.ts`.
+- Changes of decision go to SPEC.md first; new ideas go to FEATURES.md.
 
-## Contribuir
+## Contributing
 
-Contribuições são bem-vindas. Para propor uma mudança:
+Contributions are welcome. To propose a change:
 
-1. Abra uma *issue* descrevendo o problema ou a ideia (ideias também podem entrar no [FEATURES.md](FEATURES.md)).
-2. Faça um *fork*, crie um branch e mantenha as convenções acima.
-3. Confira que `npm run build` e `npm test` passam, e teste no Chrome o que mudou.
-4. Abra um *pull request* explicando o que mudou e como verificar.
+1. Open an *issue* describing the problem or the idea (ideas can also go into [FEATURES.md](FEATURES.md)).
+2. *Fork* the repo, create a branch and follow the conventions above.
+3. Make sure `npm run build` and `npm test` pass, and test what changed in Chrome.
+4. Open a *pull request* explaining what changed and how to verify it.
 
-### Limitações conhecidas
+### Known limitations
 
-- As notas existem só neste navegador; não há sincronização entre computadores (o backup JSON cobre a transferência manual).
-- **Shift+Tab** ainda não recua itens de lista: em vez disso, o Chrome troca de aba ([registrado no backlog](FEATURES.md)).
+- Notes only exist in this browser; there's no sync across computers (the JSON backup covers moving them manually).
+- **Shift+Tab** doesn't outdent list items yet: Chrome switches tabs instead ([recorded in the backlog](FEATURES.md)).
 
-## Licença
+## License
 
 [MIT](LICENSE) © 2026 Ramon K.
 
-Você pode usar, copiar, modificar, juntar com outros projetos, publicar, distribuir, sublicenciar e vender cópias do Draftab, inclusive em projetos comerciais. A única exigência é manter o aviso de copyright e o texto da licença (o arquivo [LICENSE](LICENSE)) nas cópias ou em partes relevantes do código: esses são os créditos. O software é fornecido "como está", sem garantias.
+You may use, copy, modify, merge with other projects, publish, distribute, sublicense and sell copies of Draftab, including in commercial projects. The only requirement is keeping the copyright notice and the license text (the [LICENSE](LICENSE) file) in copies or substantial portions of the code: that's the credit. The software is provided "as is", without warranty.

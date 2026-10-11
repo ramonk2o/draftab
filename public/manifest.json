@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Draftab",
-  "description": "Bloco de notas em blocos markdown na nova aba.",
+  "description": "A markdown block notepad in your new tab.",
   "version": "0.1.0",
   "chrome_url_overrides": {
     "newtab": "newtab.html"

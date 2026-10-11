@@ -1,36 +1,29 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 import type { JSONContent } from '@tiptap/core'
-import { criarBackup, lerBackup, nomeDoArquivo, notasDoBackup } from './backup'
-import { criarChromeFalso } from './chrome-falso'
-import { novaNotaEmBranco, type Nota } from './notas'
-import {
-  aoImportar,
-  lerConfiguracoes,
-  listarNotas,
-  salvarConfiguracoes,
-  salvarNota,
-  substituirTudo,
-} from './storage'
+import { backupFileName, createBackup, notesFromBackup, parseBackup } from './backup'
+import { createFakeChrome } from './fake-chrome'
+import { newBlankNote, type Note } from './notes'
+import { listNotes, onImport, readSettings, replaceAll, saveNote, saveSettings } from './storage'
 
-const texto = (t: string, marcas?: JSONContent['marks']): JSONContent => ({ type: 'text', text: t, marks: marcas })
-const paragrafo = (...c: JSONContent[]): JSONContent => ({ type: 'paragraph', content: c })
+const text = (t: string, marks?: JSONContent['marks']): JSONContent => ({ type: 'text', text: t, marks })
+const paragraph = (...c: JSONContent[]): JSONContent => ({ type: 'paragraph', content: c })
 
-// Nota com vários tipos de bloco, para conferir a ida e volta sem perdas
-function notaCompleta(): Nota {
+// Note with several block types, to check the round trip has no losses
+function fullNote(): Note {
   return {
-    ...novaNotaEmBranco(),
-    title: 'Ideias',
+    ...newBlankNote(),
+    title: 'Ideas',
     titleManual: true,
     createdAt: 100,
     updatedAt: 200,
     doc: {
       type: 'doc',
       content: [
-        { type: 'heading', attrs: { level: 1 }, content: [texto('Ideias')] },
-        paragrafo(texto('um '), texto('negrito', [{ type: 'bold' }])),
+        { type: 'heading', attrs: { level: 1 }, content: [text('Ideas')] },
+        paragraph(text('one '), text('bold', [{ type: 'bold' }])),
         {
           type: 'taskList',
-          content: [{ type: 'taskItem', attrs: { checked: true }, content: [paragrafo(texto('feito'))] }],
+          content: [{ type: 'taskItem', attrs: { checked: true }, content: [paragraph(text('done'))] }],
         },
         { type: 'horizontalRule' },
       ],
@@ -38,121 +31,122 @@ function notaCompleta(): Nota {
   }
 }
 
-function notaSimples(t: string, updatedAt: number): Nota {
-  return { ...novaNotaEmBranco(), title: t, updatedAt, doc: { type: 'doc', content: [paragrafo(texto(t))] } }
+function simpleNote(t: string, updatedAt: number): Note {
+  return { ...newBlankNote(), title: t, updatedAt, doc: { type: 'doc', content: [paragraph(text(t))] } }
 }
 
 beforeEach(() => {
-  vi.stubGlobal('chrome', criarChromeFalso())
+  vi.stubGlobal('chrome', createFakeChrome())
 })
 
-describe('criarBackup', () => {
-  test('segue o formato do SPEC e inclui o markdown de cada nota', () => {
-    const backup = criarBackup([notaCompleta()], { autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto' }, 999)
+describe('createBackup', () => {
+  test('follows the SPEC format and includes each note in markdown', () => {
+    const backup = createBackup([fullNote()], { autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto' }, 999)
     expect(backup).toMatchObject({ app: 'draftab', version: 1, exportedAt: 999 })
     expect(backup.settings).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto' })
-    expect(backup.notes[0].markdown).toBe('# Ideias\n\num **negrito**\n\n- [x] feito\n\n---')
+    expect(backup.notes[0].markdown).toBe('# Ideas\n\none **bold**\n\n- [x] done\n\n---')
   })
 })
 
-describe('ida e volta', () => {
-  test('exportar e importar devolve exatamente as mesmas notas', () => {
-    const notas = [notaCompleta(), notaSimples('outra', 50)]
-    const arquivo = JSON.stringify(criarBackup(notas, { autoBackupMinutes: 0, sidebarCollapsed: true, theme: 'auto' }))
-    expect(notasDoBackup(lerBackup(arquivo))).toEqual(notas)
+describe('round trip', () => {
+  test('exporting and importing returns exactly the same notes', () => {
+    const notes = [fullNote(), simpleNote('another', 50)]
+    const file = JSON.stringify(createBackup(notes, { autoBackupMinutes: 0, sidebarCollapsed: true, theme: 'auto' }))
+    expect(notesFromBackup(parseBackup(file))).toEqual(notes)
   })
 
-  test('pelo armazenamento: exportar, mudar tudo e importar restaura o estado', async () => {
-    await salvarNota(notaCompleta())
-    await salvarNota(notaSimples('segunda', 300))
-    await salvarConfiguracoes({ autoBackupMinutes: 10080 })
-    const antes = await listarNotas()
-    const arquivo = JSON.stringify(criarBackup(antes, await lerConfiguracoes()))
+  test('through storage: export, change everything and import restores the state', async () => {
+    await saveNote(fullNote())
+    await saveNote(simpleNote('second', 300))
+    await saveSettings({ autoBackupMinutes: 10080 })
+    const before = await listNotes()
+    const file = JSON.stringify(createBackup(before, await readSettings()))
 
-    // Depois do backup: apaga uma nota, cria outra, muda configuração
-    await substituirTudo([notaSimples('nova depois do backup', 400)], { autoBackupMinutes: 0 })
+    // After the backup: delete a note, create another, change a setting
+    await replaceAll([simpleNote('new after the backup', 400)], { autoBackupMinutes: 0 })
 
-    const backup = lerBackup(arquivo)
-    await substituirTudo(notasDoBackup(backup), backup.settings)
-    expect(await listarNotas()).toEqual(antes)
-    expect((await lerConfiguracoes()).autoBackupMinutes).toBe(10080)
-  })
-})
-
-describe('configurações no backup', () => {
-  test('todas as configurações vão no arquivo e voltam ao importar', async () => {
-    // Valores diferentes do padrão em todos os campos
-    const escolhidas = { autoBackupMinutes: 10080, sidebarCollapsed: true, theme: 'dark' } as const
-    await salvarConfiguracoes(escolhidas)
-    await salvarNota(notaSimples('x', 1))
-    const arquivo = JSON.stringify(criarBackup(await listarNotas(), await lerConfiguracoes()))
-    expect(JSON.parse(arquivo).settings).toEqual(escolhidas)
-
-    // Volta tudo ao padrão e importa
-    await substituirTudo([], {})
-    expect(await lerConfiguracoes()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' })
-    const backup = lerBackup(arquivo)
-    await substituirTudo(notasDoBackup(backup), backup.settings)
-    expect(await lerConfiguracoes()).toEqual(escolhidas)
-  })
-
-  test('nenhuma configuração fica de fora do backup', async () => {
-    // Se um campo novo for criado em Configuracoes, este teste lembra de conferir o backup
-    const configuracoes = await lerConfiguracoes()
-    const backup = criarBackup([], configuracoes)
-    expect(Object.keys(backup.settings).sort()).toEqual(Object.keys(configuracoes).sort())
-    expect(Object.keys(configuracoes).sort()).toEqual(['autoBackupMinutes', 'sidebarCollapsed', 'theme'])
+    const backup = parseBackup(file)
+    await replaceAll(notesFromBackup(backup), backup.settings)
+    expect(await listNotes()).toEqual(before)
+    expect((await readSettings()).autoBackupMinutes).toBe(10080)
   })
 })
 
-describe('lerBackup recusa arquivos inválidos', () => {
-  const valido = () => criarBackup([notaSimples('a', 1)], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' })
-  const comNota = (mudanca: Record<string, unknown>) => {
-    const b = valido()
-    return JSON.stringify({ ...b, notes: [{ ...b.notes[0], ...mudanca }] })
+describe('settings in the backup', () => {
+  test('every setting goes into the file and comes back on import', async () => {
+    // Non-default values in every field
+    const chosen = { autoBackupMinutes: 10080, sidebarCollapsed: true, theme: 'dark' } as const
+    await saveSettings(chosen)
+    await saveNote(simpleNote('x', 1))
+    const file = JSON.stringify(createBackup(await listNotes(), await readSettings()))
+    expect(JSON.parse(file).settings).toEqual(chosen)
+
+    // Reset everything to the defaults and import
+    await replaceAll([], {})
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' })
+    const backup = parseBackup(file)
+    await replaceAll(notesFromBackup(backup), backup.settings)
+    expect(await readSettings()).toEqual(chosen)
+  })
+
+  test('no setting is left out of the backup', async () => {
+    // If a new field is added to Settings, this test is a reminder to check the backup
+    const settings = await readSettings()
+    const backup = createBackup([], settings)
+    expect(Object.keys(backup.settings).sort()).toEqual(Object.keys(settings).sort())
+    expect(Object.keys(settings).sort()).toEqual(['autoBackupMinutes', 'sidebarCollapsed', 'theme'])
+  })
+})
+
+describe('parseBackup rejects invalid files', () => {
+  const valid = () => createBackup([simpleNote('a', 1)], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' })
+  const withNote = (change: Record<string, unknown>) => {
+    const b = valid()
+    return JSON.stringify({ ...b, notes: [{ ...b.notes[0], ...change }] })
   }
 
   test.each([
-    ['texto que não é JSON', 'isto não é json', 'não é um JSON válido'],
-    ['JSON de outro app', JSON.stringify({ app: 'outro', version: 1, notes: [] }), 'não é um backup do Draftab'],
-    ['versão mais nova', JSON.stringify({ ...valido(), version: 2 }), 'versão mais nova'],
-    ['sem lista de notas', JSON.stringify({ ...valido(), notes: 'x' }), 'não tem a lista de notas'],
-    ['nota sem id', comNota({ id: '' }), 'não tem identificador'],
-    ['nota sem datas', comNota({ updatedAt: 'ontem' }), 'não tem datas válidas'],
-    ['doc que não é documento', comNota({ doc: { type: 'paragraph' } }), 'conteúdo inválido'],
-    ['bloco desconhecido', comNota({ doc: { type: 'doc', content: [{ type: 'tabela' }] } }), 'conteúdo inválido'],
-  ])('%s', (_nome, arquivo, mensagem) => {
-    expect(() => lerBackup(arquivo)).toThrow(mensagem)
+    ['text that is not JSON', 'this is not json', 'not valid JSON'],
+    ['JSON from another app', JSON.stringify({ app: 'other', version: 1, notes: [] }), 'not a Draftab backup'],
+    ['newer version', JSON.stringify({ ...valid(), version: 2 }), 'newer version'],
+    ['no list of notes', JSON.stringify({ ...valid(), notes: 'x' }), 'has no list of notes'],
+    ['note without id', withNote({ id: '' }), 'has no id'],
+    ['note without dates', withNote({ updatedAt: 'yesterday' }), 'has no valid dates'],
+    ['doc that is not a document', withNote({ doc: { type: 'paragraph' } }), 'invalid content'],
+    ['unknown block', withNote({ doc: { type: 'doc', content: [{ type: 'table' }] } }), 'invalid content'],
+  ])('%s', (_name, file, message) => {
+    expect(() => parseBackup(file)).toThrow(message)
   })
 
-  test('notas repetidas', () => {
-    const b = valido()
-    expect(() => lerBackup(JSON.stringify({ ...b, notes: [b.notes[0], b.notes[0]] }))).toThrow('repetida')
+  test('duplicated notes', () => {
+    const b = valid()
+    expect(() => parseBackup(JSON.stringify({ ...b, notes: [b.notes[0], b.notes[0]] }))).toThrow('duplicated')
   })
 
-  test('backup sem notas é válido', () => {
-    expect(lerBackup(JSON.stringify(criarBackup([], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' }))).notes).toEqual([])
-  })
-})
-
-describe('importação no armazenamento', () => {
-  test('substituirTudo remove notas que não estão no backup', async () => {
-    await salvarNota(notaSimples('vai sumir', 1))
-    await substituirTudo([notaSimples('fica', 2)], {})
-    expect((await listarNotas()).map((n) => n.title)).toEqual(['fica'])
-  })
-
-  test('avisa as abas sobre a importação, mas não sobre gravações comuns', async () => {
-    const aviso = vi.fn()
-    aoImportar(aviso)
-    await salvarNota(notaSimples('comum', 1))
-    expect(aviso).not.toHaveBeenCalled()
-    await substituirTudo([], {})
-    expect(aviso).toHaveBeenCalledTimes(1)
+  test('a backup with no notes is valid', () => {
+    const empty = createBackup([], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' })
+    expect(parseBackup(JSON.stringify(empty)).notes).toEqual([])
   })
 })
 
-test('nome do arquivo no formato draftab_AAAA-MM-DD-HHhMM.json', () => {
-  expect(nomeDoArquivo(new Date(2026, 9, 11, 15, 5))).toBe('draftab_2026-10-11-15h05.json')
-  expect(nomeDoArquivo(new Date(2026, 0, 2, 9, 7))).toBe('draftab_2026-01-02-09h07.json')
+describe('importing into storage', () => {
+  test('replaceAll removes notes that are not in the backup', async () => {
+    await saveNote(simpleNote('goes away', 1))
+    await replaceAll([simpleNote('stays', 2)], {})
+    expect((await listNotes()).map((n) => n.title)).toEqual(['stays'])
+  })
+
+  test('notifies tabs about the import, but not about regular saves', async () => {
+    const notice = vi.fn()
+    onImport(notice)
+    await saveNote(simpleNote('regular', 1))
+    expect(notice).not.toHaveBeenCalled()
+    await replaceAll([], {})
+    expect(notice).toHaveBeenCalledTimes(1)
+  })
+})
+
+test('file name in the draftab_YYYY-MM-DD-HHhMM.json format', () => {
+  expect(backupFileName(new Date(2026, 9, 11, 15, 5))).toBe('draftab_2026-10-11-15h05.json')
+  expect(backupFileName(new Date(2026, 0, 2, 9, 7))).toBe('draftab_2026-01-02-09h07.json')
 })

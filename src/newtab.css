@@ -1,122 +1,119 @@
-/* ---------- Cores (temas) ----------
-   Todas as cores da interface ficam aqui. O tema escuro só troca os valores.
-   data-tema="claro|escuro" no <html> é aplicado por tema-inicial.js e src/tema.ts. */
+/* ---------- Colors (themes) ----------
+   Every interface color lives here. The dark theme only swaps the values.
+   data-theme="light|dark" on <html> is set by theme-init.js and src/theme.ts. */
 
 :root {
-  color-scheme: light; /* caixinhas, seletores e barras de rolagem do navegador */
-  --fundo: #fff;
-  --fundo-lateral: #f7f7f5;
-  --fundo-campo: #fff;
-  --fundo-dialogo: #fff;
-  --fundo-codigo: #f4f4f2;
-  --texto: #222;
-  --texto-secundario: #666;
-  --texto-citacao: #555;
-  --texto-suave: #888;
-  --icone: #888;
-  --icone-fraco: #999;
-  --alca: #bbb;
-  --borda: #e3e3e3;
-  --borda-campo: #d6d6d6;
-  --borda-foco: #bbb;
-  --linha-lista: #e2e2e2;
+  color-scheme: light; /* the browser's checkboxes, selects and scrollbars */
+  --bg: #fff;
+  --bg-sidebar: #f7f7f5;
+  --bg-field: #fff;
+  --bg-dialog: #fff;
+  --bg-code: #f4f4f2;
+  --text: #222;
+  --text-secondary: #666;
+  --text-quote: #555;
+  --text-muted: #888;
+  --icon: #888;
+  --icon-faint: #999;
+  --handle: #bbb;
+  --border: #e3e3e3;
+  --border-field: #d6d6d6;
+  --border-focus: #bbb;
+  --list-line: #e2e2e2;
   --hover: #e6e6e4;
   --hover-item: #ebebea;
-  --hover-alca: #f0f0f0;
-  --hover-botao: #f5f5f4;
-  --item-atual: #e3e3e1;
+  --hover-handle: #f0f0f0;
+  --hover-button: #f5f5f4;
+  --item-current: #e3e3e1;
   --link: #2563eb;
-  --selecao-bloco: rgba(37, 99, 235, 0.12);
-  --erro: #b42318;
+  --block-selection: rgba(37, 99, 235, 0.12);
+  --error: #b42318;
   --ok: #1a7f37;
-  --texto-sobre-perigo: #fff;
-  --sombra-dialogo: rgba(0, 0, 0, 0.2);
-  --fundo-escurecido: rgba(20, 20, 20, 0.35);
+  --text-on-danger: #fff;
+  --dialog-shadow: rgba(0, 0, 0, 0.2);
+  --backdrop: rgba(20, 20, 20, 0.35);
 
-  --largura-lateral: 260px;
+  --sidebar-width: 260px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-:root[data-tema="escuro"] {
+:root[data-theme="dark"] {
   color-scheme: dark;
-  --fundo: #1b1b1d;
-  --fundo-lateral: #222225;
-  --fundo-campo: #2a2a2d;
-  --fundo-dialogo: #242427;
-  --fundo-codigo: #2b2b2e;
-  --texto: #e6e6e6;
-  --texto-secundario: #a5a5aa;
-  --texto-citacao: #b5b5b9;
-  --texto-suave: #8a8a8f;
-  --icone: #9a9a9f;
-  --icone-fraco: #7a7a7f;
-  --alca: #5f5f64;
-  --borda: #343437;
-  --borda-campo: #46464a;
-  --borda-foco: #6a6a6f;
-  --linha-lista: #3c3c40;
+  --bg: #1b1b1d;
+  --bg-sidebar: #222225;
+  --bg-field: #2a2a2d;
+  --bg-dialog: #242427;
+  --bg-code: #2b2b2e;
+  --text: #e6e6e6;
+  --text-secondary: #a5a5aa;
+  --text-quote: #b5b5b9;
+  --text-muted: #8a8a8f;
+  --icon: #9a9a9f;
+  --icon-faint: #7a7a7f;
+  --handle: #5f5f64;
+  --border: #343437;
+  --border-field: #46464a;
+  --border-focus: #6a6a6f;
+  --list-line: #3c3c40;
   --hover: #323235;
   --hover-item: #2d2d30;
-  --hover-alca: #303033;
-  --hover-botao: #323235;
-  --item-atual: #37373a;
+  --hover-handle: #303033;
+  --hover-button: #323235;
+  --item-current: #37373a;
   --link: #6ea8fe;
-  --selecao-bloco: rgba(110, 168, 254, 0.18);
-  --erro: #ff7b72;
+  --block-selection: rgba(110, 168, 254, 0.18);
+  --error: #ff7b72;
   --ok: #56d364;
-  --texto-sobre-perigo: #1b1b1d;
-  --sombra-dialogo: rgba(0, 0, 0, 0.6);
-  --fundo-escurecido: rgba(0, 0, 0, 0.55);
+  --text-on-danger: #1b1b1d;
+  --dialog-shadow: rgba(0, 0, 0, 0.6);
+  --backdrop: rgba(0, 0, 0, 0.55);
 }
 
+/* ---------- Layout: sidebar + editor area ---------- */
+
 body {
+  display: flex;
+  min-height: 100vh;
   margin: 0;
-  background: var(--fundo);
-  color: var(--texto);
+  background: var(--bg);
+  color: var(--text);
   font-family: system-ui, -apple-system, sans-serif;
   font-size: 16px;
   line-height: 1.6;
 }
 
-/* ---------- Layout: barra lateral + área do editor ---------- */
-
-
-body {
-  display: flex;
-  min-height: 100vh;
-}
-
-/* Sem animações enquanto a aba abre (a barra não "desliza" ao carregar) */
-body.carregando * {
+/* No animations while the tab opens (the sidebar doesn't "slide" on load) */
+body.loading * {
   transition: none !important;
 }
 
-#lateral {
+#sidebar {
   box-sizing: border-box;
   flex: none;
-  width: var(--largura-lateral);
+  width: var(--sidebar-width);
   height: 100vh;
   position: sticky;
   top: 0;
   overflow-y: auto;
   padding: 12px 10px 16px;
-  background: var(--fundo-lateral);
-  border-right: 1px solid var(--borda);
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
   font-size: 14px;
-  transition: margin-left 220ms var(--suave), visibility 220ms;
+  transition: margin-left 220ms var(--ease), visibility 220ms;
 }
 
-body.lateral-recolhida #lateral {
-  margin-left: calc(-1 * var(--largura-lateral));
+body.sidebar-collapsed #sidebar {
+  margin-left: calc(-1 * var(--sidebar-width));
   visibility: hidden;
 }
 
-#area {
+#main {
   flex: 1;
   min-width: 0;
 }
 
-#alternar-lateral,
-#alternar-tema {
+#toggle-sidebar,
+#toggle-theme {
   position: fixed;
   top: 12px;
   left: 12px;
@@ -125,99 +122,99 @@ body.lateral-recolhida #lateral {
   height: 28px;
 }
 
-#alternar-tema {
+#toggle-theme {
   left: 44px;
 }
 
-/* Busca com lupa + botão de nova nota ao lado */
-.linha-busca {
+/* Search with magnifier + new note button next to it */
+.search-row {
   display: flex;
   gap: 6px;
   margin-bottom: 10px;
 }
 
-.campo-busca {
+.search-field {
   flex: 1;
   min-width: 0;
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 0 8px;
-  border: 1px solid var(--borda);
+  border: 1px solid var(--border);
   border-radius: 6px;
-  background: var(--fundo-campo);
-  color: var(--icone-fraco);
+  background: var(--bg-field);
+  color: var(--icon-faint);
   cursor: text;
 }
 
-.campo-busca:focus-within {
-  border-color: var(--borda-foco);
+.search-field:focus-within {
+  border-color: var(--border-focus);
 }
 
-.campo-busca svg {
+.search-field svg {
   flex: none;
 }
 
-#busca {
+#search {
   flex: 1;
   min-width: 0;
   padding: 6px 0;
   border: none;
   outline: none;
   background: transparent;
-  color: var(--texto);
+  color: var(--text);
   font: inherit;
 }
 
-/* Topo da barra: espaço para o botão de recolher (fixo), exportar, importar e,
-   à direita, a engrenagem */
-.topo-lateral {
+/* Top of the sidebar: room for the (fixed) sidebar and theme buttons, export,
+   import and, on the right, the gear */
+.sidebar-top {
   display: flex;
   gap: 2px;
   height: 28px;
   margin-bottom: 16px;
-  padding-left: 64px; /* espaço para os botões fixos de recolher e de tema */
+  padding-left: 64px; /* room for the fixed sidebar and theme buttons */
 }
 
-.topo-lateral .botao-icone {
+.sidebar-top .icon-button {
   width: 28px;
 }
 
-#abrir-configuracoes {
+#open-settings {
   margin-left: auto;
 }
 
-/* Botões só com ícone */
-.botao-icone,
-.acao-nota {
+/* Icon-only buttons */
+.icon-button,
+.note-action {
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: var(--icone);
+  color: var(--icon);
   cursor: pointer;
 }
 
-#nova-nota {
+#new-note {
   flex: none;
   width: 32px;
 }
 
-.botao-icone:hover,
-.acao-nota:hover {
+.icon-button:hover,
+.note-action:hover {
   background: var(--hover);
-  color: var(--texto);
+  color: var(--text);
 }
 
-#lista-notas {
+#note-list {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.item-nota {
+.note-item {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -226,16 +223,16 @@ body.lateral-recolhida #lateral {
   cursor: pointer;
 }
 
-.item-nota:hover {
+.note-item:hover {
   background: var(--hover-item);
 }
 
-.item-nota.atual {
-  background: var(--item-atual);
+.note-item.current {
+  background: var(--item-current);
   font-weight: 600;
 }
 
-.titulo-nota {
+.note-title {
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -243,15 +240,15 @@ body.lateral-recolhida #lateral {
   text-overflow: ellipsis;
 }
 
-.data-nota {
+.note-date {
   flex: none;
-  color: var(--texto-suave);
+  color: var(--text-muted);
   font-size: 12px;
   font-weight: normal;
 }
 
-/* Renomear e excluir aparecem no lugar da data ao passar o mouse */
-.item-nota .acao-nota {
+/* Rename and delete replace the date on hover */
+.note-item .note-action {
   display: none;
   flex: none;
   width: 22px;
@@ -259,22 +256,22 @@ body.lateral-recolhida #lateral {
   border-radius: 4px;
 }
 
-.item-nota .acao-nota svg {
+.note-item .note-action svg {
   width: 14px;
   height: 14px;
 }
 
-.item-nota:hover .acao-nota,
-.item-nota:focus-within .acao-nota {
+.note-item:hover .note-action,
+.note-item:focus-within .note-action {
   display: flex;
 }
 
-.item-nota:hover .data-nota,
-.item-nota:focus-within .data-nota {
+.note-item:hover .note-date,
+.note-item:focus-within .note-date {
   display: none;
 }
 
-.campo-renomear {
+.rename-field {
   box-sizing: border-box;
   width: 100%;
   padding: 2px 6px;
@@ -283,26 +280,26 @@ body.lateral-recolhida #lateral {
   font: inherit;
 }
 
-.lista-vazia {
+.empty-list {
   padding: 6px 8px;
-  color: var(--texto-suave);
+  color: var(--text-muted);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #lateral { transition: none; }
+  #sidebar { transition: none; }
 }
 
 /* ---------- Editor ---------- */
 
 #editor {
-  /* position: relative serve de referência para a alça de arrastar */
+  /* position: relative is the reference for the drag handle */
   position: relative;
   max-width: 720px;
   margin: 0 auto;
   padding: 48px 24px 48px 48px;
 }
 
-/* Área editável ocupa a tela e não mostra o contorno de foco */
+/* The editable area fills the screen and shows no focus outline */
 .tiptap {
   min-height: 80vh;
   outline: none;
@@ -316,7 +313,7 @@ body.lateral-recolhida #lateral {
   margin: 0;
 }
 
-/* ---------- Títulos ---------- */
+/* ---------- Headings ---------- */
 
 .tiptap h1,
 .tiptap h2,
@@ -333,7 +330,7 @@ body.lateral-recolhida #lateral {
   margin-top: 0;
 }
 
-/* ---------- Listas ---------- */
+/* ---------- Lists ---------- */
 
 .tiptap ul,
 .tiptap ol {
@@ -345,7 +342,7 @@ body.lateral-recolhida #lateral {
   margin: 0.15em 0;
 }
 
-/* Checklist: caixinha à esquerda, texto à direita */
+/* Checklist: box on the left, text on the right */
 .tiptap ul[data-type="taskList"] {
   list-style: none;
   padding-left: 0.25em;
@@ -357,12 +354,12 @@ body.lateral-recolhida #lateral {
   gap: 0.5em;
 }
 
-/* A caixinha fica centrada na altura da primeira linha do texto */
+/* The box is centered on the height of the text's first line */
 .tiptap ul[data-type="taskList"] li > label {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  height: 1.6em; /* igual ao line-height do texto */
+  height: 1.6em; /* same as the text's line-height */
   user-select: none;
 }
 
@@ -378,21 +375,21 @@ body.lateral-recolhida #lateral {
 }
 
 .tiptap ul[data-type="taskList"] li[data-checked="true"] > div {
-  color: var(--texto-suave);
+  color: var(--text-muted);
   text-decoration: line-through;
 }
 
-/* ---------- Citação, código e divisor ---------- */
+/* ---------- Quote, code and divider ---------- */
 
 .tiptap blockquote {
   margin: 0;
   padding: 0.1em 0 0.1em 1em;
-  border-left: 3px solid var(--borda);
-  color: var(--texto-citacao);
+  border-left: 3px solid var(--border);
+  color: var(--text-quote);
 }
 
 .tiptap code {
-  background: var(--fundo-codigo);
+  background: var(--bg-code);
   border-radius: 4px;
   padding: 0.1em 0.3em;
   font-family: ui-monospace, Menlo, monospace;
@@ -402,7 +399,7 @@ body.lateral-recolhida #lateral {
 .tiptap pre {
   margin: 0.5em 0;
   padding: 0.8em 1em;
-  background: var(--fundo-codigo);
+  background: var(--bg-code);
   border-radius: 6px;
   overflow-x: auto;
 }
@@ -415,7 +412,7 @@ body.lateral-recolhida #lateral {
 
 .tiptap hr {
   border: none;
-  border-top: 1px solid var(--borda);
+  border-top: 1px solid var(--border);
   margin: 1.2em 0;
 }
 
@@ -427,9 +424,9 @@ body.lateral-recolhida #lateral {
   text-underline-offset: 2px;
 }
 
-/* ---------- Arrastar blocos ---------- */
+/* ---------- Dragging blocks ---------- */
 
-.alca-arrastar {
+.drag-handle {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -437,70 +434,65 @@ body.lateral-recolhida #lateral {
   height: 26px;
   margin-right: 4px;
   border-radius: 4px;
-  color: var(--alca);
+  color: var(--handle);
   cursor: grab;
 }
 
-.alca-arrastar:hover {
-  background: var(--hover-alca);
-  color: var(--texto-secundario);
+.drag-handle:hover {
+  background: var(--hover-handle);
+  color: var(--text-secondary);
 }
 
-.alca-arrastar:active {
+.drag-handle:active {
   cursor: grabbing;
 }
 
-/* Bloco selecionado pela alça (ou o divisor clicado) */
+/* Block selected by the handle (or a clicked divider) */
 .tiptap .ProseMirror-selectednode,
 .tiptap .ProseMirror-selectednoderange {
-  background: var(--selecao-bloco);
+  background: var(--block-selection);
   border-radius: 4px;
 }
 
-
-/* Em itens de lista, a alça fica antes do marcador (• ou 1.) */
-.alca-arrastar.alca-em-lista {
+/* On list items, the handle sits before the marker (• or 1.) */
+.drag-handle.in-list {
   transform: translateX(-24px);
 }
 
-/* ---------- Reordenação animada ---------- */
+/* ---------- Animated reordering ---------- */
 
-:root {
-  --suave: cubic-bezier(0.2, 0.8, 0.2, 1);
+/* Neighbors slide to open space */
+.block-moving {
+  transition: transform 220ms var(--ease);
 }
 
-/* Vizinhos deslizam para abrir espaço */
-.bloco-movel {
-  transition: transform 220ms var(--suave);
-}
-
-/* O bloco arrastado aparece apagado no lugar onde vai cair */
-.bloco-arrastado {
+/* The dragged block shows faded where it will land */
+.block-dragged {
   opacity: 0.35;
 }
 
-/* A linha de destino é desnecessária quando os blocos já abrem espaço */
-body.reordenando .cursor-soltar {
+/* The drop line isn't needed when the blocks already open space */
+body.reordering .drop-cursor {
   display: none;
 }
 
-/* Destaque rápido no bloco recém-movido */
-.bloco-solto {
-  animation: destaque-solto 700ms ease-out;
+/* Quick highlight on the block that just moved */
+.block-dropped {
+  animation: drop-highlight 700ms ease-out;
 }
 
-@keyframes destaque-solto {
-  from { background-color: var(--selecao-bloco); }
+@keyframes drop-highlight {
+  from { background-color: var(--block-selection); }
   to { background-color: transparent; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bloco-movel { transition: none; }
-  .bloco-solto { animation: none; }
+  .block-moving { transition: none; }
+  .block-dropped { animation: none; }
 }
 
-/* Alça da lista inteira: barra fina à esquerda da lista */
-.alca-lista {
+/* Whole-list handle: thin bar to the left of the list */
+.list-handle {
   position: absolute;
   display: none;
   width: 16px;
@@ -508,7 +500,7 @@ body.reordenando .cursor-soltar {
   cursor: grab;
 }
 
-.alca-lista::before {
+.list-handle::before {
   content: '';
   position: absolute;
   left: 7px;
@@ -516,105 +508,104 @@ body.reordenando .cursor-soltar {
   bottom: 3px;
   width: 2px;
   border-radius: 1px;
-  background: var(--linha-lista);
+  background: var(--list-line);
 }
 
-.alca-lista:hover {
-  background: var(--hover-alca);
+.list-handle:hover {
+  background: var(--hover-handle);
 }
 
-.alca-lista:hover::before {
-  background: var(--icone-fraco);
+.list-handle:hover::before {
+  background: var(--icon-faint);
 }
 
-.alca-lista:active {
+.list-handle:active {
   cursor: grabbing;
 }
 
-/* ---------- Configurações (lightbox) ---------- */
+/* ---------- Settings (lightbox) ---------- */
 
-
-#configuracoes {
+#settings {
   box-sizing: border-box;
   width: min(560px, calc(100vw - 32px));
   max-height: calc(100vh - 64px);
   padding: 0;
   border: none;
   border-radius: 12px;
-  background: var(--fundo-dialogo);
-  color: var(--texto);
-  box-shadow: 0 20px 60px var(--sombra-dialogo);
+  background: var(--bg-dialog);
+  color: var(--text);
+  box-shadow: 0 20px 60px var(--dialog-shadow);
   font-size: 15px;
   line-height: 1.5;
 }
 
-#configuracoes::backdrop {
-  background: var(--fundo-escurecido);
+#settings::backdrop {
+  background: var(--backdrop);
 }
 
-#configuracoes[open] {
-  animation: abrir-dialogo 180ms var(--suave);
+#settings[open] {
+  animation: dialog-open 180ms var(--ease);
 }
 
-#configuracoes[open]::backdrop {
-  animation: escurecer 180ms ease-out;
+#settings[open]::backdrop {
+  animation: backdrop-fade 180ms ease-out;
 }
 
-@keyframes abrir-dialogo {
+@keyframes dialog-open {
   from { opacity: 0; transform: translateY(8px) scale(0.98); }
 }
 
-@keyframes escurecer {
+@keyframes backdrop-fade {
   from { opacity: 0; }
 }
 
-.conteudo-dialogo {
+.dialog-content {
   padding: 20px 28px 8px;
 }
 
-.cabecalho-dialogo {
+.dialog-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 8px;
 }
 
-.cabecalho-dialogo h1 {
+.dialog-header h1 {
   margin: 0;
   font-size: 1.35em;
 }
 
-#fechar-configuracoes {
+#close-settings {
   width: 30px;
   height: 30px;
 }
 
-#configuracoes section {
+#settings section {
   padding: 18px 0;
-  border-top: 1px solid var(--borda);
+  border-top: 1px solid var(--border);
 }
 
-#configuracoes h2 {
+#settings h2 {
   margin: 0 0 6px;
   font-size: 1em;
 }
 
-.explicacao {
+.hint {
   margin: 0 0 12px;
-  color: var(--texto-secundario);
+  color: var(--text-secondary);
 }
 
-.explicacao.pequena {
+.hint.small {
   font-size: 0.9em;
 }
 
-.botoes {
+.buttons {
   display: flex;
   gap: 8px;
   margin-bottom: 12px;
 }
 
-.linha {
+.row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -622,73 +613,73 @@ body.reordenando .cursor-soltar {
   margin-bottom: 12px;
 }
 
-.botao {
+.button {
   padding: 7px 14px;
-  border: 1px solid var(--borda-campo);
+  border: 1px solid var(--border-field);
   border-radius: 6px;
-  background: var(--fundo-campo);
-  color: var(--texto);
+  background: var(--bg-field);
+  color: var(--text);
   font: inherit;
   cursor: pointer;
 }
 
-.botao:hover {
-  background: var(--hover-botao);
+.button:hover {
+  background: var(--hover-button);
 }
 
-.botao.perigo {
-  border-color: var(--erro);
-  color: var(--erro);
+.button.danger {
+  border-color: var(--error);
+  color: var(--error);
 }
 
-.botao.perigo:hover:not(:disabled) {
-  background: var(--erro);
-  color: var(--texto-sobre-perigo);
+.button.danger:hover:not(:disabled) {
+  background: var(--error);
+  color: var(--text-on-danger);
 }
 
-.botao:disabled {
+.button:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 
-#configuracoes select,
-#confirmar-apagar {
+#settings select,
+#confirm-delete {
   padding: 6px 8px;
-  border: 1px solid var(--borda-campo);
+  border: 1px solid var(--border-field);
   border-radius: 6px;
-  background: var(--fundo-campo);
+  background: var(--bg-field);
   font: inherit;
 }
 
-#configuracoes code {
+#settings code {
   padding: 0.1em 0.3em;
   border-radius: 4px;
-  background: var(--fundo-codigo);
+  background: var(--bg-code);
   font-size: 0.9em;
 }
 
-.mensagem {
+.message {
   min-height: 1.5em;
   margin: 0;
   color: var(--ok);
 }
 
-.mensagem.erro {
-  color: var(--erro);
+.message.error {
+  color: var(--error);
 }
 
-/* Sem mensagem, não ocupa espaço */
-.mensagem:empty {
+/* With no message, it takes no space */
+.message:empty {
   display: none;
 }
 
-.zona-perigo h2 {
-  color: var(--erro);
+.danger-zone h2 {
+  color: var(--error);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #configuracoes[open],
-  #configuracoes[open]::backdrop {
+  #settings[open],
+  #settings[open]::backdrop {
     animation: none;
   }
 }

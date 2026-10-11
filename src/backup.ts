@@ -1,125 +1,125 @@
 import { flattenExtensions, getSchema } from '@tiptap/core'
 import { MarkdownManager } from '@tiptap/markdown'
-import { extensoesDoConteudo } from './extensoes'
-import type { Nota } from './notas'
-import type { Configuracoes } from './storage'
+import { contentExtensions } from './extensions'
+import type { Note } from './notes'
+import type { Settings } from './storage'
 
-// Formato do arquivo de backup (ver SPEC.md). Não depende de página aberta:
-// também é usado pelo backup automático.
+// Backup file format (see SPEC.md). Doesn't depend on an open page:
+// it's also used by the automatic backup.
 
-export type NotaNoBackup = Nota & { markdown: string }
+export type BackupNote = Note & { markdown: string }
 
 export type Backup = {
   app: 'draftab'
   version: 1
   exportedAt: number
-  settings: Configuracoes
-  notes: NotaNoBackup[]
+  settings: Settings
+  notes: BackupNote[]
 }
 
-const VERSAO = 1
+const VERSION = 1
 
-// Conversor e schema criados uma vez, na primeira necessidade
+// Converter and schema created once, when first needed
 let markdown: MarkdownManager | undefined
 let schema: ReturnType<typeof getSchema> | undefined
 
-function paraMarkdown(nota: Nota): string {
-  markdown ??= new MarkdownManager({ extensions: flattenExtensions(extensoesDoConteudo) })
-  return markdown.serialize(nota.doc)
+function toMarkdown(note: Note): string {
+  markdown ??= new MarkdownManager({ extensions: flattenExtensions(contentExtensions) })
+  return markdown.serialize(note.doc)
 }
 
-export function criarBackup(notas: Nota[], configuracoes: Configuracoes, agora = Date.now()): Backup {
+export function createBackup(notes: Note[], settings: Settings, now = Date.now()): Backup {
   return {
     app: 'draftab',
-    version: VERSAO,
-    exportedAt: agora,
-    settings: configuracoes,
-    notes: notas.map((nota) => ({
-      id: nota.id,
-      title: nota.title,
-      titleManual: nota.titleManual,
-      markdown: paraMarkdown(nota), // só para leitura humana
-      doc: nota.doc,
-      createdAt: nota.createdAt,
-      updatedAt: nota.updatedAt,
+    version: VERSION,
+    exportedAt: now,
+    settings,
+    notes: notes.map((note) => ({
+      id: note.id,
+      title: note.title,
+      titleManual: note.titleManual,
+      markdown: toMarkdown(note), // for humans to read only
+      doc: note.doc,
+      createdAt: note.createdAt,
+      updatedAt: note.updatedAt,
     })),
   }
 }
 
-// draftab_AAAA-MM-DD-HHhMM.json (ex.: draftab_2026-10-11-15h05.json), no horário local
-export function nomeDoArquivo(data: Date): string {
-  const dois = (n: number) => String(n).padStart(2, '0')
-  const dia = `${data.getFullYear()}-${dois(data.getMonth() + 1)}-${dois(data.getDate())}`
-  return `draftab_${dia}-${dois(data.getHours())}h${dois(data.getMinutes())}.json`
+// draftab_YYYY-MM-DD-HHhMM.json (e.g. draftab_2026-10-11-15h05.json), in local time
+export function backupFileName(date: Date): string {
+  const two = (n: number) => String(n).padStart(2, '0')
+  const day = `${date.getFullYear()}-${two(date.getMonth() + 1)}-${two(date.getDate())}`
+  return `draftab_${day}-${two(date.getHours())}h${two(date.getMinutes())}.json`
 }
 
-// Lê o texto de um arquivo de backup e confere tudo antes de aceitar.
-// Erros têm mensagens prontas para mostrar ao usuário.
-export function lerBackup(texto: string): Backup {
-  let dados: unknown
+// Reads the text of a backup file and checks everything before accepting it.
+// Errors have messages ready to show to the user.
+export function parseBackup(text: string): Backup {
+  let data: unknown
   try {
-    dados = JSON.parse(texto)
+    data = JSON.parse(text)
   } catch {
-    throw new Error('O arquivo não é um JSON válido.')
+    throw new Error('The file is not valid JSON.')
   }
-  if (!ehObjeto(dados) || dados.app !== 'draftab') {
-    throw new Error('Este arquivo não é um backup do Draftab.')
+  if (!isObject(data) || data.app !== 'draftab') {
+    throw new Error('This file is not a Draftab backup.')
   }
-  if (typeof dados.version !== 'number' || dados.version > VERSAO) {
-    throw new Error('Este backup foi feito por uma versão mais nova do Draftab.')
+  if (typeof data.version !== 'number' || data.version > VERSION) {
+    throw new Error('This backup was made by a newer version of Draftab.')
   }
-  if (dados.version !== VERSAO) {
-    throw new Error('Versão de backup desconhecida.')
+  if (data.version !== VERSION) {
+    throw new Error('Unknown backup version.')
   }
-  if (!Array.isArray(dados.notes)) {
-    throw new Error('O backup não tem a lista de notas.')
+  if (!Array.isArray(data.notes)) {
+    throw new Error('The backup has no list of notes.')
   }
 
-  schema ??= getSchema(extensoesDoConteudo)
+  schema ??= getSchema(contentExtensions)
   const ids = new Set<string>()
-  const notas = dados.notes.map((nota: unknown, i: number) => {
-    const qual = `A nota ${i + 1} do backup`
-    if (!ehObjeto(nota) || typeof nota.id !== 'string' || nota.id === '') {
-      throw new Error(`${qual} não tem identificador.`)
+  const notes = data.notes.map((note: unknown, i: number) => {
+    const which = `Note ${i + 1} in the backup`
+    if (!isObject(note) || typeof note.id !== 'string' || note.id === '') {
+      throw new Error(`${which} has no id.`)
     }
-    if (ids.has(nota.id)) throw new Error(`${qual} está repetida.`)
-    ids.add(nota.id)
-    if (typeof nota.title !== 'string') throw new Error(`${qual} não tem título.`)
-    if (typeof nota.createdAt !== 'number' || typeof nota.updatedAt !== 'number') {
-      throw new Error(`${qual} não tem datas válidas.`)
+    if (ids.has(note.id)) throw new Error(`${which} is duplicated.`)
+    ids.add(note.id)
+    if (typeof note.title !== 'string') throw new Error(`${which} has no title.`)
+    if (typeof note.createdAt !== 'number' || typeof note.updatedAt !== 'number') {
+      throw new Error(`${which} has no valid dates.`)
     }
-    // O conteúdo precisa ser um documento que o editor consegue abrir
+    // The content must be a document the editor can open
     try {
-      if (!ehObjeto(nota.doc) || nota.doc.type !== 'doc') throw new Error()
-      schema!.nodeFromJSON(nota.doc).check()
+      if (!isObject(note.doc) || note.doc.type !== 'doc') throw new Error()
+      schema!.nodeFromJSON(note.doc).check()
     } catch {
-      throw new Error(`${qual} ("${nota.title}") tem conteúdo inválido.`)
+      throw new Error(`${which} ("${note.title}") has invalid content.`)
     }
     return {
-      id: nota.id,
-      title: nota.title,
-      titleManual: nota.titleManual === true,
-      markdown: typeof nota.markdown === 'string' ? nota.markdown : '',
-      doc: nota.doc,
-      createdAt: nota.createdAt,
-      updatedAt: nota.updatedAt,
-    } as NotaNoBackup
+      id: note.id,
+      title: note.title,
+      titleManual: note.titleManual === true,
+      markdown: typeof note.markdown === 'string' ? note.markdown : '',
+      doc: note.doc,
+      createdAt: note.createdAt,
+      updatedAt: note.updatedAt,
+    } as BackupNote
   })
 
   return {
     app: 'draftab',
-    version: VERSAO,
-    exportedAt: typeof dados.exportedAt === 'number' ? dados.exportedAt : 0,
-    settings: (ehObjeto(dados.settings) ? dados.settings : {}) as Configuracoes,
-    notes: notas,
+    version: VERSION,
+    exportedAt: typeof data.exportedAt === 'number' ? data.exportedAt : 0,
+    settings: (isObject(data.settings) ? data.settings : {}) as Settings,
+    notes,
   }
 }
 
-// As notas como ficam guardadas: restauradas a partir de doc (markdown é ignorado)
-export function notasDoBackup(backup: Backup): Nota[] {
-  return backup.notes.map(({ markdown: _markdown, ...nota }) => nota)
+// The notes as they are stored: restored from doc (markdown is ignored)
+export function notesFromBackup(backup: Backup): Note[] {
+  return backup.notes.map(({ markdown: _markdown, ...note }) => note)
 }
 
-function ehObjeto(valor: unknown): valor is Record<string, unknown> {
-  return typeof valor === 'object' && valor !== null && !Array.isArray(valor)
+function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
 }

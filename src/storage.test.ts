@@ -1,150 +1,150 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
-import { criarChromeFalso } from './chrome-falso'
-import { novaNotaEmBranco, type Nota } from './notas'
+import { createFakeChrome } from './fake-chrome'
+import { newBlankNote, type Note } from './notes'
 import {
-  aoMudarNotas,
-  aoMudarTema,
-  excluirTodasAsNotas,
-  intervaloValido,
-  excluirNota,
-  lerConfiguracoes,
-  lerMeta,
-  lerNota,
-  listarNotas,
-  salvarConfiguracoes,
-  salvarNota,
+  deleteAllNotes,
+  deleteNote,
+  listNotes,
+  onNotesChanged,
+  onThemeChanged,
+  readMeta,
+  readNote,
+  readSettings,
+  saveNote,
+  saveSettings,
+  validInterval,
 } from './storage'
 
-function notaCom(texto: string, updatedAt: number): Nota {
+function noteWith(text: string, updatedAt: number): Note {
   return {
-    ...novaNotaEmBranco(),
-    doc: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: texto }] }] },
-    title: texto,
+    ...newBlankNote(),
+    doc: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }] },
+    title: text,
     updatedAt,
   }
 }
 
 beforeEach(() => {
-  vi.stubGlobal('chrome', criarChromeFalso())
+  vi.stubGlobal('chrome', createFakeChrome())
 })
 
-describe('notas', () => {
-  test('salva e lê uma nota igual à original', async () => {
-    const nota = notaCom('oi', 1)
-    await salvarNota(nota)
-    expect(await lerNota(nota.id)).toEqual(nota)
+describe('notes', () => {
+  test('saves and reads a note identical to the original', async () => {
+    const note = noteWith('hi', 1)
+    await saveNote(note)
+    expect(await readNote(note.id)).toEqual(note)
   })
 
-  test('nota inexistente volta null', async () => {
-    expect(await lerNota('nao-existe')).toBeNull()
+  test('a missing note returns null', async () => {
+    expect(await readNote('does-not-exist')).toBeNull()
   })
 
-  test('lista da mais recente para a mais antiga, ignorando outras chaves', async () => {
-    await salvarNota(notaCom('velha', 1))
-    await salvarNota(notaCom('nova', 3))
-    await salvarNota(notaCom('meio', 2))
-    await salvarConfiguracoes({ sidebarCollapsed: true })
-    const titulos = (await listarNotas()).map((n) => n.title)
-    expect(titulos).toEqual(['nova', 'meio', 'velha'])
+  test('lists from most recent to oldest, ignoring other keys', async () => {
+    await saveNote(noteWith('old', 1))
+    await saveNote(noteWith('new', 3))
+    await saveNote(noteWith('middle', 2))
+    await saveSettings({ sidebarCollapsed: true })
+    const titles = (await listNotes()).map((n) => n.title)
+    expect(titles).toEqual(['new', 'middle', 'old'])
   })
 
-  test('salvar de novo substitui a nota', async () => {
-    const nota = notaCom('antes', 1)
-    await salvarNota(nota)
-    await salvarNota({ ...nota, title: 'depois', updatedAt: 2 })
-    const notas = await listarNotas()
-    expect(notas).toHaveLength(1)
-    expect(notas[0].title).toBe('depois')
+  test('saving again replaces the note', async () => {
+    const note = noteWith('before', 1)
+    await saveNote(note)
+    await saveNote({ ...note, title: 'after', updatedAt: 2 })
+    const notes = await listNotes()
+    expect(notes).toHaveLength(1)
+    expect(notes[0].title).toBe('after')
   })
 
-  test('excluir remove a nota', async () => {
-    const nota = notaCom('tchau', 1)
-    await salvarNota(nota)
-    await excluirNota(nota.id)
-    expect(await lerNota(nota.id)).toBeNull()
-    expect(await listarNotas()).toEqual([])
+  test('deleting removes the note', async () => {
+    const note = noteWith('bye', 1)
+    await saveNote(note)
+    await deleteNote(note.id)
+    expect(await readNote(note.id)).toBeNull()
+    expect(await listNotes()).toEqual([])
   })
 
-  test('salvar e excluir registram a hora da última mudança', async () => {
+  test('saving and deleting record the time of the last change', async () => {
     vi.spyOn(Date, 'now').mockReturnValue(1000)
-    const nota = notaCom('x', 1)
-    await salvarNota(nota)
-    expect((await lerMeta()).lastChangeAt).toBe(1000)
+    const note = noteWith('x', 1)
+    await saveNote(note)
+    expect((await readMeta()).lastChangeAt).toBe(1000)
     vi.spyOn(Date, 'now').mockReturnValue(2000)
-    await excluirNota(nota.id)
-    expect((await lerMeta()).lastChangeAt).toBe(2000)
+    await deleteNote(note.id)
+    expect((await readMeta()).lastChangeAt).toBe(2000)
     vi.restoreAllMocks()
   })
 
-  test('avisa mudanças de notas, com null quando excluída', async () => {
-    const recebidas: { id: string; nota: Nota | null }[] = []
-    aoMudarNotas((mudancas) => recebidas.push(...mudancas))
-    const nota = notaCom('x', 1)
-    await salvarNota(nota)
-    await salvarConfiguracoes({ sidebarCollapsed: true }) // não é nota: não avisa
-    await excluirNota(nota.id)
-    expect(recebidas).toEqual([
-      { id: nota.id, nota },
-      { id: nota.id, nota: null },
+  test('notifies note changes, with null when deleted', async () => {
+    const received: { id: string; note: Note | null }[] = []
+    onNotesChanged((changes) => received.push(...changes))
+    const note = noteWith('x', 1)
+    await saveNote(note)
+    await saveSettings({ sidebarCollapsed: true }) // not a note: no notification
+    await deleteNote(note.id)
+    expect(received).toEqual([
+      { id: note.id, note },
+      { id: note.id, note: null },
     ])
   })
 })
 
-describe('configurações', () => {
-  test('sem nada salvo, usa os valores padrão', async () => {
-    expect(await lerConfiguracoes()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' })
+describe('settings', () => {
+  test('with nothing saved, uses the defaults', async () => {
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto' })
   })
 
-  test('salvar uma parte mantém o resto', async () => {
-    await salvarConfiguracoes({ autoBackupMinutes: 60 })
-    await salvarConfiguracoes({ sidebarCollapsed: true })
-    expect(await lerConfiguracoes()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto' })
+  test('saving one part keeps the rest', async () => {
+    await saveSettings({ autoBackupMinutes: 60 })
+    await saveSettings({ sidebarCollapsed: true })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto' })
   })
 })
 
-describe('intervalo do backup automático', () => {
-  test('valores da lista ficam como estão', () => {
-    for (const v of [0, 1, 60, 1440, 10080, 43200]) expect(intervaloValido(v)).toBe(v)
+describe('automatic backup interval', () => {
+  test('values in the list stay as they are', () => {
+    for (const v of [0, 1, 60, 1440, 10080, 43200]) expect(validInterval(v)).toBe(v)
   })
 
-  test('valores antigos viram o intervalo mais próximo, sem desligar', () => {
-    expect(intervaloValido(360)).toBe(1440) // 6 h → diário
-    expect(intervaloValido(720)).toBe(1440) // 12 h → diário
-    expect(intervaloValido(5)).toBe(1)
-    expect(intervaloValido(-3)).toBe(0)
+  test('old values become the closest interval, without turning off', () => {
+    expect(validInterval(360)).toBe(1440) // 6 h → daily
+    expect(validInterval(720)).toBe(1440) // 12 h → daily
+    expect(validInterval(5)).toBe(1)
+    expect(validInterval(-3)).toBe(0)
   })
 
-  test('configuração antiga gravada é lida já convertida', async () => {
+  test('an old stored setting is read already converted', async () => {
     await chrome.storage.local.set({ settings: { autoBackupMinutes: 720, sidebarCollapsed: false } })
-    expect((await lerConfiguracoes()).autoBackupMinutes).toBe(1440)
+    expect((await readSettings()).autoBackupMinutes).toBe(1440)
   })
 })
 
-describe('excluirTodasAsNotas', () => {
-  test('apaga todas as notas e mantém as configurações', async () => {
-    await salvarNota(notaCom('a', 1))
-    await salvarNota(notaCom('b', 2))
-    await salvarConfiguracoes({ autoBackupMinutes: 60, sidebarCollapsed: true })
-    await excluirTodasAsNotas()
-    expect(await listarNotas()).toEqual([])
-    expect(await lerConfiguracoes()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto' })
+describe('deleteAllNotes', () => {
+  test('deletes every note and keeps the settings', async () => {
+    await saveNote(noteWith('a', 1))
+    await saveNote(noteWith('b', 2))
+    await saveSettings({ autoBackupMinutes: 60, sidebarCollapsed: true })
+    await deleteAllNotes()
+    expect(await listNotes()).toEqual([])
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto' })
   })
 })
 
-describe('tema', () => {
-  test('salvo e lido; valor desconhecido volta ao automático', async () => {
-    await salvarConfiguracoes({ theme: 'dark' })
-    expect((await lerConfiguracoes()).theme).toBe('dark')
-    await chrome.storage.local.set({ settings: { theme: 'roxo' } })
-    expect((await lerConfiguracoes()).theme).toBe('auto')
+describe('theme', () => {
+  test('saved and read; an unknown value goes back to automatic', async () => {
+    await saveSettings({ theme: 'dark' })
+    expect((await readSettings()).theme).toBe('dark')
+    await chrome.storage.local.set({ settings: { theme: 'purple' } })
+    expect((await readSettings()).theme).toBe('auto')
   })
 
-  test('avisa as abas quando o tema muda, e só nesse caso', async () => {
-    const recebidos: string[] = []
-    aoMudarTema((tema) => recebidos.push(tema))
-    await salvarConfiguracoes({ theme: 'dark' })
-    await salvarConfiguracoes({ sidebarCollapsed: true })
-    await salvarConfiguracoes({ theme: 'light' })
-    expect(recebidos).toEqual(['dark', 'light'])
+  test('notifies tabs when the theme changes, and only then', async () => {
+    const received: string[] = []
+    onThemeChanged((theme) => received.push(theme))
+    await saveSettings({ theme: 'dark' })
+    await saveSettings({ sidebarCollapsed: true })
+    await saveSettings({ theme: 'light' })
+    expect(received).toEqual(['dark', 'light'])
   })
 })

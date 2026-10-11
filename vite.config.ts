@@ -1,24 +1,24 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  // Caminhos relativos: a extensão é servida de chrome-extension://<id>/
+  // Relative paths: the extension is served from chrome-extension://<id>/
   base: './',
   build: {
     outDir: 'dist',
     emptyOutDir: true,
-    // O código é lido do disco pela extensão, então o tamanho do pacote não
-    // pesa. A DragHandle traz junto a biblioteca de colaboração (yjs).
+    // The code is read from disk by the extension, so bundle size doesn't
+    // matter. DragHandle brings the collaboration library (yjs) along.
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
-      // Uma entrada por página da extensão
+      // One entry per extension page
       input: {
         newtab: 'newtab.html',
         background: 'src/background.ts',
       },
       output: {
-        // O service worker precisa de nome fixo (o manifest aponta para ele)
-        entryFileNames: (entrada) =>
-          entrada.name === 'background' ? 'background.js' : 'assets/[name]-[hash].js',
+        // The service worker needs a fixed name (the manifest points to it)
+        entryFileNames: (entry) =>
+          entry.name === 'background' ? 'background.js' : 'assets/[name]-[hash].js',
       },
     },
   },

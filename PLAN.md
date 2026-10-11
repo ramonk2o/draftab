@@ -1,38 +1,38 @@
-# Plano
+# Plan
 
-Etapas em ordem de risco: o que pode invalidar a ideia vem primeiro.
+Stages ordered by risk: whatever could invalidate the idea comes first.
 
-## Etapa 1: Esqueleto andando
-- **Entrega:** projeto Vite + TypeScript, manifest MV3 sobrescrevendo a nova aba, página com editor Tiptap básico (StarterKit). Versões das libs fixadas consultando a documentação atual do Tiptap 3.
-- **Como verificar:** `npm install && npm run build` sem erros; em chrome://extensions, "Carregar sem compactação" apontando para `dist/`; abrir nova aba, digitar `# oi` e ver um título.
-- **Status:** concluída (install, build e `npm test` sem erros; teste manual no Chrome ok: `# oi` vira título). Versões fixadas: Tiptap 3.31.4, Vite 8.3.4, TypeScript 7.0.2, Vitest 5.0.3.
+## Stage 1: Walking skeleton
+- **Deliverable:** Vite + TypeScript project, MV3 manifest overriding the new tab, page with a basic Tiptap editor (StarterKit). Library versions pinned after checking the current Tiptap 3 docs.
+- **How to verify:** `npm install && npm run build` with no errors; in chrome://extensions, "Load unpacked" pointing to `dist/`; open a new tab, type `# hi` and see a heading.
+- **Status:** done (install, build and `npm test` with no errors; manual test in Chrome ok: `# hi` becomes a heading). Pinned versions: Tiptap 3.31.4, Vite 8.3.4, TypeScript 7.0.2, Vitest 5.0.3.
 
-## Etapa 2: Editor de blocos completo + arrastar
-- **Entrega:** todos os blocos do escopo (títulos, listas, checklist, código, citação, divisor, marcas inline, links), alça DragHandle à esquerda de cada bloco e CSS dos blocos.
-- **Como verificar:** checklist manual — cada atalho markdown do SPEC vira o bloco certo; arrastar um bloco para o topo e para o fim da nota funciona; checklist é clicável.
-- **Status:** concluída. Build ok; atalhos e arraste testados no Chrome (script automatizado) e checklist manual aprovado. Além do previsto: reordenação animada, arrastar lista inteira e blocos entre níveis (ver SPEC).
+## Stage 2: Full block editor + drag
+- **Deliverable:** every block in scope (headings, lists, checklist, code, quote, divider, inline marks, links), a DragHandle to the left of each block, and block CSS.
+- **How to verify:** manual checklist — each markdown shortcut in the SPEC becomes the right block; dragging a block to the top and to the end of the note works; checklist is clickable.
+- **Status:** done. Build ok; shortcuts and dragging tested in Chrome (automated script) and manual checklist approved. Beyond the plan: animated reordering, dragging whole lists and blocks across levels (see SPEC).
 
-## Etapa 3: Persistência e lista de notas
-- **Entrega:** `src/storage.ts` (CRUD em `chrome.storage.local`), nova nota por aba, descarte de nota vazia, título automático pela primeira linha até a nota ser renomeada, barra lateral recolhível com busca, renomear e exclusão, sincronização entre abas via `chrome.storage.onChanged`.
-- **Como verificar:** `npm test` passa (CRUD com `chrome.storage` simulado). Manual: recarregar mantém notas e ordem dos blocos; abrir e fechar aba sem digitar não cria nota; duas abas na mesma nota se atualizam; renomear fixa o título; recolher a barra persiste ao recarregar.
-- **Status:** concluída. `npm test`: 23 testes ok; roteiro manual executado no Chrome com a extensão carregada (18 verificações ok) e aprovado no uso. Ajustes extras: ícones minimalistas, busca com lupa, alinhamento de checkboxes e alças.
+## Stage 3: Persistence and note list
+- **Deliverable:** `src/storage.ts` (CRUD on `chrome.storage.local`), a new note per tab, empty notes discarded, automatic title from the first line until the note is renamed, collapsible sidebar with search, rename and delete, sync across tabs via `chrome.storage.onChanged`.
+- **How to verify:** `npm test` passes (CRUD with a simulated `chrome.storage`). Manual: reloading keeps notes and block order; opening and closing a tab without typing creates no note; two tabs on the same note update each other; renaming fixes the title; collapsing the sidebar persists after reload.
+- **Status:** done. `npm test`: 23 tests ok; manual script run in Chrome with the extension loaded (18 checks ok) and approved in use. Extra tweaks: minimalist icons, search with magnifier, checkbox and handle alignment.
 
-## Etapa 4: Backup manual
-- **Entrega:** ícones de exportar/importar e engrenagem no topo da barra lateral; página de Configurações com Exportar (JSON no formato do SPEC, incluindo markdown) e Importar (valida `app`/`version`, confirma, substitui tudo).
-- **Como verificar:** `npm test` passa (exportar → importar devolve dados idênticos; arquivo inválido é recusado). Manual: exportar, apagar uma nota, importar e ver a nota de volta.
-- **Status:** concluída. `npm test`: 39 testes ok (exportar → importar idêntico; 9 tipos de arquivo inválido recusados); roteiro manual no Chrome com a extensão: 13 verificações ok; aprovado no uso. Nome do arquivo: `draftab_AAAA-MM-DD-HHhMM.json`.
+## Stage 4: Manual backup
+- **Deliverable:** export/import icons and gear at the top of the sidebar; Settings page with Export (JSON in the SPEC format, including markdown) and Import (validates `app`/`version`, confirms, replaces everything).
+- **How to verify:** `npm test` passes (export → import returns identical data; invalid file is rejected). Manual: export, delete a note, import and see the note back.
+- **Status:** done. `npm test`: 39 tests ok (export → import identical; 9 kinds of invalid file rejected); manual script in Chrome with the extension: 13 checks ok; approved in use. File name: `draftab_YYYY-MM-DD-HHhMM.json`.
 
-## Etapa 5: Backup automático
-- **Entrega:** seletor de intervalo nas Configurações (desligado, a cada minuto, a cada hora, diário, semanal, mensal), `chrome.alarms` + `chrome.downloads` no service worker, pula quando nada mudou, mostra data do último backup. Configurações em lightbox, com a seção "Apagar todas as notas" (confirmação digitada).
-- **Como verificar:** com o intervalo "a cada minuto", editar uma nota e ver o arquivo em `Downloads/draftab-backups/`; sem editar, nenhum arquivo novo aparece. Lightbox fecha pelo ×, Esc e clique fora; apagar tudo só com "apagar tudo" digitado.
-- **Status:** concluída. `npm test`: 52 testes ok; no Chrome com a extensão: backup real a cada minuto (8 verificações ok) e lightbox, intervalos e apagar tudo (18 verificações ok); aprovado no uso.
+## Stage 5: Automatic backup
+- **Deliverable:** interval picker in Settings (off, every minute, hourly, daily, weekly, monthly), `chrome.alarms` + `chrome.downloads` in the service worker, skips when nothing changed, shows the date of the last backup. Settings in a lightbox, with a "Delete all notes" section (typed confirmation).
+- **How to verify:** with the "every minute" interval, edit a note and see the file in `Downloads/draftab-backups/`; without editing, no new file appears. The lightbox closes with ×, Esc and a click outside; deleting everything only works with "delete everything" typed.
+- **Status:** done. `npm test`: 52 tests ok; in Chrome with the extension: real every-minute backup (8 checks ok) and lightbox, intervals and delete-all (18 checks ok); approved in use.
 
-## Etapa 6: Tema escuro
-- **Entrega:** cores da interface em variáveis CSS, tema escuro, opção "Tema" nas Configurações (Automático / Claro / Escuro) e botão de tema ao lado do botão da barra, aplicada na hora em todas as abas e sem piscar o tema errado ao abrir.
-- **Como verificar:** `npm test` passa. No Chrome: com o macOS no modo escuro e o tema Automático, a página abre escura; Claro e Escuro forçam o tema; mudar numa aba muda nas outras; todos os elementos (editor, blocos, barra lateral, alças, lightbox, campos) legíveis nos dois temas.
-- **Status:** concluída. `npm test`: 56 testes ok; no Chrome com a extensão: temas, sincronização, abertura sem piscar, contraste WCAG, botão de tema e backup com todas as configurações verificados; aprovado no uso.
+## Stage 6: Dark theme
+- **Deliverable:** interface colors in CSS variables, dark theme, "Theme" option in Settings (Automatic / Light / Dark) and a theme button next to the sidebar button, applied immediately to all tabs and without flashing the wrong theme on open.
+- **How to verify:** `npm test` passes. In Chrome: with macOS in dark mode and the Automatic theme, the page opens dark; Light and Dark force the theme; changing it in one tab changes the others; every element (editor, blocks, sidebar, handles, lightbox, fields) is readable in both themes.
+- **Status:** done. `npm test`: 56 tests ok; in Chrome with the extension: themes, sync, no flash on open, WCAG contrast, theme button and backup with all settings verified; approved in use.
 
-## Etapa 7: Pronto para uso diário
-- **Entrega:** ícones, atalho de teclado para nova nota, estados vazios, script `npm run zip`, rascunho de política de privacidade para publicação futura.
-- **Como verificar:** `npm run zip` gera o .zip instalável; uso por um dia sem fricção. Começa o teste de 2 semanas.
-- **Status:** pendente
+## Stage 7: Ready for daily use
+- **Deliverable:** icons, keyboard shortcut for a new note, empty states, `npm run zip` script, draft privacy policy for future publishing.
+- **How to verify:** `npm run zip` produces the installable .zip; one day of use without friction. The 2-week test starts.
+- **Status:** pending

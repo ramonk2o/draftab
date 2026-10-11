@@ -1,376 +1,363 @@
 import type { JSONContent } from '@tiptap/core'
 import { EditorState } from '@tiptap/pm/state'
-import { criarEditor } from './editor'
-import { exportarBackup, importarBackup } from './backup-ui'
-import { abrirConfiguracoes } from './configuracoes'
-import { aoTrocarTemaNaTela, aplicarTema, estaEscuro } from './tema'
+import { createEditor } from './editor'
+import { exportBackup, importBackup } from './backup-ui'
+import { openSettings } from './settings'
+import { applyTheme, isDark, onScreenThemeChange } from './theme'
+import { ICON_EXPORT, ICON_GEAR, ICON_IMPORT, ICON_MOON, ICON_PENCIL, ICON_SUN, ICON_TRASH } from './icons'
 import {
-  ICONE_ENGRENAGEM,
-  ICONE_EXPORTAR,
-  ICONE_IMPORTAR,
-  ICONE_LAPIS,
-  ICONE_LIXEIRA,
-  ICONE_LUA,
-  ICONE_SOL,
-} from './icones'
+  displayTitle,
+  filterNotes,
+  isEmptyNote,
+  newBlankNote,
+  renamed,
+  withUpdatedTitle,
+  type Note,
+} from './notes'
 import {
-  comTituloAtualizado,
-  filtrarNotas,
-  notaVazia,
-  novaNotaEmBranco,
-  renomeada,
-  tituloParaMostrar,
-  type Nota,
-} from './notas'
-import {
-  aoImportar,
-  aoMudarNotas,
-  aoMudarTema,
-  excluirNota,
-  lerConfiguracoes,
-  lerNota,
-  listarNotas,
-  salvarConfiguracoes,
-  salvarNota,
+  deleteNote,
+  listNotes,
+  onImport,
+  onNotesChanged,
+  onThemeChanged,
+  readNote,
+  readSettings,
+  saveNote,
+  saveSettings,
 } from './storage'
 
-const ESPERA_PARA_SALVAR = 500 // ms sem digitar antes de salvar
+const SAVE_DELAY = 500 // ms without typing before saving
 
-function elemento<T extends HTMLElement>(seletor: string): T {
-  const el = document.querySelector<T>(seletor)
-  if (!el) throw new Error(`Elemento ${seletor} não encontrado`)
+function element<T extends HTMLElement>(selector: string): T {
+  const el = document.querySelector<T>(selector)
+  if (!el) throw new Error(`Element ${selector} not found`)
   return el
 }
 
-const botaoAlternar = elemento<HTMLButtonElement>('#alternar-lateral')
-const botaoNovaNota = elemento<HTMLButtonElement>('#nova-nota')
-const campoBusca = elemento<HTMLInputElement>('#busca')
-const listaNotas = elemento<HTMLUListElement>('#lista-notas')
-const editor = criarEditor(elemento('#editor'))
+const sidebarButton = element<HTMLButtonElement>('#toggle-sidebar')
+const newNoteButton = element<HTMLButtonElement>('#new-note')
+const searchField = element<HTMLInputElement>('#search')
+const noteList = element<HTMLUListElement>('#note-list')
+const editor = createEditor(element('#editor'))
 
-// ---------- Estado da aba ----------
+// ---------- Tab state ----------
 
-let notaAtual: Nota = novaNotaEmBranco() // nota aberta no editor
-let notaAtualSalva = false // a nota aberta já existe no armazenamento?
-let notas: Nota[] = [] // cópia da lista, para a barra lateral
-let temporizador: ReturnType<typeof setTimeout> | undefined
-let ultimaGravacaoDestaAba = 0 // updatedAt da última nota salva por esta aba
-let renomeando = false // enquanto renomeia, a lista não é redesenhada
+let currentNote: Note = newBlankNote() // note open in the editor
+let currentNoteSaved = false // does the open note already exist in storage?
+let notes: Note[] = [] // copy of the list, for the sidebar
+let timer: ReturnType<typeof setTimeout> | undefined
+let lastSaveFromThisTab = 0 // updatedAt of the last note saved by this tab
+let renaming = false // while renaming, the list isn't redrawn
 
-// ---------- Salvar ----------
+// ---------- Saving ----------
 
 editor.on('update', () => {
-  clearTimeout(temporizador)
-  // A primeira tecla cria a nota na hora; depois, espera uma pausa na digitação
-  if (!notaAtualSalva) salvarAgora()
-  else temporizador = setTimeout(salvarAgora, ESPERA_PARA_SALVAR)
+  clearTimeout(timer)
+  // The first keystroke creates the note right away; after that, wait for a pause in typing
+  if (!currentNoteSaved) saveNow()
+  else timer = setTimeout(saveNow, SAVE_DELAY)
 })
 
-function temAlteracaoPendente(): boolean {
-  return temporizador !== undefined
+function hasPendingChanges(): boolean {
+  return timer !== undefined
 }
 
-async function salvarAgora() {
-  clearTimeout(temporizador)
-  temporizador = undefined
-  // Lê o editor antes de qualquer espera, para não pegar o conteúdo de outra nota
-  const nota = comTituloAtualizado({ ...notaAtual, doc: editor.getJSON(), updatedAt: Date.now() })
-  notaAtual = nota
+async function saveNow() {
+  clearTimeout(timer)
+  timer = undefined
+  // Read the editor before any await, so we don't pick up another note's content
+  const note = withUpdatedTitle({ ...currentNote, doc: editor.getJSON(), updatedAt: Date.now() })
+  currentNote = note
 
-  if (notaVazia(nota)) {
-    // Nota vazia não fica guardada; se já estava, sai da lista
-    if (notaAtualSalva) {
-      notaAtualSalva = false
-      await excluirNota(nota.id)
+  if (isEmptyNote(note)) {
+    // An empty note isn't stored; if it was, it leaves the list
+    if (currentNoteSaved) {
+      currentNoteSaved = false
+      await deleteNote(note.id)
     }
     return
   }
-  notaAtualSalva = true
-  ultimaGravacaoDestaAba = nota.updatedAt
-  await salvarNota(nota)
+  currentNoteSaved = true
+  lastSaveFromThisTab = note.updatedAt
+  await saveNote(note)
 }
 
-// Não perde a última digitação ao fechar ou trocar de aba
+// Don't lose the last keystrokes when closing or switching tabs
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'hidden' && temAlteracaoPendente()) salvarAgora()
+  if (document.visibilityState === 'hidden' && hasPendingChanges()) saveNow()
 })
 window.addEventListener('pagehide', () => {
-  if (temAlteracaoPendente()) salvarAgora()
+  if (hasPendingChanges()) saveNow()
 })
 
-// ---------- Abrir notas ----------
+// ---------- Opening notes ----------
 
-function abrir(nota: Nota, jaSalva: boolean) {
-  if (temAlteracaoPendente()) salvarAgora()
-  notaAtual = nota
-  notaAtualSalva = jaSalva
-  trocarDocumento(nota.doc)
-  // Recarregar a aba reabre esta nota
-  sessionStorage.setItem('notaAberta', nota.id)
-  desenharLista()
-  // view.focus() foca na hora (o focus do Tiptap espera o próximo quadro e
-  // perderia as primeiras teclas digitadas logo após clicar em "Nova nota")
+function open(note: Note, alreadySaved: boolean) {
+  if (hasPendingChanges()) saveNow()
+  currentNote = note
+  currentNoteSaved = alreadySaved
+  replaceDocument(note.doc)
+  // Reloading the tab reopens this note
+  sessionStorage.setItem('openNoteId', note.id)
+  drawList()
+  // view.focus() focuses right away (Tiptap's focus waits for the next frame and
+  // would lose the first keystrokes typed right after clicking "New note")
   editor.view.focus()
-  editor.commands.focus(jaSalva ? 'end' : 'start')
+  editor.commands.focus(alreadySaved ? 'end' : 'start')
 }
 
-// Troca o conteúdo do editor zerando o desfazer (Cmd+Z não volta para a nota anterior)
-function trocarDocumento(doc: JSONContent) {
+// Replaces the editor content and resets undo (Cmd+Z doesn't go back to the previous note)
+function replaceDocument(doc: JSONContent) {
   const { schema, plugins } = editor.state
-  let conteudo
+  let content
   try {
-    conteudo = schema.nodeFromJSON(doc)
-  } catch (erro) {
-    console.error('Nota com conteúdo inválido; abrindo em branco', erro)
-    conteudo = schema.nodeFromJSON(novaNotaEmBranco().doc)
+    content = schema.nodeFromJSON(doc)
+  } catch (error) {
+    console.error('Note with invalid content; opening blank', error)
+    content = schema.nodeFromJSON(newBlankNote().doc)
   }
-  editor.view.updateState(EditorState.create({ schema, doc: conteudo, plugins }))
+  editor.view.updateState(EditorState.create({ schema, doc: content, plugins }))
 }
 
-// Conteúdo que chegou de outra aba: troca sem entrar no desfazer e mantém o cursor
-function receberConteudo(doc: JSONContent) {
+// Content that arrived from another tab: swap it in without touching undo, keeping the cursor
+function receiveContent(doc: JSONContent) {
   const { from } = editor.state.selection
-  editor
-    .chain()
-    .setMeta('addToHistory', false)
-    .setContent(doc, { emitUpdate: false })
-    .setTextSelection(from)
-    .run()
+  editor.chain().setMeta('addToHistory', false).setContent(doc, { emitUpdate: false }).setTextSelection(from).run()
 }
 
-botaoNovaNota.addEventListener('click', () => abrir(novaNotaEmBranco(), false))
+newNoteButton.addEventListener('click', () => open(newBlankNote(), false))
 
-// ---------- Sincronização com outras abas ----------
+// ---------- Sync with other tabs ----------
 
-aoMudarNotas(async (mudancas) => {
-  notas = await listarNotas()
-  desenharLista()
+onNotesChanged(async (changes) => {
+  notes = await listNotes()
+  drawList()
 
-  const daAtual = mudancas.find((m) => m.id === notaAtual.id)
-  if (!daAtual) return
+  const forCurrent = changes.find((c) => c.id === currentNote.id)
+  if (!forCurrent) return
 
-  if (daAtual.nota === null) {
-    // Excluída em outra aba (as exclusões desta aba já marcam como não salva)
-    if (notaAtualSalva) abrir(novaNotaEmBranco(), false)
+  if (forCurrent.note === null) {
+    // Deleted in another tab (deletions from this tab already mark it as not saved)
+    if (currentNoteSaved) open(newBlankNote(), false)
     return
   }
-  // O aviso das gravações desta própria aba chega depois; pode estar
-  // desatualizado em relação ao que já foi digitado, então é ignorado
-  const recebida = daAtual.nota
-  if (recebida.updatedAt <= ultimaGravacaoDestaAba) return
-  // Se há digitação pendente aqui, ela vai gravar por cima (a última gravação vence)
-  if (temAlteracaoPendente()) return
+  // The notification of this tab's own saves arrives later; it may be outdated
+  // compared to what has been typed since, so it's ignored
+  const received = forCurrent.note
+  if (received.updatedAt <= lastSaveFromThisTab) return
+  // If there's pending typing here, it will write over it (last write wins)
+  if (hasPendingChanges()) return
 
-  if (JSON.stringify(recebida.doc) !== JSON.stringify(editor.getJSON())) {
-    receberConteudo(recebida.doc)
+  if (JSON.stringify(received.doc) !== JSON.stringify(editor.getJSON())) {
+    receiveContent(received.doc)
   }
-  notaAtual = recebida
-  notaAtualSalva = true
+  currentNote = received
+  currentNoteSaved = true
 })
 
-// ---------- Barra lateral ----------
+// ---------- Sidebar ----------
 
-campoBusca.addEventListener('input', desenharLista)
+searchField.addEventListener('input', drawList)
 
-function desenharLista() {
-  if (renomeando) return
-  const visiveis = filtrarNotas(notas, campoBusca.value)
-  if (visiveis.length === 0) {
-    const vazio = document.createElement('li')
-    vazio.className = 'lista-vazia'
-    vazio.textContent = notas.length === 0 ? 'Nenhuma nota ainda' : 'Nada encontrado'
-    listaNotas.replaceChildren(vazio)
+function drawList() {
+  if (renaming) return
+  const visible = filterNotes(notes, searchField.value)
+  if (visible.length === 0) {
+    const empty = document.createElement('li')
+    empty.className = 'empty-list'
+    empty.textContent = notes.length === 0 ? 'No notes yet' : 'Nothing found'
+    noteList.replaceChildren(empty)
     return
   }
-  listaNotas.replaceChildren(...visiveis.map(criarItem))
+  noteList.replaceChildren(...visible.map(createItem))
 }
 
-function criarItem(nota: Nota): HTMLLIElement {
+function createItem(note: Note): HTMLLIElement {
   const item = document.createElement('li')
-  item.className = 'item-nota'
-  if (nota.id === notaAtual.id) item.classList.add('atual')
+  item.className = 'note-item'
+  if (note.id === currentNote.id) item.classList.add('current')
 
-  const titulo = document.createElement('span')
-  titulo.className = 'titulo-nota'
-  titulo.textContent = tituloParaMostrar(nota)
-  titulo.title = 'Clique duas vezes para renomear'
+  const title = document.createElement('span')
+  title.className = 'note-title'
+  title.textContent = displayTitle(note)
+  title.title = 'Double-click to rename'
 
-  const data = document.createElement('span')
-  data.className = 'data-nota'
-  data.textContent = formatarData(nota.updatedAt)
+  const date = document.createElement('span')
+  date.className = 'note-date'
+  date.textContent = formatDate(note.updatedAt)
 
-  const renomear = botaoDeAcao(ICONE_LAPIS, 'Renomear', () => comecarRenomear(item, nota))
-  const excluir = botaoDeAcao(ICONE_LIXEIRA, 'Excluir', () => confirmarExclusao(nota))
+  const rename = actionButton(ICON_PENCIL, 'Rename', () => startRename(item, note))
+  const remove = actionButton(ICON_TRASH, 'Delete', () => confirmDelete(note))
 
-  item.append(titulo, data, renomear, excluir)
+  item.append(title, date, rename, remove)
   item.addEventListener('click', () => {
-    if (nota.id !== notaAtual.id) abrir(nota, true)
+    if (note.id !== currentNote.id) open(note, true)
   })
-  titulo.addEventListener('dblclick', () => comecarRenomear(item, nota))
+  title.addEventListener('dblclick', () => startRename(item, note))
   return item
 }
 
-function botaoDeAcao(icone: string, rotulo: string, acao: () => void): HTMLButtonElement {
-  const botao = document.createElement('button')
-  botao.type = 'button'
-  botao.className = 'acao-nota'
-  botao.innerHTML = icone // SVG fixo de icones.ts
-  botao.title = rotulo
-  botao.setAttribute('aria-label', rotulo)
-  botao.addEventListener('click', (evento) => {
-    evento.stopPropagation() // não abre a nota
-    acao()
+function actionButton(icon: string, label: string, action: () => void): HTMLButtonElement {
+  const button = document.createElement('button')
+  button.type = 'button'
+  button.className = 'note-action'
+  button.innerHTML = icon // fixed SVG from icons.ts
+  button.title = label
+  button.setAttribute('aria-label', label)
+  button.addEventListener('click', (event) => {
+    event.stopPropagation() // don't open the note
+    action()
   })
-  return botao
+  return button
 }
 
-// Troca o título por um campo de texto; Enter confirma, Esc cancela
-function comecarRenomear(item: HTMLLIElement, nota: Nota) {
-  renomeando = true
-  const campo = document.createElement('input')
-  campo.className = 'campo-renomear'
-  campo.value = nota.titleManual ? nota.title : ''
-  campo.placeholder = nota.title || 'Título automático'
-  campo.setAttribute('aria-label', 'Novo título')
-  item.replaceChildren(campo)
-  item.classList.add('renomeando')
-  campo.focus()
-  campo.select()
+// Swaps the title for a text field; Enter confirms, Esc cancels
+function startRename(item: HTMLLIElement, note: Note) {
+  renaming = true
+  const field = document.createElement('input')
+  field.className = 'rename-field'
+  field.value = note.titleManual ? note.title : ''
+  field.placeholder = note.title || 'Automatic title'
+  field.setAttribute('aria-label', 'New title')
+  item.replaceChildren(field)
+  item.classList.add('renaming')
+  field.focus()
+  field.select()
 
-  let terminou = false
-  const terminar = async (confirmar: boolean) => {
-    if (terminou) return
-    terminou = true
-    renomeando = false
-    if (confirmar) await aplicarNovoTitulo(nota, campo.value)
-    desenharLista()
+  let finished = false
+  const finish = async (confirmed: boolean) => {
+    if (finished) return
+    finished = true
+    renaming = false
+    if (confirmed) await applyNewTitle(note, field.value)
+    drawList()
   }
-  campo.addEventListener('click', (evento) => evento.stopPropagation())
-  campo.addEventListener('keydown', (evento) => {
-    if (evento.key === 'Enter') terminar(true)
-    if (evento.key === 'Escape') terminar(false)
+  field.addEventListener('click', (event) => event.stopPropagation())
+  field.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') finish(true)
+    if (event.key === 'Escape') finish(false)
   })
-  campo.addEventListener('blur', () => terminar(true))
+  field.addEventListener('blur', () => finish(true))
 }
 
-async function aplicarNovoTitulo(nota: Nota, titulo: string) {
-  if (nota.id === notaAtual.id) {
-    // Inclui o que foi digitado e ainda não foi salvo
-    if (temAlteracaoPendente()) await salvarAgora()
-    notaAtual = { ...renomeada(notaAtual, titulo), updatedAt: Date.now() }
-    ultimaGravacaoDestaAba = notaAtual.updatedAt
-    await salvarNota(notaAtual)
+async function applyNewTitle(note: Note, title: string) {
+  if (note.id === currentNote.id) {
+    // Include what was typed and not saved yet
+    if (hasPendingChanges()) await saveNow()
+    currentNote = { ...renamed(currentNote, title), updatedAt: Date.now() }
+    lastSaveFromThisTab = currentNote.updatedAt
+    await saveNote(currentNote)
     return
   }
-  const guardada = await lerNota(nota.id)
-  if (guardada) await salvarNota({ ...renomeada(guardada, titulo), updatedAt: Date.now() })
+  const stored = await readNote(note.id)
+  if (stored) await saveNote({ ...renamed(stored, title), updatedAt: Date.now() })
 }
 
-async function confirmarExclusao(nota: Nota) {
-  if (!confirm(`Excluir a nota "${tituloParaMostrar(nota)}"? Isso não pode ser desfeito.`)) return
-  if (nota.id === notaAtual.id) {
-    clearTimeout(temporizador)
-    temporizador = undefined
-    notaAtualSalva = false
-    abrir(novaNotaEmBranco(), false)
+async function confirmDelete(note: Note) {
+  if (!confirm(`Delete the note "${displayTitle(note)}"? This can't be undone.`)) return
+  if (note.id === currentNote.id) {
+    clearTimeout(timer)
+    timer = undefined
+    currentNoteSaved = false
+    open(newBlankNote(), false)
   }
-  await excluirNota(nota.id)
+  await deleteNote(note.id)
 }
 
-function formatarData(momento: number): string {
-  const data = new Date(momento)
-  const hoje = new Date()
-  if (data.toDateString() === hoje.toDateString()) {
-    return data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+// Time for today's notes, short date for older ones (in the browser's language)
+function formatDate(moment: number): string {
+  const date = new Date(moment)
+  const today = new Date()
+  if (date.toDateString() === today.toDateString()) {
+    return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
   }
-  return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' })
+  return date.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit', year: '2-digit' })
 }
 
-// ---------- Backup e configurações (topo da barra) ----------
+// ---------- Backup and settings (top of the sidebar) ----------
 
-const botaoExportar = elemento<HTMLButtonElement>('#exportar')
-const botaoImportar = elemento<HTMLButtonElement>('#importar')
-const botaoConfiguracoes = elemento<HTMLButtonElement>('#abrir-configuracoes')
-botaoExportar.innerHTML = ICONE_EXPORTAR
-botaoImportar.innerHTML = ICONE_IMPORTAR
-botaoConfiguracoes.innerHTML = ICONE_ENGRENAGEM
+const exportButton = element<HTMLButtonElement>('#export')
+const importButton = element<HTMLButtonElement>('#import')
+const settingsButton = element<HTMLButtonElement>('#open-settings')
+exportButton.innerHTML = ICON_EXPORT
+importButton.innerHTML = ICON_IMPORT
+settingsButton.innerHTML = ICON_GEAR
 
-botaoExportar.addEventListener('click', async () => {
-  if (temAlteracaoPendente()) await salvarAgora() // inclui o que acabou de ser digitado
-  await exportarBackup()
+exportButton.addEventListener('click', async () => {
+  if (hasPendingChanges()) await saveNow() // include what was just typed
+  await exportBackup()
 })
 
-botaoImportar.addEventListener('click', async () => {
-  const resultado = await importarBackup()
-  if (resultado && !resultado.ok) alert(`Não foi possível importar: ${resultado.mensagem}`)
-  // Se deu certo, aoImportar recarrega a aba
+importButton.addEventListener('click', async () => {
+  const result = await importBackup()
+  if (result && !result.ok) alert(`Couldn't import: ${result.message}`)
+  // On success, onImport reloads the tab
 })
 
-botaoConfiguracoes.addEventListener('click', () => abrirConfiguracoes())
+settingsButton.addEventListener('click', () => openSettings())
 
-// Depois de uma importação ou de apagar todas as notas (nesta aba ou em outra),
-// recarrega com os dados novos,
-// descartando a digitação pendente para não gravar por cima do backup
-aoImportar(() => {
-  clearTimeout(temporizador)
-  temporizador = undefined
+// After an import or deleting all notes (in this tab or another), reload with the
+// new data, discarding pending typing so it isn't written over the backup
+onImport(() => {
+  clearTimeout(timer)
+  timer = undefined
   location.reload()
 })
 
-// ---------- Recolher a barra lateral ----------
+// ---------- Collapsing the sidebar ----------
 
-function aplicarLateralRecolhida(recolhida: boolean) {
-  document.body.classList.toggle('lateral-recolhida', recolhida)
-  const rotulo = recolhida ? 'Mostrar barra lateral' : 'Recolher barra lateral'
-  botaoAlternar.title = rotulo
-  botaoAlternar.setAttribute('aria-label', rotulo)
-  botaoAlternar.setAttribute('aria-expanded', String(!recolhida))
+function applySidebarCollapsed(collapsed: boolean) {
+  document.body.classList.toggle('sidebar-collapsed', collapsed)
+  const label = collapsed ? 'Show sidebar' : 'Collapse sidebar'
+  sidebarButton.title = label
+  sidebarButton.setAttribute('aria-label', label)
+  sidebarButton.setAttribute('aria-expanded', String(!collapsed))
 }
 
-botaoAlternar.addEventListener('click', () => {
-  const recolhida = !document.body.classList.contains('lateral-recolhida')
-  aplicarLateralRecolhida(recolhida)
-  salvarConfiguracoes({ sidebarCollapsed: recolhida })
+sidebarButton.addEventListener('click', () => {
+  const collapsed = !document.body.classList.contains('sidebar-collapsed')
+  applySidebarCollapsed(collapsed)
+  saveSettings({ sidebarCollapsed: collapsed })
 })
 
-// ---------- Início ----------
+// ---------- Theme ----------
 
-// Tema escolhido em qualquer aba vale para todas
-aoMudarTema(aplicarTema)
+// A theme chosen in any tab applies to all of them
+onThemeChanged(applyTheme)
 
-// ---------- Botão de tema (ao lado do botão da barra) ----------
+const themeButton = element<HTMLButtonElement>('#toggle-theme')
 
-const botaoTema = elemento<HTMLButtonElement>('#alternar-tema')
-
-// Lua no claro (vai para o escuro), sol no escuro (vai para o claro)
-function desenharBotaoTema(escuro: boolean) {
-  botaoTema.innerHTML = escuro ? ICONE_SOL : ICONE_LUA
-  const rotulo = escuro ? 'Mudar para o tema claro' : 'Mudar para o tema escuro'
-  botaoTema.title = rotulo
-  botaoTema.setAttribute('aria-label', rotulo)
+// Moon in light mode (goes to dark), sun in dark mode (goes to light)
+function drawThemeButton(dark: boolean) {
+  themeButton.innerHTML = dark ? ICON_SUN : ICON_MOON
+  const label = dark ? 'Switch to light theme' : 'Switch to dark theme'
+  themeButton.title = label
+  themeButton.setAttribute('aria-label', label)
 }
 
-desenharBotaoTema(estaEscuro()) // tema-inicial.js já aplicou o tema
-aoTrocarTemaNaTela(desenharBotaoTema)
+drawThemeButton(isDark()) // theme-init.js has already applied the theme
+onScreenThemeChange(drawThemeButton)
 
-// Troca para o oposto do que está na tela; todas as abas acompanham (aoMudarTema)
-botaoTema.addEventListener('click', () => {
-  salvarConfiguracoes({ theme: estaEscuro() ? 'light' : 'dark' })
+// Switches to the opposite of what's on screen; every tab follows (onThemeChanged)
+themeButton.addEventListener('click', () => {
+  saveSettings({ theme: isDark() ? 'light' : 'dark' })
 })
 
-async function iniciar() {
-  const configuracoes = await lerConfiguracoes()
-  aplicarTema(configuracoes.theme)
-  aplicarLateralRecolhida(configuracoes.sidebarCollapsed)
-  notas = await listarNotas()
+// ---------- Start ----------
 
-  const idAberta = sessionStorage.getItem('notaAberta')
-  const notaAberta = idAberta ? await lerNota(idAberta) : null
-  if (notaAberta) abrir(notaAberta, true)
-  else abrir(novaNotaEmBranco(), false)
+async function start() {
+  const settings = await readSettings()
+  applyTheme(settings.theme)
+  applySidebarCollapsed(settings.sidebarCollapsed)
+  notes = await listNotes()
 
-  // Só agora liga as animações, para a barra não "deslizar" ao abrir a aba
-  requestAnimationFrame(() => document.body.classList.remove('carregando'))
+  const openId = sessionStorage.getItem('openNoteId')
+  const openNote = openId ? await readNote(openId) : null
+  if (openNote) open(openNote, true)
+  else open(newBlankNote(), false)
+
+  // Only now turn animations on, so the sidebar doesn't "slide" when the tab opens
+  requestAnimationFrame(() => document.body.classList.remove('loading'))
 }
 
-iniciar()
+start()

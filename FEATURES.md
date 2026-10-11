@@ -1,50 +1,50 @@
-# Features do Draftab
+# Draftab features
 
-Backlog de ideias de features: o que pode entrar no Draftab no futuro, com status de cada uma.
+Feature idea backlog: what may come to Draftab in the future, with the status of each one.
 
 ## Editor
 
-### Tabelas
-- **Status:** Ideia
-- **Descrição:** bloco de tabela nas notas.
-- **Motivação:** não registrada (veio da lista "Fora do escopo" do SPEC.md).
+### Tables
+- **Status:** Idea
+- **Description:** a table block in notes.
+- **Motivation:** not recorded (came from the SPEC.md "Out of scope" list).
 
-### Correção: Shift+Tab para recuar blocos
-- **Status:** Ideia
-- **Descrição:** Tab avança (indenta) o bloco, mas Shift+Tab não recua: em vez disso, o Chrome troca de aba. Shift+Tab deve recuar o bloco.
-- **Motivação:** corrigir o comportamento atual, que é inconsistente com o Tab.
+### Fix: Shift+Tab to outdent blocks
+- **Status:** Idea
+- **Description:** Tab moves the block forward (indents), but Shift+Tab doesn't outdent: instead, Chrome switches tabs. Shift+Tab should outdent the block.
+- **Motivation:** fix the current behavior, which is inconsistent with Tab.
 
-## Notas e barra lateral
+## Notes and sidebar
 
-### Pastas e tags
-- **Status:** Ideia
-- **Descrição:** organizar as notas em pastas e com tags.
-- **Motivação:** não registrada (veio da lista "Fora do escopo" do SPEC.md).
+### Folders and tags
+- **Status:** Idea
+- **Description:** organize notes in folders and with tags.
+- **Motivation:** not recorded (came from the SPEC.md "Out of scope" list).
 
-## Backup e configurações
+## Backup and settings
 
-### Sincronização entre computadores
-- **Status:** Ideia
-- **Descrição:** manter as mesmas notas em mais de um computador.
-- **Motivação:** hoje a transferência entre computadores é manual, pelo backup JSON (SPEC.md).
+### Sync across computers
+- **Status:** Idea
+- **Description:** keep the same notes on more than one computer.
+- **Motivation:** today moving notes between computers is manual, via the JSON backup (SPEC.md).
 
-## Aparência
+## Appearance
 
-### Tema escuro
-- **Status:** Implementada
-- **Descrição:** versão escura da interface.
-- **Motivação:** não registrada (veio da lista "Fora do escopo" do SPEC.md, marcado como "a avaliar").
+### Dark theme
+- **Status:** Implemented
+- **Description:** a dark version of the interface.
+- **Motivation:** not recorded (came from the SPEC.md "Out of scope" list, marked "to be evaluated").
 
-### Temas tipográficos das notas
-- **Status:** Ideia
-- **Descrição:** seção de configuração para escolher o tema da anotação. Cada tema define a fonte e a hierarquia de tamanhos. Começa com dois temas: um serifado e um sem serifa.
-- **Motivação:** não registrada.
+### Typographic themes for notes
+- **Status:** Idea
+- **Description:** a settings section to choose the note theme. Each theme defines the font and the size hierarchy. Starts with two themes: a serif one and a sans-serif one.
+- **Motivation:** not recorded.
 
-## Administrativo
+## Administrative
 
-### Publicação na Chrome Web Store
-- **Status:** Ideia
-- **Descrição:** publicar o Draftab na Chrome Web Store.
-- **Motivação:** não registrada (veio da lista "Fora do escopo" do SPEC.md).
+### Publishing on the Chrome Web Store
+- **Status:** Idea
+- **Description:** publish Draftab on the Chrome Web Store.
+- **Motivation:** not recorded (came from the SPEC.md "Out of scope" list).
 
-## Arquivo
+## Archive
