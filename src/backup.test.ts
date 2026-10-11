@@ -126,6 +126,7 @@ describe('importação no armazenamento', () => {
   })
 })
 
-test('nome do arquivo no formato draftab-AAAA-MM-DD-HHmm.json', () => {
-  expect(nomeDoArquivo(new Date(2026, 9, 5, 9, 7))).toBe('draftab-2026-10-05-0907.json')
+test('nome do arquivo no formato draftab_AAAA-MM-DD-HHhMM.json', () => {
+  expect(nomeDoArquivo(new Date(2026, 9, 11, 15, 5))).toBe('draftab_2026-10-11-15h05.json')
+  expect(nomeDoArquivo(new Date(2026, 0, 2, 9, 7))).toBe('draftab_2026-01-02-09h07.json')
 })

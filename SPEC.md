@@ -28,7 +28,8 @@ Sucesso: ~2 semanas de uso real sem perder nenhuma nota e sem voltar ao New Tab 
   - Exportar backup agora (baixa um JSON).
   - Importar backup: valida o arquivo, pede confirmação e substitui tudo. As abas abertas do Draftab recarregam sozinhas depois da importação (nenhuma grava conteúdo antigo por cima).
   - Backup automático: desligado / 1 h / 6 h / 12 h / 24 h, mostrando a data do último backup.
-- Backup automático salva `Downloads/draftab-backups/draftab-AAAA-MM-DD-HHmm.json` sem perguntar, e só se houve mudança desde o último backup.
+- Nome do arquivo de backup (manual e automático): `draftab_AAAA-MM-DD-HHhMM.json` (ex.: `draftab_2026-10-11-15h05.json`).
+- Backup automático salva em `Downloads/draftab-backups/` sem perguntar, e só se houve mudança desde o último backup.
 
 ## Fora do escopo (por enquanto)
 - Sincronização entre computadores (o backup JSON cobre a transferência manual).

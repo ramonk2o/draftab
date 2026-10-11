@@ -46,11 +46,11 @@ export function criarBackup(notas: Nota[], configuracoes: Configuracoes, agora =
   }
 }
 
-// draftab-AAAA-MM-DD-HHmm.json, no horário local
+// draftab_AAAA-MM-DD-HHhMM.json (ex.: draftab_2026-10-11-15h05.json), no horário local
 export function nomeDoArquivo(data: Date): string {
   const dois = (n: number) => String(n).padStart(2, '0')
   const dia = `${data.getFullYear()}-${dois(data.getMonth() + 1)}-${dois(data.getDate())}`
-  return `draftab-${dia}-${dois(data.getHours())}${dois(data.getMinutes())}.json`
+  return `draftab_${dia}-${dois(data.getHours())}h${dois(data.getMinutes())}.json`
 }
 
 // Lê o texto de um arquivo de backup e confere tudo antes de aceitar.

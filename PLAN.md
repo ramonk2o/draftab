@@ -20,7 +20,7 @@ Etapas em ordem de risco: o que pode invalidar a ideia vem primeiro.
 ## Etapa 4: Backup manual
 - **Entrega:** ícones de exportar/importar e engrenagem no topo da barra lateral; página de Configurações com Exportar (JSON no formato do SPEC, incluindo markdown) e Importar (valida `app`/`version`, confirma, substitui tudo).
 - **Como verificar:** `npm test` passa (exportar → importar devolve dados idênticos; arquivo inválido é recusado). Manual: exportar, apagar uma nota, importar e ver a nota de volta.
-- **Status:** implementada (`npm test`: 39 testes ok, incluindo exportar → importar idêntico e 9 tipos de arquivo inválido recusados; roteiro manual executado no Chrome com a extensão: 13 verificações ok); falta seu teste no Chrome.
+- **Status:** concluída. `npm test`: 39 testes ok (exportar → importar idêntico; 9 tipos de arquivo inválido recusados); roteiro manual no Chrome com a extensão: 13 verificações ok; aprovado no uso. Nome do arquivo: `draftab_AAAA-MM-DD-HHhMM.json`.
 
 ## Etapa 5: Backup automático
 - **Entrega:** seletor de intervalo nas Configurações, `chrome.alarms` + `chrome.downloads` no service worker, pula quando nada mudou, mostra data do último backup.
