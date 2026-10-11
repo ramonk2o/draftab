@@ -97,7 +97,7 @@ Dica: desinstalar a extensão apaga as notas, então exporte um backup antes.
 |---|---|---|
 | Store icon | 128×128 | `public/icons/icon-128.png` |
 | Screenshots (1 to 5) | 1280×800 | `docs/store/en/screenshot-*.png` and `docs/store/pt-BR/screenshot-*.png` |
-| Small promo tile | 440×280 | `docs/store/promo-small.png` |
+| Small promo tile | 440×280 | `docs/store/en/promo-small.png` and `docs/store/pt-BR/promo-small.png` |
 
 ## Privacy practices
 
@@ -135,9 +135,9 @@ Dica: desinstalar a extensão apaga as notas, então exporte um backup antes.
 4. **Store listing tab:**
    - Description: paste the English description above.
    - Category and language: as in "Other listing fields".
-   - Graphic assets: upload the store icon, the 5 screenshots from `docs/store/en/` and the small promo tile.
+   - Graphic assets: upload the store icon, the 5 screenshots and the small promo tile from `docs/store/en/`.
    - Homepage and support URLs: as in "Other listing fields".
-   - Add the Portuguese (Brazil) localization: paste the pt-BR description and upload the screenshots from `docs/store/pt-BR/`.
+   - Add the Portuguese (Brazil) localization: paste the pt-BR description and upload the screenshots and promo tile from `docs/store/pt-BR/`.
 5. **Privacy tab:** paste the single purpose, the four permission justifications, answer "No" to remote code, leave every data category unchecked, check the three certifications and paste the privacy policy URL.
 6. **Distribution tab:** Public, all regions.
 7. **Submit for review.** Reviews usually take from a few days to a few weeks; the dashboard emails you when it's done.

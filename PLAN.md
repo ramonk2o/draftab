@@ -35,4 +35,4 @@ Stages ordered by risk: whatever could invalidate the idea comes first.
 ## Stage 7: Ready to publish
 - **Deliverable:** extension icons in the manifest, version 1.0.0, `npm run zip` (package + third-party license notices), `PRIVACY.md`, `STORE.md` (en-US and pt-BR listing texts, single purpose, permission justifications, data disclosure), store images (1280×800 screenshots in both languages, 440×280 promo tile), and a step-by-step submission guide.
 - **How to verify:** `npm test` passes; `npm run zip` produces a .zip that loads in Chrome with the icons showing and everything working; store images have the exact required sizes; every field the store asks for has a ready text. Then the user submits it in the Chrome Web Store dashboard.
-- **Status:** pending
+- **Status:** ready for submission. `npm test`: 56 tests ok; `npm run zip` builds draftab-1.0.0.zip (icons, localized description, LICENSE, third-party notices); the unzipped package loads in Chrome with the 4 icons and works; every E2E script passes; 10 screenshots at 1280×800 and 2 promo tiles at 440×280. Waiting for the user to submit in the Chrome Web Store dashboard.
