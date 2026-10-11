@@ -25,6 +25,7 @@ Chrome extension (Manifest V3) that replaces the new tab with a notepad with a m
 - Implement one PLAN.md stage at a time.
 - Before declaring something done, run the stage's verification and show the result.
 - When finished: update the **Status** in PLAN.md and commit.
+- When a stage or any user-visible change is done, record it in CHANGELOG.md under the version in progress (Added / Changed / Fixed).
 - Any change of decision goes to SPEC.md before the code.
 
 ## Feature backlog
