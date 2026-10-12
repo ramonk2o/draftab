@@ -21,6 +21,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 - The sidebar can be collapsed; its state is remembered.
   - Typing in the note hides the sidebar if it's showing; moving the mouse brings it back. This automatic hiding isn't remembered (a reload shows the sidebar). A sidebar collapsed with the button stays collapsed until reopened with the button (or a tag search).
   - Opening or closing the sidebar (by the button or automatically) doesn't move the note's text.
+  - While collapsed by the button, the sidebar button shows it (a different icon); hidden while typing, it doesn't.
 - Import a file as a note (next to New note): one `.md` or `.txt` file becomes a new note, which opens.
   - `.md` / `.markdown` is read as markdown (headings, lists, checklists, quotes, code, dividers, marks, links); headings smaller than `###` become `###`. If something in it can't become a Draftab block, the file is read as plain text instead.
   - `.txt` is plain text: each line becomes a paragraph. Windows and old Mac line breaks are accepted.

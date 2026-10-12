@@ -37,4 +37,10 @@ export const ICON_GEAR = icon(
   '<path d="M12.86 6.81 14.52 6.95 14.52 9.05 12.86 9.19 12.27 10.59 13.35 11.86 11.86 13.35 10.59 12.27 9.19 12.86 9.05 14.52 6.95 14.52 6.81 12.86 5.41 12.27 4.14 13.35 2.65 11.86 3.73 10.59 3.14 9.19 1.48 9.05 1.48 6.95 3.14 6.81 3.73 5.41 2.65 4.14 4.14 2.65 5.41 3.73 6.81 3.14 6.95 1.48 9.05 1.48 9.19 3.14 10.59 3.73 11.86 2.65 13.35 4.14 12.27 5.41Z" /><circle cx="8" cy="8" r="2" />',
 )
 
+// A window with a side panel: the sidebar button. With » while it's collapsed by the button
+export const ICON_SIDEBAR = icon('<rect x="2" y="2.5" width="12" height="11" rx="2" /><path d="M6 2.5v11" />')
+export const ICON_SIDEBAR_CLOSED = icon(
+  '<rect x="2" y="2.5" width="12" height="11" rx="2" /><path d="M6 2.5v11" /><path d="m8.25 6 2 2-2 2" /><path d="m10.75 6 2 2-2 2" />',
+)
+
 export const ICON_CLOSE = icon('<path d="M4 4l8 8" /><path d="M12 4l-8 8" />')

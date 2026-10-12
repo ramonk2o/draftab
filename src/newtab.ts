@@ -18,6 +18,8 @@ import {
   ICON_MARKDOWN,
   ICON_PENCIL,
   ICON_PIN,
+  ICON_SIDEBAR,
+  ICON_SIDEBAR_CLOSED,
   ICON_TEXT_BIGGER,
   ICON_TEXT_SMALLER,
   ICON_TRASH,
@@ -686,9 +688,11 @@ function searchForTag(tag: string) {
 let hiddenWhileTyping = false
 let mouseWhenHidden: { x: number; y: number } | null = null
 
-function applySidebarCollapsed(collapsed: boolean) {
-  hiddenWhileTyping = false
+// whileTyping: hidden automatically; the button keeps its normal icon
+function applySidebarCollapsed(collapsed: boolean, whileTyping = false) {
+  hiddenWhileTyping = collapsed && whileTyping
   document.body.classList.toggle('sidebar-collapsed', collapsed)
+  sidebarButton.innerHTML = collapsed && !whileTyping ? ICON_SIDEBAR_CLOSED : ICON_SIDEBAR
   const label = collapsed ? 'Show sidebar' : 'Collapse sidebar'
   sidebarButton.title = label
   sidebarButton.setAttribute('aria-label', label)
@@ -704,8 +708,7 @@ sidebarButton.addEventListener('click', () => {
 // Typing in the note hides the sidebar, if it's showing
 element('#editor').addEventListener('beforeinput', () => {
   if (document.body.classList.contains('sidebar-collapsed')) return
-  applySidebarCollapsed(true)
-  hiddenWhileTyping = true
+  applySidebarCollapsed(true, true)
   mouseWhenHidden = null
 })
 

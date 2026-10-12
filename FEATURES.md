@@ -19,11 +19,11 @@ How a feature moves:
 ## Sidebar
 
 ### Hide the sidebar while typing
-- **Status:** In progress — round 2 after the user's test: opening/closing the sidebar must not move the note's text (the sidebar now opens over the page; the text's position depends only on the window width). `npm test` (138 passed) and `npm run build` OK. Waiting for the check in Chrome.
+- **Status:** In progress — round 3 after the user's test: show when the sidebar is collapsed by the button (the sidebar button gets an icon with »). Round 2 (the text doesn't move) approved. `npm test` (138 passed) and `npm run build` OK. Waiting for the check in Chrome.
 - **Description:** typing in the note hides the sidebar if it's showing; moving the mouse brings it back. If the sidebar was collapsed with the button, it stays collapsed until the user reopens it.
 - **Motivation:** not recorded (direct request).
 - **Deliverable:** automatic hiding on typing (not saved in Settings), shown again on mouse movement; the button's collapse keeps working as before.
-- **How to verify:** `npm test` and `npm run build`; in Chrome: with the sidebar showing, type in the note → it hides; keep typing without touching the mouse → stays hidden; move the mouse → it comes back; collapse with the button, type and move the mouse → stays collapsed; reopen with the button → it works again; reload while auto-hidden → the sidebar shows; the text doesn't move when the sidebar opens or closes, in a wide and in a narrow window.
+- **How to verify:** `npm test` and `npm run build`; in Chrome: with the sidebar showing, type in the note → it hides; keep typing without touching the mouse → stays hidden; move the mouse → it comes back; collapse with the button, type and move the mouse → stays collapsed; reopen with the button → it works again; reload while auto-hidden → the sidebar shows; the text doesn't move when the sidebar opens or closes, in a wide and in a narrow window; the sidebar button shows » only while collapsed by the button (also after a reload), not while hidden by typing.
 
 ## Interface
 
