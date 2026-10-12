@@ -545,10 +545,11 @@ body.sidebar-collapsed #sidebar {
   justify-content: center;
   width: 24px;
   height: 28px;
-  margin-right: 12px;
   border-radius: 4px;
   color: var(--handle);
   cursor: grab;
+  /* Gap to the text. The handle is placed by its "left", so a margin wouldn't move it */
+  transform: translateX(-8px);
 }
 
 .drag-handle:hover {
@@ -569,9 +570,9 @@ body.sidebar-collapsed #sidebar {
 
 /* On list items, the handle sits before the marker (• or 1.) */
 .drag-handle.in-list {
-  /* the list indentation (the handle inherits the note's font size), minus 16px:
-     the marker already separates it from the text, and the whole-list bar needs the room */
-  transform: translateX(calc(-1.625em + 16px));
+  /* the list indentation (the handle inherits the note's font size), plus 4px:
+     the handle ends 4px inside the list, right next to the whole-list bar */
+  transform: translateX(calc(-1.625em + 4px));
 }
 
 /* ---------- Animated reordering ---------- */

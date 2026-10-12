@@ -22,10 +22,10 @@ How a feature moves:
 - **Motivation:** not recorded (direct request).
 
 ### Handle position and size
-- **Status:** In progress — round 3 after the user's test (list bar still too far from the list). `npm test` (122 passed) and `npm run build` OK. Waiting for the check in Chrome.
+- **Status:** In progress — round 4 after the user's test (handle further left, especially on lists; the bar stays). Found that the CSS margin never moved the handle (it is placed by its `left`); the gap is now a translate. `npm test` (122 passed) and `npm run build` OK. Waiting for the check in Chrome.
 - **Description:** move the drag handles a bit further to the left and make their clickable area slightly bigger.
 - **Motivation:** not recorded (direct request).
-- **Deliverable:** block handles 24×28 px (were 20×26) with 12 px of gap to the text (was 4 px). On list items the handle goes 4 px into the list's indentation (the marker already separates it from the text), so the whole-list bar (16 px wide) moves closer to the list: 36 px from its edge (was 44) without overlapping.
+- **Deliverable:** block handles 24×28 px (were 20×26), 8 px from the text. On list items the handle ends 4 px inside the list's indentation, touching the whole-list bar (16 px wide, 36 px from the list's edge, unchanged) without overlapping.
 - **How to verify:** `npm test` and `npm run build` pass; in Chrome, the handle of paragraphs, headings and list items sits further from the text and is easier to hit; the whole-list bar is still to the left of the item handles, without overlapping; dragging and double-click to copy still work.
 
 ## Sidebar
