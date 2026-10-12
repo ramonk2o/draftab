@@ -18,6 +18,13 @@ How a feature moves:
 
 ## Sidebar
 
+### Hide the sidebar while typing
+- **Status:** In progress — implemented; `npm test` (138 passed; no new unit tests, it's page behavior) and `npm run build` (with type check) OK. Waiting for the check in Chrome.
+- **Description:** typing in the note hides the sidebar if it's showing; moving the mouse brings it back. If the sidebar was collapsed with the button, it stays collapsed until the user reopens it.
+- **Motivation:** not recorded (direct request).
+- **Deliverable:** automatic hiding on typing (not saved in Settings), shown again on mouse movement; the button's collapse keeps working as before.
+- **How to verify:** `npm test` and `npm run build`; in Chrome: with the sidebar showing, type in the note → it hides; keep typing without touching the mouse → stays hidden; move the mouse → it comes back; collapse with the button, type and move the mouse → stays collapsed; reopen with the button → it works again; reload while auto-hidden → the sidebar shows.
+
 ## Interface
 
 ### Portuguese translation

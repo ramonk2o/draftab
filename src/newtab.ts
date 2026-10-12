@@ -682,7 +682,12 @@ function searchForTag(tag: string) {
 
 // ---------- Collapsing the sidebar ----------
 
+// Hidden by typing (not by the button): comes back when the mouse moves, and isn't saved
+let hiddenWhileTyping = false
+let mouseWhenHidden: { x: number; y: number } | null = null
+
 function applySidebarCollapsed(collapsed: boolean) {
+  hiddenWhileTyping = false
   document.body.classList.toggle('sidebar-collapsed', collapsed)
   const label = collapsed ? 'Show sidebar' : 'Collapse sidebar'
   sidebarButton.title = label
@@ -694,6 +699,26 @@ sidebarButton.addEventListener('click', () => {
   const collapsed = !document.body.classList.contains('sidebar-collapsed')
   applySidebarCollapsed(collapsed)
   saveSettings({ sidebarCollapsed: collapsed })
+})
+
+// Typing in the note hides the sidebar, if it's showing
+element('#editor').addEventListener('beforeinput', () => {
+  if (document.body.classList.contains('sidebar-collapsed')) return
+  applySidebarCollapsed(true)
+  hiddenWhileTyping = true
+  mouseWhenHidden = null
+})
+
+// ...and moving the mouse brings it back. Screen coordinates: the page moving under a
+// still mouse (when the sidebar closes) can also fire mousemove, without the mouse moving
+document.addEventListener('mousemove', (event) => {
+  if (!hiddenWhileTyping) return
+  if (!mouseWhenHidden) {
+    mouseWhenHidden = { x: event.screenX, y: event.screenY }
+    return
+  }
+  const moved = Math.hypot(event.screenX - mouseWhenHidden.x, event.screenY - mouseWhenHidden.y)
+  if (moved > 3) applySidebarCollapsed(false)
 })
 
 // ---------- Theme ----------
