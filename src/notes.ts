@@ -57,6 +57,14 @@ export function firstLine(doc: JSONContent): string {
   return (line ?? '').slice(0, 80)
 }
 
+// The document without its first block (the title) and the empty paragraphs right after it.
+// Used by "Copy note" and "Copy for WhatsApp".
+export function withoutFirstLine(doc: JSONContent): JSONContent {
+  const blocks = (doc.content ?? []).slice(1)
+  while (blocks.length > 0 && blocks[0].type === 'paragraph' && textOf(blocks[0]).trim() === '') blocks.shift()
+  return { ...doc, content: blocks }
+}
+
 // Until the note is renamed, the title follows the first line
 export function withUpdatedTitle(note: Note): Note {
   if (note.titleManual) return note

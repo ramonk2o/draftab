@@ -1,4 +1,4 @@
-import type { JSONContent } from '@tiptap/core'
+import { generateHTML, type JSONContent } from '@tiptap/core'
 import { EditorState } from '@tiptap/pm/state'
 import { createEditor } from './editor'
 import { element } from './dom'
@@ -31,6 +31,7 @@ import {
   validTextSize,
   renamed,
   sortNotes,
+  withoutFirstLine,
   withUpdatedTitle,
   type Note,
   type NoteSort,
@@ -379,12 +380,14 @@ noteExportButton.addEventListener('click', async () => {
   exportMarkdown(currentNote)
 })
 
-// The whole note: formatted for apps that accept it, markdown for plain-text ones
+// The note without the first line (the title): formatted for apps that accept it,
+// markdown for plain-text ones
 noteCopyButton.addEventListener('click', async () => {
-  const note = { ...currentNote, doc: editor.getJSON() }
+  const doc = withoutFirstLine(editor.getJSON())
+  const html = generateHTML(doc, editor.extensionManager.extensions)
   const item = new ClipboardItem({
-    'text/html': new Blob([editor.getHTML()], { type: 'text/html' }),
-    'text/plain': new Blob([noteToMarkdown(note)], { type: 'text/plain' }),
+    'text/html': new Blob([html], { type: 'text/html' }),
+    'text/plain': new Blob([noteToMarkdown({ ...currentNote, doc })], { type: 'text/plain' }),
   })
   try {
     await navigator.clipboard.write([item])

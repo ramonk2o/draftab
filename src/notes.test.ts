@@ -11,6 +11,7 @@ import {
   sortNotes,
   textOf,
   validTextSize,
+  withoutFirstLine,
   withUpdatedTitle,
   type Note,
 } from './notes'
@@ -156,5 +157,22 @@ describe('text size', () => {
     expect(nextTextSize(90, -1)).toBe(80)
     expect(nextTextSize(80, -1)).toBe(80)
     expect(nextTextSize(150, 1)).toBe(150)
+  })
+})
+
+describe('withoutFirstLine', () => {
+  test('drops the first block and the empty paragraphs right after it', () => {
+    expect(withoutFirstLine(doc(paragraph('Title'), paragraph(), paragraph('  '), paragraph('a'), paragraph(), paragraph('b')))).toEqual(
+      doc(paragraph('a'), paragraph(), paragraph('b')),
+    )
+  })
+
+  test('keeps a divider right after the title', () => {
+    const divider = { type: 'horizontalRule' }
+    expect(withoutFirstLine(doc(paragraph('Title'), divider, paragraph('a')))).toEqual(doc(divider, paragraph('a')))
+  })
+
+  test('a note with only a title becomes empty', () => {
+    expect(withoutFirstLine(doc(paragraph('Title'), paragraph()))).toEqual(doc())
   })
 })

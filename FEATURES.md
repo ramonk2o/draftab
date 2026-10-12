@@ -18,6 +18,13 @@ How a feature moves:
 - **Deliverable:** a "Copy for WhatsApp" button next to Copy note; `src/whatsapp.ts` converts the note; tests in `src/whatsapp.test.ts`.
 - **How to verify:** `npm test` and `npm run build`; in Chrome, copy a note with a title, bold/italic/strike/code, lists, checklist, quote, code block and link, paste it into WhatsApp Web, and check that the first line is gone and the formatting shows correctly.
 
+### Copy note without the first line
+- **Status:** In progress — implemented; `npm test` 116/116 passing (3 new in `notes.test.ts`), `npm run build` OK; waiting for the test in Chrome
+- **Description:** "Copy note" leaves out the first line (the title) and the empty lines right after it, like Copy for WhatsApp.
+- **Motivation:** direct request.
+- **Deliverable:** `withoutFirstLine` in `src/notes.ts`, used by Copy note (formatted and markdown) and by Copy for WhatsApp; tests in `src/notes.test.ts`.
+- **How to verify:** `npm test` and `npm run build`; in Chrome, on a note with a title, empty lines and text, click Copy note and paste into a formatted app (Google Docs) and a plain-text one: the title and the empty lines after it are gone.
+
 ### Tables
 - **Status:** Idea
 - **Description:** a table block in notes.

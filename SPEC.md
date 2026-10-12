@@ -37,7 +37,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 
 ### The note page
 - Export as Markdown: downloads the open note as `<title>.md` through a normal browser download, with the same markdown the backup's `markdown` field gets. Pending typing is saved first. The file name drops characters not allowed in file names (`/ \ : * ? " < > |` and control characters), has at most 100 characters, and is `Untitled.md` when nothing is left. Exporting is only on the note page, not in the note list.
-- Copy note: copies the whole note, formatted (HTML) for apps that accept it and as markdown (the same as the exported file) for plain-text apps. A "Copied" label confirms it.
+- Copy note: copies the note without its first block (the first line, usually the title) and the empty lines right after it, formatted (HTML) for apps that accept it and as markdown for plain-text apps. A "Copied" label confirms it. Export as Markdown still includes the whole note.
 - Copy for WhatsApp: copies the note as plain text in WhatsApp's formatting, without its first block (the first line, usually the title) and the empty lines right after it. A "Copied" label confirms it.
   - Bold `*x*`, italic `_x_`, strikethrough `~x~`, inline code `` `x` ``; underline has no equivalent and becomes plain text. Spaces at the edges of a formatted piece stay outside the marks (WhatsApp ignores marks next to a space).
   - Headings become a bold line. Bullet list `- `, numbered list `1. `, checklist `☐ ` / `☑ `; nested levels are indented 2 spaces per level. Quote: each line starts with `> `. Code block between ` ``` `. Divider `———`.

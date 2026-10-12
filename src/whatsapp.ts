@@ -1,12 +1,13 @@
 import type { JSONContent } from '@tiptap/core'
+import { withoutFirstLine } from './notes'
 
 // "Copy for WhatsApp": the note as plain text in WhatsApp's formatting
 // (*bold*, _italic_, ~strikethrough~, `code`), without its first line (the title)
 
 export function noteToWhatsApp(doc: JSONContent): string {
-  const blocks = (doc.content ?? []).slice(1) // the first block is the title
+  const blocks = withoutFirstLine(doc).content ?? []
   const lines = blocks.flatMap((block) => blockLines(block, 0))
-  // No empty lines at the start (right after the title) or at the end
+  // No empty lines at the start or at the end
   while (lines.length > 0 && lines[0].trim() === '') lines.shift()
   while (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop()
   return lines.join('\n')
