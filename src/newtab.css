@@ -269,6 +269,7 @@ body.sidebar-collapsed #sidebar {
 #new-note {
   flex: none;
   width: 32px;
+  padding: 0; /* without the browser's button padding, they really shrink to 0 */
   overflow: hidden;
   transition: width 200ms var(--ease), margin-left 200ms var(--ease), opacity 150ms var(--ease);
 }
