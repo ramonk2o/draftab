@@ -151,15 +151,14 @@ New permissions are only added with a reason recorded in SPEC.md.
 
 `npm test` covers the data layer and backups: saving/reading/listing/deleting notes, settings, title and search rules, lossless export → import, rejection of invalid backup files and the automatic backup decisions. `chrome.storage`, alarms and downloads are simulated in `src/fake-chrome.ts`.
 
-The editor and the interface (shortcuts, dragging, appearance) are checked in Chrome, following the "How to verify" of the stage in progress in [PLAN.md](PLAN.md) (finished stages keep theirs in the git history).
+The editor and the interface (shortcuts, dragging, appearance) are checked in Chrome, following the "How to verify" of the feature in progress in [FEATURES.md](FEATURES.md) (finished ones keep theirs in the git history).
 
 ### Project documents
 
 | File | Contents |
 |---|---|
 | [SPEC.md](SPEC.md) | How Draftab behaves today (rules by area), data model and technical decisions |
-| [PLAN.md](PLAN.md) | The stage in progress (deliverable, how to verify, status) and the list of finished stages |
-| [FEATURES.md](FEATURES.md) | Feature idea backlog, by area, with status |
+| [FEATURES.md](FEATURES.md) | Ideas, by area, and the feature in progress with how to verify it; done features move to CHANGELOG.md |
 | [CHANGELOG.md](CHANGELOG.md) | What changed in each version |
 | [STORE.md](STORE.md) | Chrome Web Store listing texts (en-US and pt-BR), privacy answers and how to submit or update |
 | [PRIVACY.md](PRIVACY.md) | Privacy policy (English and Portuguese) |

@@ -53,7 +53,7 @@ First public version, submitted to the Chrome Web Store.
 
 ## Development history before 1.0.0
 
-Draftab was built in stages (see [PLAN.md](PLAN.md)), all on 2026-10-11. Early commit messages are in Portuguese; the project moved to English right before the first release.
+Draftab was built in stages (commits named "Stage N: …"), all on 2026-10-11. Early commit messages are in Portuguese; the project moved to English right before the first release.
 
 | Stage | What came in | Commits |
 |---|---|---|

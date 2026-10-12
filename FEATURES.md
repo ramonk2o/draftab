@@ -1,6 +1,13 @@
 # Draftab features
 
-Feature idea backlog: what may come to Draftab in the future, with the status of each one.
+Features from idea to done: the backlog of ideas and the one being built.
+
+How a feature moves:
+- **Idea** → **Approved** (decided, not started) → **In progress** → done.
+- When work starts (on an idea from here or on a direct request), the entry becomes **In progress** and gets two more fields: **Deliverable** (what will exist at the end) and **How to verify** (`npm test` plus what to check in Chrome). One feature in progress at a time.
+- When it's implemented, the status records the verification results and waits for the user's test in Chrome.
+- Once done, it **leaves this file**: what changed goes to CHANGELOG.md (under the version in progress) and the rules to SPEC.md. The full detail stays in the git history.
+- A discarded idea goes to a "Discarded" section at the end, so it isn't proposed again.
 
 ## Editor
 
@@ -19,26 +26,6 @@ Feature idea backlog: what may come to Draftab in the future, with the status of
 ## Administrative
 
 ### Publishing on the Chrome Web Store
-- **Status:** Approved — 1.0.0 submitted, in review; becomes Implemented when it's live on the store
+- **Status:** Approved — 1.0.0 submitted, in review; leaves this file once it's live on the store
 - **Description:** publish Draftab on the Chrome Web Store.
 - **Motivation:** not recorded (came from the SPEC.md "Out of scope" list).
-
-## Archive
-
-### Fix: Shift+Tab to outdent blocks
-- **Status:** Implemented
-- **Area:** Editor
-- **Description:** Tab moves the block forward (indents), but Shift+Tab doesn't outdent: instead, Chrome switches tabs. Shift+Tab should outdent the block.
-- **Motivation:** fix the current behavior, which is inconsistent with Tab.
-
-### Dark theme
-- **Status:** Implemented (Stage 6)
-- **Area:** Appearance
-- **Description:** a dark version of the interface.
-- **Motivation:** not recorded (came from the SPEC.md "Out of scope" list, marked "to be evaluated").
-
-### Typographic themes for notes
-- **Status:** Implemented (Stage 9, as the "Note font" setting)
-- **Area:** Appearance
-- **Description:** a settings section to choose the note theme. Each theme defines the font and the size hierarchy. Starts with two themes: a serif one and a sans-serif one.
-- **Motivation:** not recorded.
