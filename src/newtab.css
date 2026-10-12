@@ -127,7 +127,7 @@ body.sidebar-collapsed #sidebar {
   display: flex;
   gap: 6px;
   margin-bottom: 10px;
-  padding: 10px 0;
+  padding: 10px 8px; /* the field and the buttons end where the dividers do */
 }
 
 /* The dividers stop short of the edges, like the one after the pinned notes */
@@ -269,6 +269,23 @@ body.sidebar-collapsed #sidebar {
 #new-note {
   flex: none;
   width: 32px;
+  overflow: hidden;
+  transition: width 200ms var(--ease), margin-left 200ms var(--ease), opacity 150ms var(--ease);
+}
+
+/* While searching, the field takes the whole row: the buttons shrink and fade out
+   (margin-left cancels the row's gap) */
+.search-row:has(.search-field:focus-within) #import,
+.search-row:has(.search-field:focus-within) #new-note {
+  width: 0;
+  margin-left: -6px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #import,
+  #new-note { transition: none; }
 }
 
 .icon-button:hover,
