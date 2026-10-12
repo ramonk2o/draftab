@@ -40,6 +40,11 @@ describe('noteToMarkdown', () => {
     expect(md).toContain('```\nlet a = 1\n```')
     expect(md).toContain('---')
   })
+
+  test('strikethrough is ~~, underline is ++', () => {
+    const md = noteToMarkdown(noteWith('x', paragraph(text('gone', [{ type: 'strike' }]), text(' and '), text('under', [{ type: 'underline' }]))))
+    expect(md).toBe('~~gone~~ and ++under++')
+  })
 })
 
 describe('markdownFileName', () => {
@@ -82,6 +87,11 @@ describe('noteFromFile', () => {
     // Back to markdown, nothing is lost
     expect(noteToMarkdown(note!)).toContain('- [x] done')
     expect(noteToMarkdown(note!)).toContain('One **bold**')
+  })
+
+  test('~~ and ++ in a .md file become strikethrough and underline', () => {
+    const note = noteFromFile('a.md', '~~gone~~ and ++under++')
+    expect(note?.doc.content).toEqual([paragraph(text('gone', [{ type: 'strike' }]), text(' and '), text('under', [{ type: 'underline' }]))])
   })
 
   test('headings smaller than ### become level 3', () => {

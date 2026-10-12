@@ -21,6 +21,7 @@ Ready to upload to the Chrome Web Store as an update.
 - **Copy for WhatsApp** on the note page: a chat-bubble button next to Copy note copies the note in WhatsApp's formatting (`*bold*`, `_italic_`, `~strikethrough~`, `` `code` ``, headings as bold lines, `- ` / `1. ` / `☐` lists, `> ` quotes), leaving out the first line (the title).
 - **Character counts** at the bottom right of the note page: total characters with markdown marks (the same text as the exported file), without markdown, and, while text is selected, how many are selected.
 - **Text size per note**: A− / A+ buttons at the top right of the note page, with the current size between them (also Cmd/Ctrl+Shift+, and Cmd/Ctrl+Shift+.), make the note's text smaller or bigger, from 80% to 150%. Each note keeps its own size, in every tab and in backups. "Text size of new notes" in Settings sets the size new notes start with; existing notes keep theirs.
+- **Strikethrough and underline shortcuts**: typing or pasting `++text++` underlines it (before, only Cmd/Ctrl+U did), and `~~text~~` strikes it through (already worked, now documented). In `.md` files they are `~~` and `++` too.
 - The new settings are included in backups.
 
 ### Changed

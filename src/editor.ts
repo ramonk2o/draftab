@@ -6,6 +6,7 @@ import { contentExtensions } from './extensions'
 import { selectAndCopyBlock } from './copy-block'
 import { UnwrapBlock } from './unwrap-block'
 import { Tags } from './tags'
+import { UnderlineShortcut } from './underline-shortcut'
 import { t } from './i18n'
 
 // Handle icon: six dots in two columns
@@ -96,6 +97,7 @@ export function createEditor(element: HTMLElement, onTagClick: (tag: string) => 
     extensions: [
       ...contentExtensions,
       ChecklistInsideList,
+      UnderlineShortcut,
       UnwrapBlock,
       Tags.configure({ onTagClick }),
       Reorder,
