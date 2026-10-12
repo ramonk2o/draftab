@@ -21,13 +21,6 @@ How a feature moves:
 - **Description:** the editor formats tags (`#example`) as links; clicking one puts the hashtag in the sidebar search.
 - **Motivation:** not recorded (direct request).
 
-### Handle position and size
-- **Status:** In progress — round 5 after the user's test: the handle disappeared on the way to it (the mouse left the editor's hover area). The editor's hover area now extends 32 px to the left, as far as the handles reach. `npm test` (122 passed) and `npm run build` OK. Waiting for the check in Chrome.
-- **Description:** move the drag handles a bit further to the left and make their clickable area slightly bigger.
-- **Motivation:** not recorded (direct request).
-- **Deliverable:** block handles 24×28 px (were 20×26), 8 px from the text. On list items the handle ends 4 px inside the list's indentation, touching the whole-list bar (16 px wide, 36 px from the list's edge, unchanged) without overlapping.
-- **How to verify:** `npm test` and `npm run build` pass; in Chrome, the handle of paragraphs, headings and list items sits further from the text and is easier to hit; the whole-list bar is still to the left of the item handles, without overlapping; dragging and double-click to copy still work.
-
 ## Sidebar
 
 ### Pin notes
