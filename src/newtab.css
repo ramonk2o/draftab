@@ -112,8 +112,7 @@ body.sidebar-collapsed #sidebar {
   min-width: 0;
 }
 
-#toggle-sidebar,
-#toggle-theme {
+#toggle-sidebar {
   position: fixed;
   top: 12px;
   left: 12px;
@@ -122,15 +121,14 @@ body.sidebar-collapsed #sidebar {
   height: 28px;
 }
 
-#toggle-theme {
-  left: 44px;
-}
-
-/* Search with magnifier + new note button next to it */
+/* Search with magnifier + import and new note buttons, between two dividers */
 .search-row {
   display: flex;
   gap: 6px;
-  margin-bottom: 10px;
+  margin: 0 -10px 10px; /* the dividers go edge to edge, like the sidebar's border */
+  padding: 10px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
 .search-field {
@@ -166,14 +164,13 @@ body.sidebar-collapsed #sidebar {
   font: inherit;
 }
 
-/* Top of the sidebar: room for the (fixed) sidebar and theme buttons, export,
-   import and, on the right, the gear */
+/* Top of the sidebar: room for the (fixed) sidebar button and, on the right, the gear */
 .sidebar-top {
   display: flex;
   gap: 2px;
   height: 28px;
-  margin-bottom: 16px;
-  padding-left: 64px; /* room for the fixed sidebar and theme buttons */
+  margin-bottom: 12px;
+  padding-left: 32px; /* room for the fixed sidebar button */
 }
 
 .sidebar-top .icon-button {

@@ -25,7 +25,7 @@ A Chrome extension that turns the **new tab** into a local notepad. The editor i
 - **Backup** (in Settings): export and import a JSON file with all notes and settings (each note also goes in markdown, readable without Draftab).
 - **Automatic backup** to `Downloads/draftab-backups/`: every minute, hour, day, week or month, only when some note changed. Works with the tab closed, as long as Chrome is open.
 - **Copy a block with a double-click** on its handle (or a whole list on its bar): it's selected and copied, formatted and as plain text.
-- **Light, dark or automatic theme** (follows the system), with a button for quick switching.
+- **Light, dark or automatic theme** (follows the system), chosen in Settings.
 - **Note font**: sans-serif, serif or monospace, with typography modeled on [Tailwind Typography](https://github.com/tailwindlabs/tailwindcss-typography).
 - **Privacy**: nothing leaves your computer. The extension doesn't access the internet, has no account and collects no data.
 

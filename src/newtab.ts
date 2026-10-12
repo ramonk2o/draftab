@@ -4,14 +4,12 @@ import { createEditor } from './editor'
 import { chooseFile, exportMarkdown } from './backup-ui'
 import { noteFromFile } from './markdown'
 import { openSettings } from './settings'
-import { applyNoteFont, applyTheme, isDark, onScreenThemeChange } from './theme'
+import { applyNoteFont, applyTheme } from './theme'
 import {
   ICON_GEAR,
   ICON_IMPORT,
   ICON_MARKDOWN,
-  ICON_MOON,
   ICON_PENCIL,
-  ICON_SUN,
   ICON_TRASH,
 } from './icons'
 import {
@@ -358,24 +356,6 @@ sidebarButton.addEventListener('click', () => {
 // A theme or note font chosen in any tab applies to all of them
 onThemeChanged(applyTheme)
 onNoteFontChanged(applyNoteFont)
-
-const themeButton = element<HTMLButtonElement>('#toggle-theme')
-
-// Moon in light mode (goes to dark), sun in dark mode (goes to light)
-function drawThemeButton(dark: boolean) {
-  themeButton.innerHTML = dark ? ICON_SUN : ICON_MOON
-  const label = dark ? 'Switch to light theme' : 'Switch to dark theme'
-  themeButton.title = label
-  themeButton.setAttribute('aria-label', label)
-}
-
-drawThemeButton(isDark()) // theme-init.js has already applied the theme
-onScreenThemeChange(drawThemeButton)
-
-// Switches to the opposite of what's on screen; every tab follows (onThemeChanged)
-themeButton.addEventListener('click', () => {
-  saveSettings({ theme: isDark() ? 'light' : 'dark' })
-})
 
 // ---------- Start ----------
 

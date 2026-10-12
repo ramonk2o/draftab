@@ -17,7 +17,10 @@ Ready to upload to the Chrome Web Store as an update.
 
 ### Changed
 - Backup export and import moved to Settings only; the sidebar's backup icons are gone.
-- The sidebar is a little wider (300 px instead of 260 px).
+- The sidebar is a little wider (300 px instead of 260 px), and the row with the search sits between two dividers.
+
+### Removed
+- The light/dark button next to the sidebar toggle; the theme is chosen in Settings.
 - Settings: manual and automatic backup are one "Backup" section, with shorter explanations in a slightly smaller font; the interval label reads "Automatic backup" instead of "Back up".
 - **Typography** rewritten on the proportions of [Tailwind Typography](https://github.com/tailwindlabs/tailwindcss-typography), adapted for notes: quotes get breathing room above and below, clearer heading hierarchy, and more comfortable spacing for lists, code blocks and dividers. Paragraphs stay close together, since every Enter creates a paragraph.
 - Plain-text copies (including Cmd/Ctrl+C) now put one line per block instead of separating blocks with blank lines.
