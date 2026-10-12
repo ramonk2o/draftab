@@ -679,12 +679,9 @@ body.reordering .drop-cursor {
 }
 
 .hint {
-  margin: 0 0 12px;
+  margin: 0 0 10px;
   color: var(--text-secondary);
-}
-
-.hint.small {
-  font-size: 0.9em;
+  font-size: 0.87em;
 }
 
 .buttons {

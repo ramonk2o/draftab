@@ -14,8 +14,6 @@ export const ICON_MARKDOWN = icon(
   '<path d="M4 1.75h5l3 3v9.5H4z" /><path d="M9 1.75v3h3" /><path d="M8 7v4.5" /><path d="m6.25 9.75 1.75 1.75 1.75-1.75" />',
 )
 
-export const ICON_EXPORT = icon('<path d="M8 2.5v8" /><path d="m4.75 7.25 3.25 3.25 3.25-3.25" /><path d="M3 13.5h10" />')
-
 export const ICON_IMPORT = icon('<path d="M8 10.5v-8" /><path d="m4.75 5.75 3.25-3.25 3.25 3.25" /><path d="M3 13.5h10" />')
 
 export const ICON_GEAR = icon(

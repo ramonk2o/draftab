@@ -34,7 +34,7 @@ export type ImportResult = { ok: boolean; message: string }
 // Asks for the file, checks it, confirms and replaces everything.
 // Returns null if the user gives up along the way.
 export async function importBackup(): Promise<ImportResult | null> {
-  const file = await chooseFile()
+  const file = await chooseFile('application/json,.json')
   if (!file) return null
 
   let backup
@@ -57,11 +57,12 @@ export async function importBackup(): Promise<ImportResult | null> {
   return { ok: true, message: `${plural(backup.notes.length, 'note imported', 'notes imported')}.` }
 }
 
-function chooseFile(): Promise<File | null> {
+// Opens the file picker; `accept` lists the file types offered
+export function chooseFile(accept: string): Promise<File | null> {
   return new Promise((resolve) => {
     const input = document.createElement('input')
     input.type = 'file'
-    input.accept = 'application/json,.json'
+    input.accept = accept
     input.addEventListener('change', () => resolve(input.files?.[0] ?? null))
     input.addEventListener('cancel', () => resolve(null))
     input.click()

@@ -1,11 +1,11 @@
 import type { JSONContent } from '@tiptap/core'
 import { EditorState } from '@tiptap/pm/state'
 import { createEditor } from './editor'
-import { exportBackup, exportMarkdown, importBackup } from './backup-ui'
+import { chooseFile, exportMarkdown } from './backup-ui'
+import { noteFromFile } from './markdown'
 import { openSettings } from './settings'
 import { applyNoteFont, applyTheme, isDark, onScreenThemeChange } from './theme'
 import {
-  ICON_EXPORT,
   ICON_GEAR,
   ICON_IMPORT,
   ICON_MARKDOWN,
@@ -306,24 +306,25 @@ onNoteSortChanged((order) => {
   drawList()
 })
 
-// ---------- Backup and settings (top of the sidebar) ----------
+// ---------- Import a file and settings (top of the sidebar) ----------
 
-const exportButton = element<HTMLButtonElement>('#export')
 const importButton = element<HTMLButtonElement>('#import')
 const settingsButton = element<HTMLButtonElement>('#open-settings')
-exportButton.innerHTML = ICON_EXPORT
 importButton.innerHTML = ICON_IMPORT
 settingsButton.innerHTML = ICON_GEAR
 
-exportButton.addEventListener('click', async () => {
-  if (hasPendingChanges()) await saveNow() // include what was just typed
-  await exportBackup()
-})
-
+// A .md or .txt file becomes a new note, opened in this tab
 importButton.addEventListener('click', async () => {
-  const result = await importBackup()
-  if (result && !result.ok) alert(`Couldn't import: ${result.message}`)
-  // On success, onImport reloads the tab
+  const file = await chooseFile('.md,.markdown,.txt,text/markdown,text/plain')
+  if (!file) return
+  const note = noteFromFile(file.name, await file.text())
+  if (!note) {
+    alert(`Couldn't import: "${file.name}" is empty.`)
+    return
+  }
+  await saveNote(note)
+  notes = await listNotes()
+  open(note, true)
 })
 
 settingsButton.addEventListener('click', () => openSettings())

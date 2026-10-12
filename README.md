@@ -19,9 +19,10 @@ A Chrome extension that turns the **new tab** into a local notepad. The editor i
   - List items have their own handle; a thin bar to the left of a list moves the whole list.
   - Items and paragraphs move in and out of lists: at the edge of a list, pulling the mouse left takes the item out, pulling right puts it in.
 - **Collapsible sidebar** with your notes sorted by last edit, title or creation date (your choice in Settings), search across title and content (accent-insensitive), rename, export a note as a Markdown `.md` file, and delete.
+- **Import a file as a note**: the import icon at the top of the sidebar turns a `.md` (read as markdown) or `.txt` (one paragraph per line) file into a new note.
 - **Automatic title**: until the note is renamed, its title follows the first line.
 - **Several tabs at once**: what you write in one tab shows up in the others.
-- **Backup**: export and import a JSON file with all notes and settings (each note also goes in markdown, readable without Draftab).
+- **Backup** (in Settings): export and import a JSON file with all notes and settings (each note also goes in markdown, readable without Draftab).
 - **Automatic backup** to `Downloads/draftab-backups/`: every minute, hour, day, week or month, only when some note changed. Works with the tab closed, as long as Chrome is open.
 - **Copy a block with a double-click** on its handle (or a whole list on its bar): it's selected and copied, formatted and as plain text.
 - **Light, dark or automatic theme** (follows the system), with a button for quick switching.
@@ -104,10 +105,12 @@ src/
   reorder.ts             animated drag and drop, across levels (lists, items, paragraphs)
   list-handle.ts         handle that moves a whole list
   copy-block.ts          double-click on a handle: select and copy the block
+  unwrap-block.ts        Backspace at the start of a code block or quote turns it into text
+  markdown.ts            note ↔ markdown: export a note, import a .md/.txt file
   notes.ts               note model and pure rules (title, empty note, search)
   storage.ts             the single access point to chrome.storage
   backup.ts              backup file format: create, validate, restore
-  backup-ui.ts           export (download) and import (choose a file) from a page
+  backup-ui.ts           downloads and file picking from a page (backup, note export)
   auto-backup.ts         decides on and makes the automatic backup (runs in the service worker)
   background.ts          service worker: automatic backup alarms
   settings.ts            Settings lightbox

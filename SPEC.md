@@ -28,8 +28,9 @@ Success: ~2 weeks of real use without losing a single note and without going bac
 - Reloading the tab reopens the same note (the id is kept in the tab's `sessionStorage`, which survives reloads and is cleared when the tab closes).
 - Autosave with a ~500 ms debounce. Changes made in another tab show up in this one (last write wins).
 - Next to the sidebar toggle (always visible): a theme button (moon in light mode, sun in dark mode) that switches to the opposite of the theme on screen; "Automatic" is in Settings.
-- Top of the sidebar (visible only when open): export and import backup icons next to the sidebar and theme buttons, and a gear on the right that opens Settings.
-- Settings in a lightbox over the notes page (closes with the × button, Esc or a click outside):
+- Top of the sidebar (visible only when open): an import icon next to the sidebar and theme buttons, and a gear on the right that opens Settings. Backup export and import live only in Settings.
+  - Import a file as a note: the icon asks for one `.md` or `.txt` file and creates a new note with its content, which opens in the tab. A `.md` (or `.markdown`) file is read as markdown (headings, lists, checklists, quotes, code, dividers, marks, links); if something in it can't become a Draftab block, the file is read as plain text instead. A `.txt` file is plain text: each line becomes a paragraph. The title is automatic (first line), like any new note. An empty file creates nothing and shows a message.
+- Settings in a lightbox over the notes page (closes with the × button, Esc or a click outside). Explanations are short and in a slightly smaller font than the options. Manual and automatic backup are one "Backup" section:
   - Export backup now (downloads a JSON with all notes and all settings; importing restores both).
   - Import backup: validates the file, asks for confirmation and replaces everything. Open Draftab tabs reload by themselves after the import (none writes old content over it).
   - Automatic backup: off / every minute / hourly / daily / weekly / monthly (30 days), showing the date of the last automatic backup (manual exports don't count). Old values outside this list move to the closest interval.
@@ -42,7 +43,7 @@ Success: ~2 weeks of real use without losing a single note and without going bac
 ## Publishing (Chrome Web Store)
 - Published right away, before the 2-week test (the test continues with the store version).
 - Store listing in English (en-US) and Brazilian Portuguese (pt-BR); the extension UI stays English-only.
-- Versions: 1.0.0 submitted to the store; 1.1.0 (note sort order, note fonts and typography, double-click to copy, export a note as Markdown, Backspace to undo code blocks and quotes) ready to upload as an update. Icons at 16, 32, 48 and 128 px in `public/icons/` (the 128 px one is also the store icon).
+- Versions: 1.0.0 submitted to the store; 1.1.0 (note sort order, note fonts and typography, double-click to copy, export a note as Markdown, Backspace to undo code blocks and quotes, import a .md/.txt file as a note, backup export/import only in Settings) ready to upload as an update. Icons at 16, 32, 48 and 128 px in `public/icons/` (the 128 px one is also the store icon).
 - Privacy policy in `PRIVACY.md` in the repository; its public GitHub URL is the policy URL in the store. Nothing is collected or sent anywhere.
 - Store texts (descriptions, single purpose, permission justifications, data disclosure) in `STORE.md`, in both languages.
 - Store images: 1280×800 screenshots generated from the real extension, and a 440×280 small promo tile from the user's artwork (en and pt-BR).

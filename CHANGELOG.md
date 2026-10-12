@@ -12,9 +12,12 @@ Ready to upload to the Chrome Web Store as an update.
 - **Double-click a handle to copy**: double-clicking a block's handle selects its content and copies it like Cmd/Ctrl+C (formatted and plain text); double-clicking the whole-list bar copies the whole list. A small "Copied" label confirms it.
 - **Export a note as Markdown**: a button on each note in the sidebar (on hover, between rename and delete) downloads it as a `.md` file named after its title. Unsaved typing in the open note is included.
 - **Backspace undoes code blocks and quotes**: with the cursor at the start of a code block, Backspace turns it into normal text, one paragraph per line; at the start of a quote, the whole quote becomes normal paragraphs. Cmd/Ctrl+Z brings the block back.
+- **Import a file as a note**: the import icon at the top of the sidebar now turns a `.md` file (read as markdown) or a `.txt` file (one paragraph per line) into a new note and opens it.
 - The new settings are included in backups.
 
 ### Changed
+- Backup export and import moved to Settings only; the sidebar's export backup icon is gone and its import icon now imports a single note (see above).
+- Settings: manual and automatic backup are one "Backup" section, with shorter explanations in a slightly smaller font; the interval label reads "Automatic backup" instead of "Back up".
 - **Typography** rewritten on the proportions of [Tailwind Typography](https://github.com/tailwindlabs/tailwindcss-typography), adapted for notes: quotes get breathing room above and below, clearer heading hierarchy, and more comfortable spacing for lists, code blocks and dividers. Paragraphs stay close together, since every Enter creates a paragraph.
 - Plain-text copies (including Cmd/Ctrl+C) now put one line per block instead of separating blocks with blank lines.
 

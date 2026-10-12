@@ -1,17 +1,59 @@
-import { flattenExtensions } from '@tiptap/core'
+import { flattenExtensions, getSchema, type JSONContent } from '@tiptap/core'
 import { MarkdownManager } from '@tiptap/markdown'
 import { contentExtensions } from './extensions'
-import { displayTitle, type Note } from './notes'
+import { displayTitle, isEmptyNote, newBlankNote, withUpdatedTitle, type Note } from './notes'
 
-// Markdown of a note: used by the backup and by "Export as Markdown".
+// Markdown of a note: used by the backup, by "Export as Markdown" and by importing a file.
 // Doesn't depend on an open page (the automatic backup runs in the service worker).
 
-// Converter created once, when first needed
+// Converter and schema created once, when first needed
 let markdown: MarkdownManager | undefined
+let schema: ReturnType<typeof getSchema> | undefined
+
+function converter(): MarkdownManager {
+  markdown ??= new MarkdownManager({ extensions: flattenExtensions(contentExtensions) })
+  return markdown
+}
 
 export function noteToMarkdown(note: Note): string {
-  markdown ??= new MarkdownManager({ extensions: flattenExtensions(contentExtensions) })
-  return markdown.serialize(note.doc)
+  return converter().serialize(note.doc)
+}
+
+// A new note from the text of an imported file: .md/.markdown is read as markdown,
+// anything else (.txt) as plain text. Returns null when the file has no text.
+export function noteFromFile(fileName: string, fileText: string): Note | null {
+  const text = fileText.replace(/\r\n?/g, '\n') // Windows and old Mac line breaks
+  const isMarkdown = /\.(md|markdown)$/i.test(fileName)
+  const doc = (isMarkdown && markdownDoc(text)) || plainTextDoc(text)
+  const note = withUpdatedTitle({ ...newBlankNote(), doc })
+  return isEmptyNote(note) ? null : note
+}
+
+// The document for a markdown text, or null if the editor couldn't open it
+function markdownDoc(text: string): JSONContent | null {
+  try {
+    const doc = limitHeadings(converter().parse(text))
+    schema ??= getSchema(contentExtensions)
+    schema.nodeFromJSON(doc).check()
+    return doc
+  } catch {
+    return null
+  }
+}
+
+// Draftab has headings 1 to 3: #### and smaller become level 3
+function limitHeadings(node: JSONContent): JSONContent {
+  const attrs = node.type === 'heading' && node.attrs?.level > 3 ? { ...node.attrs, level: 3 } : node.attrs
+  return { ...node, attrs, content: node.content?.map(limitHeadings) }
+}
+
+// One paragraph per line
+function plainTextDoc(text: string): JSONContent {
+  const lines = text.replace(/\n+$/, '').split('\n')
+  return {
+    type: 'doc',
+    content: lines.map((line) => (line ? { type: 'paragraph', content: [{ type: 'text', text: line }] } : { type: 'paragraph' })),
+  }
 }
 
 const MAX_NAME_LENGTH = 100

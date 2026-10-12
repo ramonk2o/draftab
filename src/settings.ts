@@ -11,7 +11,7 @@ import {
 import type { NoteSort } from './notes'
 import type { NoteFont, Theme } from './theme'
 
-// Settings lightbox: manual backup, automatic backup, appearance and deleting all notes
+// Settings lightbox: backup (manual and automatic), appearance and deleting all notes
 
 const DELETE_PHRASE = 'delete everything'
 

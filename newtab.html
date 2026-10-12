@@ -20,8 +20,7 @@
     <aside id="sidebar">
       <!-- Icons filled in by newtab.ts (src/icons.ts) -->
       <div class="sidebar-top">
-        <button id="export" class="icon-button" type="button" title="Export backup" aria-label="Export backup"></button>
-        <button id="import" class="icon-button" type="button" title="Import backup" aria-label="Import backup"></button>
+        <button id="import" class="icon-button" type="button" title="Import a .md or .txt file as a note" aria-label="Import a .md or .txt file as a note"></button>
         <button id="open-settings" class="icon-button" type="button" title="Settings" aria-label="Settings"></button>
       </div>
       <div class="search-row">
@@ -54,26 +53,14 @@
 
         <section>
           <h2>Backup</h2>
-          <p class="hint">
-            A JSON file with all notes and settings. Each note also goes in markdown, so the file can be read
-            without Draftab.
-          </p>
+          <p class="hint">A JSON file with all notes (also in markdown) and settings. Importing replaces everything.</p>
           <div class="buttons">
             <button id="settings-export" class="button" type="button">Export backup</button>
             <button id="settings-import" class="button" type="button">Import backup…</button>
           </div>
-          <p class="hint">Importing replaces all current notes with the ones in the file.</p>
           <p id="backup-message" class="message" role="status" aria-live="polite"></p>
-        </section>
-
-        <section>
-          <h2>Automatic backup</h2>
-          <p class="hint">
-            Saves a backup to <code>Downloads/draftab-backups/</code> without asking, only when some note changed
-            since the last one. Works even with the tab closed, as long as Chrome is open.
-          </p>
           <label class="row">
-            <span>Back up</span>
+            <span>Automatic backup</span>
             <select id="interval">
               <option value="0">Off</option>
               <option value="1">Every minute</option>
@@ -83,11 +70,11 @@
               <option value="43200">Monthly</option>
             </select>
           </label>
-          <p id="last-backup" class="hint"></p>
-          <p class="hint small">
-            If Chrome is set to "Ask where to save each file before downloading", it will ask on every automatic
-            backup.
+          <p class="hint">
+            Saved to <code>Downloads/draftab-backups/</code> only when something changed, even with the tab closed.
+            If Chrome asks where to save each file, it will ask every time.
           </p>
+          <p id="last-backup" class="hint"></p>
         </section>
 
         <section>
@@ -120,10 +107,7 @@
 
         <section class="danger-zone">
           <h2>Delete all notes</h2>
-          <p class="hint">
-            Removes every note from this browser. This can't be undone; export a backup first if you want to
-            keep anything. Settings are kept.
-          </p>
+          <p class="hint">Removes every note from this browser for good. Settings are kept.</p>
           <label class="row">
             <span>To confirm, type <strong>delete everything</strong>:</span>
             <input id="confirm-delete" type="text" autocomplete="off" spellcheck="false" />
