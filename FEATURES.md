@@ -22,7 +22,7 @@ How a feature moves:
 - **Motivation:** not recorded (direct request).
 
 ### Handle position and size
-- **Status:** In progress — round 4 after the user's test (handle further left, especially on lists; the bar stays). Found that the CSS margin never moved the handle (it is placed by its `left`); the gap is now a translate. `npm test` (122 passed) and `npm run build` OK. Waiting for the check in Chrome.
+- **Status:** In progress — round 5 after the user's test: the handle disappeared on the way to it (the mouse left the editor's hover area). The editor's hover area now extends 32 px to the left, as far as the handles reach. `npm test` (122 passed) and `npm run build` OK. Waiting for the check in Chrome.
 - **Description:** move the drag handles a bit further to the left and make their clickable area slightly bigger.
 - **Motivation:** not recorded (direct request).
 - **Deliverable:** block handles 24×28 px (were 20×26), 8 px from the text. On list items the handle ends 4 px inside the list's indentation, touching the whole-list bar (16 px wide, 36 px from the list's edge, unchanged) without overlapping.

@@ -161,7 +161,8 @@ function prepare(): Drag | null {
     }
   }
   // Where text starts: the note's left edge, or a list item's text (after its bullet or checkbox)
-  const noteX = view.dom.getBoundingClientRect().left
+  // (the editor's left padding is the handles' hover area, not text)
+  const noteX = view.dom.getBoundingClientRect().left + parseFloat(getComputedStyle(view.dom).paddingLeft)
   const slots: Slot[] = []
   for (const parent of parents) {
     if (parent.type !== 'doc' && !entersLists) continue

@@ -379,6 +379,10 @@ body.sidebar-collapsed #sidebar {
 .tiptap {
   min-height: 80vh;
   outline: none;
+  /* The hover area reaches as far left as the handles (24px wide, 8px from the text),
+     so the handle doesn't disappear on the way to it */
+  margin-left: -32px;
+  padding-left: 32px;
 }
 
 /* Typography modeled on Tailwind Typography ("prose"): its proportions for

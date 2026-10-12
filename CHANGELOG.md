@@ -27,7 +27,7 @@ Ready to upload to the Chrome Web Store as an update.
 - The light/dark button next to the sidebar toggle; the theme is chosen in Settings.
 - Settings: manual and automatic backup are one "Backup" section, with shorter explanations in a slightly smaller font; the interval label reads "Automatic backup" instead of "Back up".
 - **Typography** rewritten on the proportions of [Tailwind Typography](https://github.com/tailwindlabs/tailwindcss-typography), adapted for notes: quotes get breathing room above and below, clearer heading hierarchy, and more comfortable spacing for lists, code blocks and dividers. Paragraphs stay close together, since every Enter creates a paragraph.
-- Drag handles sit a little further from the text and have a bigger clickable area; the whole-list bar sits closer to its list.
+- Drag handles sit a little further from the text and have a bigger clickable area, which the mouse can reach without the handle disappearing; the whole-list bar sits closer to its list.
 - Open tabs update their note list with just the note that changed, instead of reading every note again after each autosave.
 - Plain-text copies (including Cmd/Ctrl+C) now put one line per block instead of separating blocks with blank lines.
 
