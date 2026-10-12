@@ -123,12 +123,30 @@ body.sidebar-collapsed #sidebar {
 
 /* Search with magnifier + import and new note buttons, between two dividers */
 .search-row {
+  position: relative;
   display: flex;
   gap: 6px;
-  margin: 0 -10px 10px; /* the dividers go edge to edge, like the sidebar's border */
-  padding: 10px;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
+  padding: 10px 0;
+}
+
+/* The dividers stop short of the edges, like the one after the pinned notes */
+.search-row::before,
+.search-row::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  height: 1px;
+  background: var(--border);
+}
+
+.search-row::before {
+  top: 0;
+}
+
+.search-row::after {
+  bottom: 0;
 }
 
 .search-field {
