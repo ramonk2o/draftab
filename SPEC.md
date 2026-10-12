@@ -38,6 +38,11 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 ### The note page
 - Export as Markdown: downloads the open note as `<title>.md` through a normal browser download, with the same markdown the backup's `markdown` field gets. Pending typing is saved first. The file name drops characters not allowed in file names (`/ \ : * ? " < > |` and control characters), has at most 100 characters, and is `Untitled.md` when nothing is left. Exporting is only on the note page, not in the note list.
 - Copy note: copies the whole note, formatted (HTML) for apps that accept it and as markdown (the same as the exported file) for plain-text apps. A "Copied" label confirms it.
+- Copy for WhatsApp: copies the note as plain text in WhatsApp's formatting, without its first block (the first line, usually the title) and the empty lines right after it. A "Copied" label confirms it.
+  - Bold `*x*`, italic `_x_`, strikethrough `~x~`, inline code `` `x` ``; underline has no equivalent and becomes plain text. Spaces at the edges of a formatted piece stay outside the marks (WhatsApp ignores marks next to a space).
+  - Headings become a bold line. Bullet list `- `, numbered list `1. `, checklist `☐ ` / `☑ `; nested levels are indented 2 spaces per level. Quote: each line starts with `> `. Code block between ` ``` `. Divider `———`.
+  - Link: `text (url)`, or only the url when the text is the url itself.
+  - One line per block, like the plain-text copy; an empty paragraph is an empty line.
 - Export and copy are disabled while the note is empty.
 - Text size of the note: smaller (A−) and bigger (A+) buttons with the current size between them, also Cmd/Ctrl+Shift+, (smaller) and Cmd/Ctrl+Shift+. (bigger). Cmd/Ctrl + and − stay Chrome's zoom.
   - Steps, relative to the note font's normal size: 80%, 90%, 100%, 110%, 120%, 135%, 150%. One step per click; the button is disabled at the end of the range.

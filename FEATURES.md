@@ -11,6 +11,13 @@ How a feature moves:
 
 ## Editor
 
+### Copy for WhatsApp
+- **Status:** In progress — implemented; `npm test` 113/113 passing (10 new in `whatsapp.test.ts`), `npm run build` OK; waiting for the test in Chrome / WhatsApp Web
+- **Description:** a button on the note page that copies the note in WhatsApp's formatting, leaving out the first line (the title).
+- **Motivation:** "Copy note" uses standard markdown (`**bold**`, `# heading`), which WhatsApp doesn't understand.
+- **Deliverable:** a "Copy for WhatsApp" button next to Copy note; `src/whatsapp.ts` converts the note; tests in `src/whatsapp.test.ts`.
+- **How to verify:** `npm test` and `npm run build`; in Chrome, copy a note with a title, bold/italic/strike/code, lists, checklist, quote, code block and link, paste it into WhatsApp Web, and check that the first line is gone and the formatting shows correctly.
+
 ### Tables
 - **Status:** Idea
 - **Description:** a table block in notes.

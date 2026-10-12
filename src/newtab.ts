@@ -6,9 +6,11 @@ import { showCopied } from './copy-block'
 import { characters, markdownCharacters, plainTextCharacters, selectedCharacters } from './char-count'
 import { chooseFile, exportMarkdown } from './backup-ui'
 import { noteFromFile, noteToMarkdown } from './markdown'
+import { noteToWhatsApp } from './whatsapp'
 import { openSettings } from './settings'
 import { applyNoteFont, applyTheme } from './theme'
 import {
+  ICON_CHAT,
   ICON_COPY,
   ICON_GEAR,
   ICON_IMPORT,
@@ -354,14 +356,17 @@ onImport(() => {
 
 const noteExportButton = element<HTMLButtonElement>('#note-export')
 const noteCopyButton = element<HTMLButtonElement>('#note-copy')
+const noteWhatsAppButton = element<HTMLButtonElement>('#note-copy-whatsapp')
 noteExportButton.innerHTML = ICON_MARKDOWN
 noteCopyButton.innerHTML = ICON_COPY
+noteWhatsAppButton.innerHTML = ICON_CHAT
 
 // Nothing to export or copy while the note is empty
 function updateNoteActions() {
   const empty = editor.state.doc.textContent.trim() === ''
   noteExportButton.disabled = empty
   noteCopyButton.disabled = empty
+  noteWhatsAppButton.disabled = empty
 }
 
 // Only when the content changes (not on every cursor movement)
@@ -384,6 +389,16 @@ noteCopyButton.addEventListener('click', async () => {
   try {
     await navigator.clipboard.write([item])
     showCopied(noteCopyButton, true)
+  } catch (error) {
+    alert(`Couldn't copy the note: ${error instanceof Error ? error.message : String(error)}`)
+  }
+})
+
+// WhatsApp formatting, without the first line (the title)
+noteWhatsAppButton.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(noteToWhatsApp(editor.getJSON()))
+    showCopied(noteWhatsAppButton, true)
   } catch (error) {
     alert(`Couldn't copy the note: ${error instanceof Error ? error.message : String(error)}`)
   }
