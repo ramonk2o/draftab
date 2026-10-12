@@ -5,7 +5,7 @@ Everything the Chrome Web Store developer dashboard asks for, ready to copy. The
 ## Status
 
 - **1.0.0:** live on the Chrome Web Store.
-- **1.1.0:** ready to upload as an update (what's in it: CHANGELOG.md); the listing texts and screenshots below are already for 1.1.0.
+- **1.1.0:** submitted as an update, in review (what's in it: CHANGELOG.md); the listing texts and screenshots below are for 1.1.0.
 
 ## Package
 

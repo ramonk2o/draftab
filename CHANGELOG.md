@@ -4,7 +4,7 @@ All notable changes to Draftab are documented here. The format is based on [Keep
 
 ## [1.1.0] — unreleased
 
-Ready to upload to the Chrome Web Store as an update.
+Submitted to the Chrome Web Store as an update, in review.
 
 ### Added
 - **Clickable tags**: `#tags` in notes (a letter after `#`, then letters, digits, `_` or `-`) show in gray monospace, like links (underline and hand cursor on hover); Cmd/Ctrl+click on one searches for it in the sidebar, opening the sidebar if it's collapsed. The note's content doesn't change.
