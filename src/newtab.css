@@ -545,7 +545,7 @@ body.sidebar-collapsed #sidebar {
   justify-content: center;
   width: 24px;
   height: 28px;
-  margin-right: 8px;
+  margin-right: 12px;
   border-radius: 4px;
   color: var(--handle);
   cursor: grab;
@@ -569,7 +569,9 @@ body.sidebar-collapsed #sidebar {
 
 /* On list items, the handle sits before the marker (• or 1.) */
 .drag-handle.in-list {
-  transform: translateX(-1.625em); /* the list indentation; the handle inherits the note's font size */
+  /* the list indentation (the handle inherits the note's font size), minus 8px:
+     the marker already separates it from the text, and the whole-list bar needs the room */
+  transform: translateX(calc(-1.625em + 8px));
 }
 
 /* ---------- Animated reordering ---------- */
@@ -644,7 +646,7 @@ body.reordering .drop-cursor {
 .list-handle {
   position: absolute;
   display: none;
-  width: 20px;
+  width: 16px;
   border-radius: 4px;
   cursor: grab;
 }
@@ -652,7 +654,7 @@ body.reordering .drop-cursor {
 .list-handle::before {
   content: '';
   position: absolute;
-  left: 9px;
+  left: 7px;
   top: 3px;
   bottom: 3px;
   width: 2px;
