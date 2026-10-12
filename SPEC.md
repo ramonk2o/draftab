@@ -31,6 +31,12 @@ Success: ~2 weeks of real use without losing a single note and without going bac
   - Export as Markdown: downloads the note as a `.md` file (see "Export a note as Markdown" above).
   - Copy note: copies the whole note to the clipboard, formatted (HTML) for apps that accept it and as markdown (the same as the exported file) for plain-text apps. A small "Copied" label shows under the button.
   - Both are disabled while the note is empty.
+- Bottom right of the note page (always visible, fixed while scrolling): character counts for the open note, in small muted text, e.g. "1,234 characters · 1,180 without markdown · 42 selected".
+  - Characters: the whole note as markdown, marks included (`#`, `**`, `-`, `- [ ]`, `>`, ` ``` `…), the same text as the exported file.
+  - Without markdown: the note's plain text, with one line break between blocks (the same text as a plain-text copy).
+  - Selected: shown only while there's a text selection, counted like "without markdown".
+  - Spaces and line breaks count; line breaks at the end of the note don't. An emoji or accented letter counts as one character. Numbers use the browser's language separators.
+  - Hidden while the note is empty. The totals update a moment after typing stops (~300 ms); the selection count updates right away.
 - The sidebar toggle is always visible, at the top left. The theme is chosen only in Settings (there's no theme button).
 - Top of the sidebar (visible only when open): a gear on the right that opens Settings (the sidebar toggle sits on the left). Backup export and import live only in Settings. The sidebar is 300 px wide.
 - The row with the search, import and new note sits between two dividers (thin lines like the sidebar's border), separating it from the top buttons and from the note list.

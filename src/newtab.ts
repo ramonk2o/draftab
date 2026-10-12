@@ -3,6 +3,7 @@ import { EditorState } from '@tiptap/pm/state'
 import { createEditor } from './editor'
 import { element } from './dom'
 import { showCopied } from './copy-block'
+import { characters, markdownCharacters, plainTextCharacters, selectedCharacters } from './char-count'
 import { chooseFile, exportMarkdown } from './backup-ui'
 import { noteFromFile, noteToMarkdown } from './markdown'
 import { openSettings } from './settings'
@@ -42,6 +43,7 @@ import {
 } from './storage'
 
 const SAVE_DELAY = 500 // ms without typing before saving
+const STATS_DELAY = 300 // ms without typing before recounting the note's characters
 
 const sidebarButton = element<HTMLButtonElement>('#toggle-sidebar')
 const newNoteButton = element<HTMLButtonElement>('#new-note')
@@ -116,6 +118,7 @@ function open(note: Note, alreadySaved: boolean) {
   currentNoteSaved = alreadySaved
   replaceDocument(note.doc)
   updateNoteActions()
+  updateTotals()
   // Reloading the tab reopens this note
   sessionStorage.setItem('openNoteId', note.id)
   drawList()
@@ -370,6 +373,41 @@ noteCopyButton.addEventListener('click', async () => {
   } catch (error) {
     alert(`Couldn't copy the note: ${error instanceof Error ? error.message : String(error)}`)
   }
+})
+
+// ---------- Character counts (bottom right) ----------
+
+const noteStats = element<HTMLDivElement>('#note-stats')
+let totals = '' // "1,234 characters · 1,180 without markdown"
+let statsTimer: ReturnType<typeof setTimeout> | undefined
+
+// Recounts the whole note (converting to markdown takes a moment on long notes)
+function updateTotals() {
+  clearTimeout(statsTimer)
+  const doc = editor.state.doc
+  if (doc.textContent.trim() === '') {
+    totals = ''
+  } else {
+    const withMarkdown = markdownCharacters({ ...currentNote, doc: editor.getJSON() })
+    totals = `${characters(withMarkdown)} · ${plainTextCharacters(doc).toLocaleString()} without markdown`
+  }
+  drawStats()
+}
+
+// The totals plus the selected count, while there's a selection
+function drawStats() {
+  const { from, to, empty } = editor.state.selection
+  const selected = empty ? 0 : selectedCharacters(editor.state.doc, from, to)
+  noteStats.textContent = selected > 0 ? `${totals} · ${selected.toLocaleString()} selected` : totals
+  noteStats.hidden = totals === ''
+}
+
+editor.on('transaction', ({ transaction }) => {
+  if (transaction.docChanged) {
+    clearTimeout(statsTimer)
+    statsTimer = setTimeout(updateTotals, STATS_DELAY)
+  }
+  if (transaction.selectionSet || transaction.docChanged) drawStats()
 })
 
 // ---------- Collapsing the sidebar ----------
