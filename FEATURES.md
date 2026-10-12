@@ -17,7 +17,7 @@ How a feature moves:
 - **Motivation:** not recorded (came from the SPEC.md "Out of scope" list).
 
 ### Clickable tags
-- **Status:** In progress — implemented; `npm test` (131 passed, including 7 new tag tests: format, position, marks, line breaks, inline code and code blocks) and `npm run build` (with type check) OK. Waiting for the check in Chrome.
+- **Status:** In progress — round 2 after the user's test: gray instead of purple, smaller, underline and hand cursor on hover. `npm test` (131 passed) and `npm run build` OK. Waiting for the check in Chrome.
 - **Description:** the editor formats tags (`#example`) as links; clicking one puts the hashtag in the sidebar search.
 - **Motivation:** not recorded (direct request).
 - **Deliverable:** tags (rules in SPEC.md) shown in monospace and in their own color, without changing the stored note; Cmd/Ctrl+click puts the tag in the sidebar search and opens the sidebar if collapsed.
