@@ -72,7 +72,6 @@
 /* ---------- Layout: sidebar + editor area ---------- */
 
 body {
-  display: flex;
   min-height: 100vh;
   margin: 0;
   background: var(--bg);
@@ -87,29 +86,26 @@ body.loading * {
   transition: none !important;
 }
 
+/* Over the page: opening or closing it doesn't move the note's text */
 #sidebar {
   box-sizing: border-box;
-  flex: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 15; /* under the sidebar button (20) */
   width: var(--sidebar-width);
   height: 100vh;
-  position: sticky;
-  top: 0;
   overflow-y: auto;
   padding: 12px 10px 16px;
   background: var(--bg-sidebar);
   border-right: 1px solid var(--border);
   font-size: 14px;
-  transition: margin-left 220ms var(--ease), visibility 220ms;
+  transition: transform 220ms var(--ease), visibility 220ms;
 }
 
 body.sidebar-collapsed #sidebar {
-  margin-left: calc(-1 * var(--sidebar-width));
+  transform: translateX(-100%);
   visibility: hidden;
-}
-
-#main {
-  flex: 1;
-  min-width: 0;
 }
 
 #toggle-sidebar {
@@ -478,7 +474,10 @@ body.sidebar-collapsed #sidebar {
   /* position: relative is the reference for the drag handle */
   position: relative;
   max-width: 720px;
-  margin: 0 auto;
+  /* Centered in the window (720 + 72 of padding = 792px), but never under the sidebar.
+     Depends only on the window width, so the sidebar opening or closing doesn't move it */
+  margin-left: max(var(--sidebar-width), (100% - 792px) / 2);
+  margin-right: auto;
   padding: 48px 24px 48px 48px;
   font-family: var(--note-font);
   /* --note-scale: the open note's text size (newtab.ts) */
