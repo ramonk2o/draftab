@@ -11,13 +11,6 @@ How a feature moves:
 
 ## Editor
 
-### Backspace undoes headings
-- **Status:** In progress — implemented; `npm test` (147 passed, including 3 new heading tests) and `npm run build` (with type check) OK. Waiting for the check in Chrome.
-- **Description:** a way to turn a heading back into a paragraph: Backspace at the start of the heading, like code blocks and quotes.
-- **Motivation:** there was no visible way to undo a heading (only Tiptap's Cmd/Ctrl+Option/Alt+0 shortcut).
-- **Deliverable:** Backspace at the start of a heading (any level, also inside a quote) turns it into a paragraph with the same text and marks; its own undo step.
-- **How to verify:** `npm test` (new tests in unwrap-block.test.ts) and `npm run build`; in Chrome: `# Title`, cursor at the start, Backspace → paragraph "Title"; again Backspace → joins with the block above, as usual; Cmd/Ctrl+Z brings the heading back; right after typing `# `, Backspace still gives back the `# `.
-
 ### Tables
 - **Status:** Idea
 - **Description:** a table block in notes.
