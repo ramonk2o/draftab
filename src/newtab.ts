@@ -1,4 +1,4 @@
-import { generateHTML, type JSONContent } from '@tiptap/core'
+import { getHTMLFromFragment, type JSONContent } from '@tiptap/core'
 import { EditorState } from '@tiptap/pm/state'
 import { createEditor } from './editor'
 import { element } from './dom'
@@ -393,7 +393,8 @@ noteExportButton.addEventListener('click', async () => {
 // markdown for plain-text ones
 noteCopyButton.addEventListener('click', async () => {
   const doc = withoutFirstLine(editor.getJSON())
-  const html = generateHTML(doc, editor.extensionManager.extensions)
+  // The editor's own schema (generateHTML would build a new one and warn about duplicate extensions)
+  const html = getHTMLFromFragment(editor.schema.nodeFromJSON(doc).content, editor.schema)
   const item = new ClipboardItem({
     'text/html': new Blob([html], { type: 'text/html' }),
     'text/plain': new Blob([noteToMarkdown({ ...currentNote, doc })], { type: 'text/plain' }),
