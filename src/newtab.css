@@ -270,10 +270,13 @@ body.sidebar-collapsed #sidebar {
   transition: width 200ms var(--ease), margin-left 200ms var(--ease), opacity 150ms var(--ease);
 }
 
-/* While searching, the field takes the whole row: the buttons shrink and fade out
-   (margin-left cancels the row's gap) */
+/* While searching (focus or any text), the field takes the whole row: the buttons
+   shrink and fade out (margin-left cancels the row's gap). With text it stays wide,
+   so its clear button (×) doesn't move away when clicked */
 .search-row:has(.search-field:focus-within) #import,
-.search-row:has(.search-field:focus-within) #new-note {
+.search-row:has(.search-field:focus-within) #new-note,
+.search-row:has(#search:not(:placeholder-shown)) #import,
+.search-row:has(#search:not(:placeholder-shown)) #new-note {
   width: 0;
   margin-left: -6px;
   opacity: 0;
