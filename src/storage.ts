@@ -1,4 +1,4 @@
-import type { Note, NoteSort } from './notes'
+import { validTextSize, type Note, type NoteSort } from './notes'
 import type { NoteFont, Theme } from './theme'
 
 // All chrome.storage access goes through here.
@@ -16,6 +16,7 @@ export type Settings = {
   theme: Theme
   noteSort: NoteSort
   noteFont: NoteFont
+  newNoteTextSize: number // in percent, one of TEXT_SIZES
 }
 
 export type Meta = {
@@ -30,6 +31,7 @@ const DEFAULT_SETTINGS: Settings = {
   theme: 'auto',
   noteSort: 'updated',
   noteFont: 'sans',
+  newNoteTextSize: 100,
 }
 const DEFAULT_META: Meta = { lastChangeAt: 0, lastBackupAt: 0, lastImportAt: 0 }
 
@@ -127,6 +129,7 @@ export async function readSettings(): Promise<Settings> {
   if (!['auto', 'light', 'dark'].includes(result.theme)) result.theme = 'auto'
   if (!['updated', 'title', 'created'].includes(result.noteSort)) result.noteSort = 'updated'
   if (!['sans', 'serif', 'mono'].includes(result.noteFont)) result.noteFont = 'sans'
+  result.newNoteTextSize = validTextSize(result.newNoteTextSize)
   return result
 }
 
@@ -172,6 +175,10 @@ export function onNoteSortChanged(callback: (order: NoteSort) => void) {
 
 export function onNoteFontChanged(callback: (font: NoteFont) => void) {
   onFieldChanged('settings', 'noteFont', (font) => font && callback(font))
+}
+
+export function onNewNoteTextSizeChanged(callback: (size: number) => void) {
+  onFieldChanged('settings', 'newNoteTextSize', (size) => size && callback(validTextSize(size)))
 }
 
 export function onBackupIntervalChanged(callback: () => void) {

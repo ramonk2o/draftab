@@ -25,6 +25,7 @@ const intervalSelect = element<HTMLSelectElement>('#interval')
 const themeSelect = element<HTMLSelectElement>('#theme')
 const sortSelect = element<HTMLSelectElement>('#note-sort')
 const fontSelect = element<HTMLSelectElement>('#note-font')
+const textSizeSelect = element<HTMLSelectElement>('#new-note-text-size')
 const lastBackup = element<HTMLParagraphElement>('#last-backup')
 const confirmField = element<HTMLInputElement>('#confirm-delete')
 const deleteButton = element<HTMLButtonElement>('#delete-all')
@@ -33,11 +34,12 @@ closeButton.innerHTML = ICON_CLOSE
 
 export async function openSettings() {
   // Always opens with the current values and nothing left over from last time
-  const { autoBackupMinutes, theme, noteSort, noteFont } = await readSettings()
+  const { autoBackupMinutes, theme, noteSort, noteFont, newNoteTextSize } = await readSettings()
   intervalSelect.value = String(autoBackupMinutes)
   themeSelect.value = theme
   sortSelect.value = noteSort
   fontSelect.value = noteFont
+  textSizeSelect.value = String(newNoteTextSize)
   showLastBackup((await readMeta()).lastBackupAt)
   showMessage('')
   confirmField.value = ''
@@ -98,6 +100,11 @@ themeSelect.addEventListener('change', () => {
 fontSelect.addEventListener('change', () => {
   // Every tab (this one included) switches the font when it notices the change (onNoteFontChanged)
   saveSettings({ noteFont: fontSelect.value as NoteFont })
+})
+
+textSizeSelect.addEventListener('change', () => {
+  // Only notes created from now on start with this size (onNewNoteTextSizeChanged)
+  saveSettings({ newNoteTextSize: Number(textSizeSelect.value) })
 })
 
 sortSelect.addEventListener('change', () => {

@@ -113,6 +113,11 @@ describe('noteFromFile', () => {
     expect(noteFromFile('blank.txt', '\n  \n')).toBeNull()
   })
 
+  test('starts with the text size given (the setting for new notes)', () => {
+    expect(noteFromFile('a.txt', 'x', 135)?.textSize).toBe(135)
+    expect(noteFromFile('a.txt', 'x')?.textSize).toBe(100)
+  })
+
   test('every import is a new note', () => {
     expect(noteFromFile('a.txt', 'x')?.id).not.toBe(noteFromFile('a.txt', 'x')?.id)
   })

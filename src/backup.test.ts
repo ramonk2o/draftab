@@ -41,9 +41,9 @@ beforeEach(() => {
 
 describe('createBackup', () => {
   test('follows the SPEC format and includes each note in markdown', () => {
-    const backup = createBackup([fullNote()], { autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans' }, 999)
+    const backup = createBackup([fullNote()], { autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteTextSize: 100 }, 999)
     expect(backup).toMatchObject({ app: 'draftab', version: 1, exportedAt: 999 })
-    expect(backup.settings).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans' })
+    expect(backup.settings).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteTextSize: 100 })
     expect(backup.notes[0].markdown).toBe('# Ideas\n\none **bold**\n\n- [x] done\n\n---')
   })
 })
@@ -51,8 +51,17 @@ describe('createBackup', () => {
 describe('round trip', () => {
   test('exporting and importing returns exactly the same notes', () => {
     const notes = [fullNote(), simpleNote('another', 50)]
-    const file = JSON.stringify(createBackup(notes, { autoBackupMinutes: 0, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans' }))
+    const file = JSON.stringify(createBackup(notes, { autoBackupMinutes: 0, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteTextSize: 100 }))
     expect(notesFromBackup(parseBackup(file))).toEqual(notes)
+  })
+
+  test("each note's text size goes into the file and comes back; old backups without it get 100%", () => {
+    const big = { ...simpleNote('big', 1), textSize: 150 }
+    const backup = createBackup([big], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteTextSize: 100 })
+    expect(backup.notes[0].textSize).toBe(150)
+    expect(notesFromBackup(parseBackup(JSON.stringify(backup)))[0].textSize).toBe(150)
+    const { textSize: _textSize, ...old } = backup.notes[0]
+    expect(notesFromBackup(parseBackup(JSON.stringify({ ...backup, notes: [old] })))[0].textSize).toBe(100)
   })
 
   test('through storage: export, change everything and import restores the state', async () => {
@@ -75,7 +84,7 @@ describe('round trip', () => {
 describe('settings in the backup', () => {
   test('every setting goes into the file and comes back on import', async () => {
     // Non-default values in every field
-    const chosen = { autoBackupMinutes: 10080, sidebarCollapsed: true, theme: 'dark', noteSort: 'title', noteFont: 'serif' } as const
+    const chosen = { autoBackupMinutes: 10080, sidebarCollapsed: true, theme: 'dark', noteSort: 'title', noteFont: 'serif', newNoteTextSize: 120 } as const
     await saveSettings(chosen)
     await saveNote(simpleNote('x', 1))
     const file = JSON.stringify(createBackup(await listNotes(), await readSettings()))
@@ -83,7 +92,7 @@ describe('settings in the backup', () => {
 
     // Reset everything to the defaults and import
     await replaceAll([], {})
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteTextSize: 100 })
     const backup = parseBackup(file)
     await replaceAll(notesFromBackup(backup), backup.settings)
     expect(await readSettings()).toEqual(chosen)
@@ -94,12 +103,12 @@ describe('settings in the backup', () => {
     const settings = await readSettings()
     const backup = createBackup([], settings)
     expect(Object.keys(backup.settings).sort()).toEqual(Object.keys(settings).sort())
-    expect(Object.keys(settings).sort()).toEqual(['autoBackupMinutes', 'noteFont', 'noteSort', 'sidebarCollapsed', 'theme'])
+    expect(Object.keys(settings).sort()).toEqual(['autoBackupMinutes', 'newNoteTextSize', 'noteFont', 'noteSort', 'sidebarCollapsed', 'theme'])
   })
 })
 
 describe('parseBackup rejects invalid files', () => {
-  const valid = () => createBackup([simpleNote('a', 1)], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans' })
+  const valid = () => createBackup([simpleNote('a', 1)], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteTextSize: 100 })
   const withNote = (change: Record<string, unknown>) => {
     const b = valid()
     return JSON.stringify({ ...b, notes: [{ ...b.notes[0], ...change }] })
@@ -124,7 +133,7 @@ describe('parseBackup rejects invalid files', () => {
   })
 
   test('a backup with no notes is valid', () => {
-    const empty = createBackup([], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans' })
+    const empty = createBackup([], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteTextSize: 100 })
     expect(parseBackup(JSON.stringify(empty)).notes).toEqual([])
   })
 })

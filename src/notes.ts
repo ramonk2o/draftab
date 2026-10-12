@@ -6,17 +6,34 @@ export type Note = {
   doc: JSONContent // Tiptap JSON: the source of truth
   title: string
   titleManual: boolean // true after the user renames the note
+  textSize?: number // in percent, one of TEXT_SIZES; missing in notes from before it existed (= 100)
   createdAt: number
   updatedAt: number
 }
 
-export function newBlankNote(): Note {
+// Text sizes of a note, in percent of the note font's normal size
+export const TEXT_SIZES = [80, 90, 100, 110, 120, 135, 150]
+
+// The size to use for a value read from storage, a backup or the settings
+export function validTextSize(size: unknown): number {
+  return TEXT_SIZES.includes(size as number) ? (size as number) : 100
+}
+
+// One step smaller (-1) or bigger (+1), stopping at the ends of the range
+export function nextTextSize(size: number, direction: 1 | -1): number {
+  const i = TEXT_SIZES.indexOf(validTextSize(size)) + direction
+  return TEXT_SIZES[Math.min(Math.max(i, 0), TEXT_SIZES.length - 1)]
+}
+
+// textSize: the "Text size of new notes" setting
+export function newBlankNote(textSize = 100): Note {
   const now = Date.now()
   return {
     id: crypto.randomUUID(),
     doc: { type: 'doc', content: [{ type: 'paragraph' }] },
     title: '',
     titleManual: false,
+    textSize: validTextSize(textSize),
     createdAt: now,
     updatedAt: now,
   }

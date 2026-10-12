@@ -213,7 +213,7 @@ body.sidebar-collapsed #sidebar {
   cursor: default;
 }
 
-/* Export and copy for the open note, fixed at the top right */
+/* Text size, export and copy for the open note, fixed at the top right */
 #note-actions {
   position: fixed;
   top: 12px;
@@ -359,7 +359,8 @@ body.sidebar-collapsed #sidebar {
   margin: 0 auto;
   padding: 48px 24px 48px 48px;
   font-family: var(--note-font);
-  font-size: var(--note-size);
+  /* --note-scale: the open note's text size (newtab.ts) */
+  font-size: calc(var(--note-size) * var(--note-scale, 1));
   line-height: var(--note-line);
 }
 

@@ -14,6 +14,7 @@ Ready to upload to the Chrome Web Store as an update.
 - **Import a file as a note**: an import icon to the left of the New note button turns a `.md` file (read as markdown) or a `.txt` file (one paragraph per line) into a new note and opens it.
 - **Export and copy buttons on the note page**: at the top right, Export as Markdown downloads the open note as a `.md` file named after its title (unsaved typing included), and Copy note copies all of it, formatted for apps that accept formatting and as markdown for plain-text ones.
 - **Character counts** at the bottom right of the note page: total characters with markdown marks (the same text as the exported file), without markdown, and, while text is selected, how many are selected.
+- **Text size per note**: A− / A+ buttons at the top right of the note page (also Cmd/Ctrl+Shift+, and Cmd/Ctrl+Shift+.) make the note's text smaller or bigger, from 80% to 150%. Each note keeps its own size, in every tab and in backups. "Text size of new notes" in Settings sets the size new notes start with; existing notes keep theirs.
 - The new settings are included in backups.
 
 ### Changed

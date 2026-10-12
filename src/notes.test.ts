@@ -6,9 +6,11 @@ import {
   isEmptyNote,
   listDate,
   newBlankNote,
+  nextTextSize,
   renamed,
   sortNotes,
   textOf,
+  validTextSize,
   withUpdatedTitle,
   type Note,
 } from './notes'
@@ -131,5 +133,28 @@ describe('sortNotes', () => {
     expect(listDate(note, 'created')).toBe(1)
     expect(listDate(note, 'updated')).toBe(2)
     expect(listDate(note, 'title')).toBe(2)
+  })
+})
+
+describe('text size', () => {
+  test('a new note starts with the size it was given (the setting), 100% by default', () => {
+    expect(newBlankNote().textSize).toBe(100)
+    expect(newBlankNote(120).textSize).toBe(120)
+    expect(newBlankNote(77).textSize).toBe(100)
+  })
+
+  test('sizes outside the steps (or missing, in old notes) are 100%', () => {
+    expect(validTextSize(undefined)).toBe(100)
+    expect(validTextSize(105)).toBe(100)
+    expect(validTextSize('120')).toBe(100)
+    expect(validTextSize(150)).toBe(150)
+  })
+
+  test('one step at a time, stopping at 80% and 150%', () => {
+    expect(nextTextSize(100, 1)).toBe(110)
+    expect(nextTextSize(120, 1)).toBe(135)
+    expect(nextTextSize(90, -1)).toBe(80)
+    expect(nextTextSize(80, -1)).toBe(80)
+    expect(nextTextSize(150, 1)).toBe(150)
   })
 })

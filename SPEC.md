@@ -31,6 +31,10 @@ Success: ~2 weeks of real use without losing a single note and without going bac
   - Export as Markdown: downloads the note as a `.md` file (see "Export a note as Markdown" above).
   - Copy note: copies the whole note to the clipboard, formatted (HTML) for apps that accept it and as markdown (the same as the exported file) for plain-text apps. A small "Copied" label shows under the button.
   - Both are disabled while the note is empty.
+  - Text size of the note, to their left: two buttons, smaller (A−) and bigger (A+), also on the keyboard: Cmd/Ctrl+Shift+, (smaller) and Cmd/Ctrl+Shift+. (bigger). Cmd/Ctrl + and − stay Chrome's zoom.
+    - Sizes, relative to the note font's normal size: 80%, 90%, 100%, 110%, 120%, 135%, 150%. Each click moves one step; the button is disabled at the end of the range. A small label with the new size (e.g. "120%") shows under the buttons.
+    - The size belongs to the note: each note keeps its own, in every tab and in backups. Changing it counts as an edit to the note (it's saved right away and updates the "last modified" date). On a new note that hasn't been saved yet, the size is kept and saved with the first keystroke.
+    - Only the note content changes size (headings, lists, code… keep their proportions); the sidebar, buttons and counts don't.
 - Bottom right of the note page (always visible, fixed while scrolling): character counts for the open note, in small muted text, e.g. "1,234 characters · 1,180 without markdown · 42 selected".
   - Characters: the whole note as markdown, marks included (`#`, `**`, `-`, `- [ ]`, `>`, ` ``` `…), the same text as the exported file.
   - Without markdown: the note's plain text, with one line break between blocks (the same text as a plain-text copy).
@@ -47,6 +51,7 @@ Success: ~2 weeks of real use without losing a single note and without going bac
   - Automatic backup: off / every minute / hourly / daily / weekly / monthly (30 days), showing the date of the last automatic backup (manual exports don't count). Old values outside this list move to the closest interval.
   - Delete all notes: the button only works after typing "delete everything" in a confirmation field. Open tabs reload, as with an import.
   - Theme: Automatic (follows the system's light/dark mode), Light or Dark. Default: Automatic. Applies immediately to all open tabs, and the page opens in the right theme (no flash of the wrong theme).
+  - Text size of new notes: 80% to 150% (same steps as the note's buttons), default 100%. A new note (new tab, New note button, imported file) starts with this size; changing it doesn't change existing notes, which keep their own size. Notes from before this setting existed are 100%.
   - Note font: Sans-serif (default), Serif or Monospace, using system fonts (no downloads): on macOS SF Pro / New York / SF Mono, with Segoe UI / Georgia / Consolas and similar as fallbacks elsewhere. Applies to the note content only (the sidebar and Settings stay sans-serif), immediately in every open tab, and the page opens with the right font (no flash).
 - Backup file name (manual and automatic): `draftab_YYYY-MM-DD-HHhMM.json` (e.g. `draftab_2026-10-11-15h05.json`).
 - Automatic backup saves to `Downloads/draftab-backups/` without asking, and only if something changed since the last backup.
@@ -78,13 +83,14 @@ Everything not in the scope above. Ideas for after the MVP go to the backlog, in
 - Language: English everywhere in the project (code, comments, UI, docs).
 
 ## Data model
-- `Note { id: string (uuid), doc: TiptapJSON, title: string, titleManual: boolean, createdAt: number, updatedAt: number }`
+- `Note { id: string (uuid), doc: TiptapJSON, title: string, titleManual: boolean, textSize?: number, createdAt: number, updatedAt: number }`
+  `textSize` = the note's text size in percent (80, 90, 100, 110, 120, 135 or 150); missing or any other value = 100.
   `titleManual` = the user renamed the note; while it's `false`, `title` follows the first line.
   The Tiptap JSON is the source of truth (no conversion losses).
-- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark', noteSort: 'updated' | 'title' | 'created', noteFont: 'sans' | 'serif' | 'mono' }` (0 = off)
+- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark', noteSort: 'updated' | 'title' | 'created', noteFont: 'sans' | 'serif' | 'mono', newNoteTextSize: number }` (0 = off; `newNoteTextSize` = text size of new notes, in percent, default 100)
 - `meta { lastChangeAt: number, lastBackupAt: number, lastImportAt: number }` (`lastImportAt` marks an import or the deletion of all notes, and tells open tabs to reload)
 - Backup file:
-  `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, titleManual, markdown, doc, createdAt, updatedAt }] }`
+  `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, titleManual, textSize, markdown, doc, createdAt, updatedAt }] }`
   `markdown` is for humans to read; importing restores from `doc`.
 
 ## Main flows

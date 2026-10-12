@@ -2,7 +2,7 @@ import type { JSONContent } from '@tiptap/core'
 import { EditorState } from '@tiptap/pm/state'
 import { createEditor } from './editor'
 import { element } from './dom'
-import { showCopied } from './copy-block'
+import { showCopied, showLabel } from './copy-block'
 import { characters, markdownCharacters, plainTextCharacters, selectedCharacters } from './char-count'
 import { chooseFile, exportMarkdown } from './backup-ui'
 import { noteFromFile, noteToMarkdown } from './markdown'
@@ -14,6 +14,8 @@ import {
   ICON_IMPORT,
   ICON_MARKDOWN,
   ICON_PENCIL,
+  ICON_TEXT_BIGGER,
+  ICON_TEXT_SMALLER,
   ICON_TRASH,
 } from './icons'
 import {
@@ -22,6 +24,9 @@ import {
   isEmptyNote,
   listDate,
   newBlankNote,
+  nextTextSize,
+  TEXT_SIZES,
+  validTextSize,
   renamed,
   sortNotes,
   withUpdatedTitle,
@@ -34,6 +39,7 @@ import {
   onImport,
   onNoteFontChanged,
   onNoteSortChanged,
+  onNewNoteTextSizeChanged,
   onNotesChanged,
   onThemeChanged,
   readNote,
@@ -60,6 +66,12 @@ let timer: ReturnType<typeof setTimeout> | undefined
 let lastSaveFromThisTab = 0 // updatedAt of the last note saved by this tab
 let renaming = false // while renaming, the list isn't redrawn
 let noteSort: NoteSort = 'updated' // sidebar order, from Settings
+let newNoteTextSize = 100 // text size new notes start with, from Settings
+
+// A blank note with the text size chosen in Settings
+function newNote(): Note {
+  return newBlankNote(newNoteTextSize)
+}
 
 // ---------- Saving ----------
 
@@ -117,6 +129,7 @@ function open(note: Note, alreadySaved: boolean) {
   currentNote = note
   currentNoteSaved = alreadySaved
   replaceDocument(note.doc)
+  applyTextSize()
   updateNoteActions()
   updateTotals()
   // Reloading the tab reopens this note
@@ -147,7 +160,7 @@ function receiveContent(doc: JSONContent) {
   editor.chain().setMeta('addToHistory', false).setContent(doc, { emitUpdate: false }).setTextSelection(from).run()
 }
 
-newNoteButton.addEventListener('click', () => open(newBlankNote(), false))
+newNoteButton.addEventListener('click', () => open(newNote(), false))
 
 // ---------- Sync with other tabs ----------
 
@@ -166,7 +179,7 @@ onNotesChanged((changes) => {
 
   if (forCurrent.note === null) {
     // Deleted in another tab (deletions from this tab already mark it as not saved)
-    if (currentNoteSaved) open(newBlankNote(), false)
+    if (currentNoteSaved) open(newNote(), false)
     return
   }
   // The notification of this tab's own saves arrives later; it may be outdated
@@ -181,6 +194,7 @@ onNotesChanged((changes) => {
   }
   currentNote = received
   currentNoteSaved = true
+  applyTextSize() // the size may have changed in the other tab
 })
 
 // ---------- Sidebar ----------
@@ -285,7 +299,7 @@ async function confirmDelete(note: Note) {
   if (note.id === currentNote.id) {
     discardPending()
     currentNoteSaved = false
-    open(newBlankNote(), false)
+    open(newNote(), false)
   }
   await deleteNote(note.id)
 }
@@ -317,7 +331,7 @@ settingsButton.innerHTML = ICON_GEAR
 importButton.addEventListener('click', async () => {
   const file = await chooseFile('.md,.markdown,.txt,text/markdown,text/plain')
   if (!file) return
-  const note = noteFromFile(file.name, await file.text())
+  const note = noteFromFile(file.name, await file.text(), newNoteTextSize)
   if (!note) {
     alert(`Couldn't import: "${file.name}" is empty.`)
     return
@@ -373,6 +387,61 @@ noteCopyButton.addEventListener('click', async () => {
   } catch (error) {
     alert(`Couldn't copy the note: ${error instanceof Error ? error.message : String(error)}`)
   }
+})
+
+// ---------- Text size of the open note (top right, and Cmd/Ctrl+Shift+, and .) ----------
+
+const editorElement = element<HTMLDivElement>('#editor')
+const textSmallerButton = element<HTMLButtonElement>('#text-smaller')
+const textBiggerButton = element<HTMLButtonElement>('#text-bigger')
+textSmallerButton.innerHTML = ICON_TEXT_SMALLER
+textBiggerButton.innerHTML = ICON_TEXT_BIGGER
+
+const SHORTCUT = navigator.platform.startsWith('Mac') ? 'Cmd' : 'Ctrl'
+
+// Shows the open note's size; the buttons stop at the ends of the range
+function applyTextSize() {
+  const size = validTextSize(currentNote.textSize)
+  editorElement.style.setProperty('--note-scale', String(size / 100))
+  textSmallerButton.disabled = size === TEXT_SIZES[0]
+  textBiggerButton.disabled = size === TEXT_SIZES[TEXT_SIZES.length - 1]
+  setLabel(textSmallerButton, `Smaller text (${size}%) — ${SHORTCUT}+Shift+,`)
+  setLabel(textBiggerButton, `Bigger text (${size}%) — ${SHORTCUT}+Shift+.`)
+}
+
+function setLabel(button: HTMLButtonElement, label: string) {
+  button.title = label
+  button.setAttribute('aria-label', label)
+}
+
+// The size is part of the note: saved right away (a note not saved yet keeps it
+// and saves it with the first keystroke)
+function changeTextSize(direction: 1 | -1) {
+  const size = validTextSize(currentNote.textSize)
+  const next = nextTextSize(size, direction)
+  if (next === size) return
+  currentNote = { ...currentNote, textSize: next }
+  applyTextSize()
+  // The drag handle would stay where the block was; it comes back on the next mouse move
+  editor.view.dispatch(editor.state.tr.setMeta('hideDragHandle', true))
+  showLabel(direction === 1 ? textBiggerButton : textSmallerButton, `${next}%`, true)
+  if (currentNoteSaved) saveNow()
+}
+
+textSmallerButton.addEventListener('click', () => changeTextSize(-1))
+textBiggerButton.addEventListener('click', () => changeTextSize(1))
+
+// event.code, because with Shift the key is "<" or ">" (on a US keyboard)
+document.addEventListener('keydown', (event) => {
+  if (!(event.metaKey || event.ctrlKey) || !event.shiftKey || event.altKey) return
+  if (event.code !== 'Comma' && event.code !== 'Period') return
+  event.preventDefault()
+  changeTextSize(event.code === 'Period' ? 1 : -1)
+})
+
+// The setting only affects notes created from now on
+onNewNoteTextSizeChanged((size) => {
+  newNoteTextSize = size
 })
 
 // ---------- Character counts (bottom right) ----------
@@ -440,12 +509,13 @@ async function start() {
   applyNoteFont(settings.noteFont)
   applySidebarCollapsed(settings.sidebarCollapsed)
   noteSort = settings.noteSort
+  newNoteTextSize = settings.newNoteTextSize
   notes = await listNotes()
 
   const openId = sessionStorage.getItem('openNoteId')
   const openNote = openId ? await readNote(openId) : null
   if (openNote) open(openNote, true)
-  else open(newBlankNote(), false)
+  else open(newNote(), false)
 
   // Only now turn animations on, so the sidebar doesn't "slide" when the tab opens
   requestAnimationFrame(() => document.body.classList.remove('loading'))

@@ -5,6 +5,7 @@ import {
   deleteAllNotes,
   deleteNote,
   listNotes,
+  onNewNoteTextSizeChanged,
   onNoteFontChanged,
   onNoteSortChanged,
   onNotesChanged,
@@ -94,13 +95,13 @@ describe('notes', () => {
 
 describe('settings', () => {
   test('with nothing saved, uses the defaults', async () => {
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteTextSize: 100 })
   })
 
   test('saving one part keeps the rest', async () => {
     await saveSettings({ autoBackupMinutes: 60 })
     await saveSettings({ sidebarCollapsed: true })
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteTextSize: 100 })
   })
 })
 
@@ -129,7 +130,7 @@ describe('deleteAllNotes', () => {
     await saveSettings({ autoBackupMinutes: 60, sidebarCollapsed: true })
     await deleteAllNotes()
     expect(await listNotes()).toEqual([])
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteTextSize: 100 })
   })
 })
 
@@ -186,5 +187,24 @@ describe('note font', () => {
     await saveSettings({ noteSort: 'title' })
     await saveSettings({ noteFont: 'mono' })
     expect(received).toEqual(['serif', 'mono'])
+  })
+})
+
+describe('text size of new notes', () => {
+  test('defaults to 100%; saved and read; a value outside the steps goes back to 100%', async () => {
+    expect((await readSettings()).newNoteTextSize).toBe(100)
+    await saveSettings({ newNoteTextSize: 135 })
+    expect((await readSettings()).newNoteTextSize).toBe(135)
+    await chrome.storage.local.set({ settings: { newNoteTextSize: 300 } })
+    expect((await readSettings()).newNoteTextSize).toBe(100)
+  })
+
+  test('notifies tabs when it changes, and only then', async () => {
+    const received: number[] = []
+    onNewNoteTextSizeChanged((size) => received.push(size))
+    await saveSettings({ newNoteTextSize: 110 })
+    await saveSettings({ noteSort: 'title' })
+    await saveSettings({ newNoteTextSize: 90 })
+    expect(received).toEqual([110, 90])
   })
 })

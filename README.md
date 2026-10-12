@@ -20,6 +20,7 @@ A Chrome extension that turns the **new tab** into a local notepad. The editor i
   - Items and paragraphs move in and out of lists: at the edge of a list, pulling the mouse left takes the item out, pulling right puts it in.
 - **Collapsible sidebar** with your notes sorted by last edit, title or creation date (your choice in Settings), search across title and content (accent-insensitive), rename and delete.
 - **Export and copy the open note** with the buttons at the top right: a Markdown `.md` file, or the whole note on the clipboard (formatted, and as markdown for plain-text apps).
+- **Text size per note**: A− / A+ at the top right (or Cmd/Ctrl+Shift+, and Cmd/Ctrl+Shift+.) from 80% to 150%; each note keeps its own size, and Settings sets the size new notes start with.
 - **Character counts** at the bottom right: the note's characters with markdown, without markdown, and how many are selected.
 - **Import a file as a note**: the import icon next to the New note button turns a `.md` (read as markdown) or `.txt` (one paragraph per line) file into a new note.
 - **Automatic title**: until the note is renamed, its title follows the first line.

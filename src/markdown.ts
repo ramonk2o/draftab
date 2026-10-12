@@ -20,11 +20,12 @@ export function noteToMarkdown(note: Note): string {
 
 // A new note from the text of an imported file: .md/.markdown is read as markdown,
 // anything else (.txt) as plain text. Returns null when the file has no text.
-export function noteFromFile(fileName: string, fileText: string): Note | null {
+// textSize: the "Text size of new notes" setting
+export function noteFromFile(fileName: string, fileText: string, textSize = 100): Note | null {
   const text = fileText.replace(/\r\n?/g, '\n') // Windows and old Mac line breaks
   const isMarkdown = /\.(md|markdown)$/i.test(fileName)
   const doc = (isMarkdown && markdownDoc(text)) || plainTextDoc(text)
-  const note = withUpdatedTitle({ ...newBlankNote(), doc })
+  const note = withUpdatedTitle({ ...newBlankNote(textSize), doc })
   return isEmptyNote(note) ? null : note
 }
 

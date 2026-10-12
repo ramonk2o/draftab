@@ -18,6 +18,10 @@ export const ICON_MARKDOWN = icon(
   '<path d="M4 1.75h5l3 3v9.5H4z" /><path d="M9 1.75v3h3" /><path d="M8 7v4.5" /><path d="m6.25 9.75 1.75 1.75 1.75-1.75" />',
 )
 
+// A letter A with a minus / plus sign: smaller and bigger text
+export const ICON_TEXT_SMALLER = icon('<path d="m1.75 13 3.5-9.5L8.75 13" /><path d="M3 10h4.5" /><path d="M10.5 8.5h4" />')
+export const ICON_TEXT_BIGGER = icon('<path d="m1.75 13 3.5-9.5L8.75 13" /><path d="M3 10h4.5" /><path d="M10.5 8.5h4" /><path d="M12.5 6.5v4" />')
+
 export const ICON_IMPORT = icon('<path d="M8 10.5v-8" /><path d="m4.75 5.75 3.25-3.25 3.25 3.25" /><path d="M3 13.5h10" />')
 
 export const ICON_GEAR = icon(
