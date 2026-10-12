@@ -7,7 +7,7 @@ All notable changes to Draftab are documented here. The format is based on [Keep
 Ready to upload to the Chrome Web Store as an update.
 
 ### Added
-- **Pin notes**: a pin button on each note in the sidebar keeps it at the top of the list, with a pin in place of the date and a divider before the other notes. Pinned notes follow the chosen sort order among themselves. Pinning doesn't change the note's "last modified", syncs across open tabs and goes into backups.
+- **Pin notes**: a pin button on each note in the sidebar, or at the top right of the note page, keeps it at the top of the list, with a pin in place of the date and a divider before the other notes. Pinned notes follow the chosen sort order among themselves. Pinning doesn't change the note's "last modified", syncs across open tabs and goes into backups.
 - **Note sort order** in Settings: last modified (default), title A–Z (ignoring case and accents, numbers in natural order, untitled notes last) or date created. The date next to each note follows the order, and every open tab re-sorts immediately.
 - **Font per note**: sans-serif (default), serif or monospace, using system fonts (SF Pro / New York / SF Mono on macOS). The "Aa" button at the top right of the note page switches the open note's font; each note keeps its own, in every tab and in backups, without a flash of the wrong font on open. "Font of new notes" in Settings sets the font new notes start with. Notes from before keep the font that was set in Settings.
 - **Double-click a handle to copy**: double-clicking a block's handle selects its content and copies it like Cmd/Ctrl+C (formatted and plain text); double-clicking the whole-list bar copies the whole list. A small "Copied" label confirms it.

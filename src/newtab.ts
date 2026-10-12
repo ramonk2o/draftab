@@ -144,6 +144,7 @@ function open(note: Note, alreadySaved: boolean) {
   applyTextSize()
   applyFont()
   updateNoteActions()
+  updatePinButton()
   updateTotals()
   // Reloading the tab reopens this note
   sessionStorage.setItem('openNoteId', note.id)
@@ -198,6 +199,7 @@ onNotesChanged((changes) => {
   // Pinning doesn't change updatedAt, so it's taken even when the rest is ignored below
   // (otherwise this tab's next save would undo a pin made in another tab)
   currentNote = { ...currentNote, pinned: isPinned(forCurrent.note) }
+  updatePinButton()
 
   // The notification of this tab's own saves arrives later; it may be outdated
   // compared to what has been typed since, so it's ignored
@@ -335,6 +337,7 @@ async function togglePin(note: Note) {
   if (note.id === currentNote.id) {
     await saveIfPending() // include what was typed and not saved yet
     currentNote = { ...currentNote, pinned }
+    updatePinButton()
     await saveNote(currentNote)
     return
   }
@@ -413,11 +416,29 @@ function updateNoteActions() {
   noteExportButton.disabled = empty
   noteCopyButton.disabled = empty
   noteWhatsAppButton.disabled = empty
+  notePinButton.disabled = empty
 }
 
 // Only when the content changes (not on every cursor movement)
 editor.on('transaction', ({ transaction }) => {
   if (transaction.docChanged) updateNoteActions()
+})
+
+// ---------- Pin the open note (top right) ----------
+
+const notePinButton = element<HTMLButtonElement>('#note-pin')
+notePinButton.innerHTML = ICON_PIN
+
+// Marked while the open note is pinned
+function updatePinButton() {
+  const label = isPinned(currentNote) ? 'Unpin note' : 'Pin note'
+  notePinButton.title = label
+  notePinButton.setAttribute('aria-label', label)
+  notePinButton.setAttribute('aria-pressed', String(isPinned(currentNote)))
+}
+
+notePinButton.addEventListener('click', () => {
+  if (currentNoteSaved) togglePin(currentNote) // a note not saved yet isn't in the list
 })
 
 noteExportButton.addEventListener('click', async () => {

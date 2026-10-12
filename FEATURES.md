@@ -24,11 +24,11 @@ How a feature moves:
 ## Sidebar
 
 ### Pin notes
-- **Status:** In progress — implemented; `npm test` (124 passed, including the new sorting and backup tests) and `npm run build` (with type check) OK. Waiting for the check in Chrome.
+- **Status:** In progress — round 2 after the user's test: a pin button on the note page too. `npm test` (124 passed) and `npm run build` (with type check) OK. Waiting for the check in Chrome.
 - **Description:** pin notes; when several are pinned, they follow the default sort order among themselves.
 - **Motivation:** not recorded (direct request).
-- **Deliverable:** a pin button on each note in the sidebar (on hover, next to rename and delete) pins/unpins it. Pinned notes come first, sorted by the chosen order, with a divider before the others; a pinned note shows a pin instead of its date. Pinning doesn't change "last modified", syncs to other tabs and goes into backups (`pinned` field, SPEC.md).
-- **How to verify:** `npm test` (new tests for the sorting with pinned notes and for `pinned` in backups) and `npm run build`; in Chrome: pin two notes → they go to the top with a pin and a divider below; switch the sort order in Settings → pinned stay on top, sorted among themselves; search → pinned matches first; date and order by last modified don't change when pinning; unpin → it goes back to its place; pin in one tab → the other tab updates, and typing in the other tab doesn't undo the pin; export a backup → `"pinned": true` in the file.
+- **Deliverable:** a pin button on each note in the sidebar (on hover, next to rename and delete) and one at the top right of the note page (marked while the open note is pinned; disabled while it's empty) pins/unpins it. Pinned notes come first, sorted by the chosen order, with a divider before the others; a pinned note shows a pin instead of its date. Pinning doesn't change "last modified", syncs to other tabs and goes into backups (`pinned` field, SPEC.md).
+- **How to verify:** `npm test` (new tests for the sorting with pinned notes and for `pinned` in backups) and `npm run build`; in Chrome: the note page's pin button pins the open note, looks marked, and the sidebar follows (and the other way around); it's disabled on a blank note; pin two notes → they go to the top with a pin and a divider below; switch the sort order in Settings → pinned stay on top, sorted among themselves; search → pinned matches first; date and order by last modified don't change when pinning; unpin → it goes back to its place; pin in one tab → the other tab updates, and typing in the other tab doesn't undo the pin; export a backup → `"pinned": true` in the file.
 
 ### Tag autocomplete in search
 - **Status:** Idea

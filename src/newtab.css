@@ -228,6 +228,11 @@ body.sidebar-collapsed #sidebar {
   height: 28px;
 }
 
+/* Pin button while the open note is pinned */
+#note-pin[aria-pressed="true"] {
+  color: var(--text);
+}
+
 /* Current text size, between A− and A+ */
 #text-size {
   align-self: center;

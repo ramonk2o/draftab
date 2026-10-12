@@ -17,7 +17,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 - Title: while the user hasn't set one, it follows the first line of text (up to 80 characters). Renaming fixes it; renaming to empty goes back to the automatic title.
 - The sidebar lists the notes, with search (title and content, ignoring case and accents), New note, rename (double-click the title or the pencil button; Enter confirms, Esc cancels) and delete with confirmation.
 - Sort order (chosen in Settings): last modified (default, newest first), title A–Z (ignoring case and accents, numbers in natural order, untitled notes last) or date created (newest first). The date next to each note follows the order: the creation date when sorting by date created, the last edit otherwise.
-- Pinned notes: a pin button on each note in the sidebar pins or unpins it. Pinned notes come first, sorted among themselves by the chosen order, then the others; a divider separates the two groups when both have notes. A pinned note shows a pin instead of its date. Search keeps the same grouping. Pinning or unpinning doesn't count as an edit ("last modified" doesn't change); it applies to every open tab and goes into backups.
+- Pinned notes: a pin button on each note in the sidebar, and one at the top right of the note page (for the open note, marked while it's pinned), pins or unpins it. Pinned notes come first, sorted among themselves by the chosen order, then the others; a divider separates the two groups when both have notes. A pinned note shows a pin instead of its date. Search keeps the same grouping. Pinning or unpinning doesn't count as an edit ("last modified" doesn't change); it applies to every open tab and goes into backups.
 - The sidebar can be collapsed; its state is remembered.
 - Import a file as a note (next to New note): one `.md` or `.txt` file becomes a new note, which opens.
   - `.md` / `.markdown` is read as markdown (headings, lists, checklists, quotes, code, dividers, marks, links); headings smaller than `###` become `###`. If something in it can't become a Draftab block, the file is read as plain text instead.
@@ -44,7 +44,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
   - Headings become a bold line. Bullet list `- `, numbered list `1. `, checklist `☐ ` / `☑ `; nested levels are indented 2 spaces per level. Quote: each line starts with `> `. Code block between ` ``` `. Divider `———`.
   - Link: `text (url)`, or only the url when the text is the url itself.
   - One line per block, like the plain-text copy; an empty paragraph is an empty line.
-- Export and copy are disabled while the note is empty.
+- Export, copy and pin are disabled while the note is empty (an empty note isn't saved).
 - Text size of the note: smaller (A−) and bigger (A+) buttons with the current size between them, also Cmd/Ctrl+Shift+, (smaller) and Cmd/Ctrl+Shift+. (bigger). Cmd/Ctrl + and − stay Chrome's zoom.
   - Steps, relative to the note font's normal size: 80%, 90%, 100%, 110%, 120%, 135%, 150%. One step per click; the button is disabled at the end of the range.
   - The size belongs to the note: each note keeps its own, in every tab and in backups. Changing it counts as an edit (saved right away, updates "last modified"). On a new note not saved yet, the size is saved with the first keystroke.
