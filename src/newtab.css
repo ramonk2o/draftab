@@ -206,6 +206,28 @@ body.sidebar-collapsed #sidebar {
   color: var(--text);
 }
 
+.icon-button:disabled {
+  opacity: 0.35;
+  background: transparent;
+  color: var(--icon);
+  cursor: default;
+}
+
+/* Export and copy for the open note, fixed at the top right */
+#note-actions {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 20;
+  display: flex;
+  gap: 2px;
+}
+
+#note-actions .icon-button {
+  width: 28px;
+  height: 28px;
+}
+
 #note-list {
   margin: 0;
   padding: 0;
@@ -554,7 +576,7 @@ body.reordering .drop-cursor {
   .block-dropped { animation: none; }
 }
 
-/* "Copied" label after double-clicking a handle */
+/* "Copied" label after double-clicking a handle or copying the note */
 .copied-label {
   position: fixed;
   z-index: 30;
@@ -568,6 +590,19 @@ body.reordering .drop-cursor {
   line-height: 1.5;
   pointer-events: none;
   animation: copied-fade 1100ms ease-out forwards;
+}
+
+/* Under a button at the top of the page (there's no room above it) */
+.copied-label.below {
+  transform: translate(-50%, 0);
+  animation-name: copied-fade-below;
+}
+
+@keyframes copied-fade-below {
+  0% { opacity: 0; margin-top: 0; }
+  15% { opacity: 1; margin-top: 4px; }
+  70% { opacity: 1; margin-top: 4px; }
+  100% { opacity: 0; margin-top: 4px; }
 }
 
 @keyframes copied-fade {

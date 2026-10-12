@@ -27,6 +27,10 @@ Success: ~2 weeks of real use without losing a single note and without going bac
 - An empty note (no text and no user-set title) isn't saved: opening and closing a tab leaves no clutter, and a saved note that becomes empty leaves the list.
 - Reloading the tab reopens the same note (the id is kept in the tab's `sessionStorage`, which survives reloads and is cleared when the tab closes).
 - Autosave with a ~500 ms debounce. Changes made in another tab show up in this one (last write wins).
+- Top right of the note page (always visible, fixed while scrolling): two icon buttons for the open note.
+  - Export as Markdown: the same download as the button in the note list.
+  - Copy note: copies the whole note to the clipboard, formatted (HTML) for apps that accept it and as markdown (the same as the exported file) for plain-text apps. A small "Copied" label shows under the button.
+  - Both are disabled while the note is empty.
 - The sidebar toggle is always visible, at the top left. The theme is chosen only in Settings (there's no theme button).
 - Top of the sidebar (visible only when open): a gear on the right that opens Settings (the sidebar toggle sits on the left). Backup export and import live only in Settings. The sidebar is 300 px wide.
 - The row with the search, import and new note sits between two dividers (thin lines like the sidebar's border), separating it from the top buttons and from the note list.
@@ -44,7 +48,7 @@ Success: ~2 weeks of real use without losing a single note and without going bac
 ## Publishing (Chrome Web Store)
 - Published right away, before the 2-week test (the test continues with the store version).
 - Store listing in English (en-US) and Brazilian Portuguese (pt-BR); the extension UI stays English-only.
-- Versions: 1.0.0 submitted to the store; 1.1.0 (note sort order, note fonts and typography, double-click to copy, export a note as Markdown, Backspace to undo code blocks and quotes, import a .md/.txt file as a note, backup export/import only in Settings, sidebar layout without the theme button) ready to upload as an update. Icons at 16, 32, 48 and 128 px in `public/icons/` (the 128 px one is also the store icon).
+- Versions: 1.0.0 submitted to the store; 1.1.0 (note sort order, note fonts and typography, double-click to copy, export a note as Markdown, Backspace to undo code blocks and quotes, import a .md/.txt file as a note, backup export/import only in Settings, sidebar layout without the theme button, export and copy buttons on the note page) ready to upload as an update. Icons at 16, 32, 48 and 128 px in `public/icons/` (the 128 px one is also the store icon).
 - Privacy policy in `PRIVACY.md` in the repository; its public GitHub URL is the policy URL in the store. Nothing is collected or sent anywhere.
 - Store texts (descriptions, single purpose, permission justifications, data disclosure) in `STORE.md`, in both languages.
 - Store images: 1280×800 screenshots generated from the real extension, and a 440×280 small promo tile from the user's artwork (en and pt-BR).

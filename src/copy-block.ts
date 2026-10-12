@@ -22,14 +22,14 @@ export function selectAndCopyBlock(view: EditorView, pos: number, handle: HTMLEl
   if (document.execCommand('copy')) showCopied(handle)
 }
 
-// Small "Copied" label above the handle, fading out
-function showCopied(handle: HTMLElement) {
-  const box = handle.getBoundingClientRect()
+// Small "Copied" label above the element (or below it), fading out
+export function showCopied(element: HTMLElement, below = false) {
+  const box = element.getBoundingClientRect()
   const label = document.createElement('div')
-  label.className = 'copied-label'
+  label.className = below ? 'copied-label below' : 'copied-label'
   label.textContent = 'Copied'
   label.style.left = `${box.left + box.width / 2}px`
-  label.style.top = `${box.top}px`
+  label.style.top = `${below ? box.bottom : box.top}px`
   document.body.appendChild(label)
   label.addEventListener('animationend', () => label.remove())
 }

@@ -1,11 +1,13 @@
 import type { JSONContent } from '@tiptap/core'
 import { EditorState } from '@tiptap/pm/state'
 import { createEditor } from './editor'
+import { showCopied } from './copy-block'
 import { chooseFile, exportMarkdown } from './backup-ui'
-import { noteFromFile } from './markdown'
+import { noteFromFile, noteToMarkdown } from './markdown'
 import { openSettings } from './settings'
 import { applyNoteFont, applyTheme } from './theme'
 import {
+  ICON_COPY,
   ICON_GEAR,
   ICON_IMPORT,
   ICON_MARKDOWN,
@@ -110,6 +112,7 @@ function open(note: Note, alreadySaved: boolean) {
   currentNote = note
   currentNoteSaved = alreadySaved
   replaceDocument(note.doc)
+  updateNoteActions()
   // Reloading the tab reopens this note
   sessionStorage.setItem('openNoteId', note.id)
   drawList()
@@ -333,6 +336,39 @@ onImport(() => {
   clearTimeout(timer)
   timer = undefined
   location.reload()
+})
+
+// ---------- Export and copy the open note (top right) ----------
+
+const noteExportButton = element<HTMLButtonElement>('#note-export')
+const noteCopyButton = element<HTMLButtonElement>('#note-copy')
+noteExportButton.innerHTML = ICON_MARKDOWN
+noteCopyButton.innerHTML = ICON_COPY
+
+// Nothing to export or copy while the note is empty
+function updateNoteActions() {
+  const empty = editor.state.doc.textContent.trim() === ''
+  noteExportButton.disabled = empty
+  noteCopyButton.disabled = empty
+}
+
+editor.on('transaction', updateNoteActions)
+
+noteExportButton.addEventListener('click', () => exportNote(currentNote))
+
+// The whole note: formatted for apps that accept it, markdown for plain-text ones
+noteCopyButton.addEventListener('click', async () => {
+  const note = { ...currentNote, doc: editor.getJSON() }
+  const item = new ClipboardItem({
+    'text/html': new Blob([editor.getHTML()], { type: 'text/html' }),
+    'text/plain': new Blob([noteToMarkdown(note)], { type: 'text/plain' }),
+  })
+  try {
+    await navigator.clipboard.write([item])
+    showCopied(noteCopyButton, true)
+  } catch (error) {
+    alert(`Couldn't copy the note: ${error instanceof Error ? error.message : String(error)}`)
+  }
 })
 
 // ---------- Collapsing the sidebar ----------

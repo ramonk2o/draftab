@@ -10,6 +10,10 @@ export const ICON_TRASH = icon(
   '<path d="M3 4.5h10" /><path d="M6.5 4.5V3h3v1.5" /><path d="M4.5 4.5 5 13h6l.5-8.5" />',
 )
 
+export const ICON_COPY = icon(
+  '<rect x="5.5" y="5.5" width="8" height="8" rx="1.5" /><path d="M10.5 5.5V4a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 4v5A1.5 1.5 0 0 0 4 10.5h1.5" />',
+)
+
 export const ICON_MARKDOWN = icon(
   '<path d="M4 1.75h5l3 3v9.5H4z" /><path d="M9 1.75v3h3" /><path d="M8 7v4.5" /><path d="m6.25 9.75 1.75 1.75 1.75-1.75" />',
 )

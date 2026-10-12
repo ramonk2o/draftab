@@ -13,6 +13,7 @@ Ready to upload to the Chrome Web Store as an update.
 - **Export a note as Markdown**: a button on each note in the sidebar (on hover, between rename and delete) downloads it as a `.md` file named after its title. Unsaved typing in the open note is included.
 - **Backspace undoes code blocks and quotes**: with the cursor at the start of a code block, Backspace turns it into normal text, one paragraph per line; at the start of a quote, the whole quote becomes normal paragraphs. Cmd/Ctrl+Z brings the block back.
 - **Import a file as a note**: an import icon to the left of the New note button turns a `.md` file (read as markdown) or a `.txt` file (one paragraph per line) into a new note and opens it.
+- **Export and copy buttons on the note page**: at the top right, Export as Markdown downloads the open note and Copy note copies all of it, formatted for apps that accept formatting and as markdown for plain-text ones.
 - The new settings are included in backups.
 
 ### Changed
