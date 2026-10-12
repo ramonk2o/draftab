@@ -16,6 +16,28 @@ How a feature moves:
 - **Description:** a table block in notes.
 - **Motivation:** not recorded (came from the SPEC.md "Out of scope" list).
 
+### Clickable tags
+- **Status:** Idea
+- **Description:** the editor formats tags (`#example`) as links; clicking one puts the hashtag in the sidebar search.
+- **Motivation:** not recorded (direct request).
+
+### Handle position and size
+- **Status:** Idea
+- **Description:** move the drag handles a bit further to the left and make their clickable area slightly bigger.
+- **Motivation:** not recorded (direct request).
+
+## Sidebar
+
+### Pin notes
+- **Status:** Idea
+- **Description:** pin notes; when several are pinned, they follow the default sort order among themselves.
+- **Motivation:** not recorded (direct request).
+
+### Tag autocomplete in search
+- **Status:** Idea
+- **Description:** the search suggests the tags that exist in the notes while typing.
+- **Motivation:** not recorded (direct request). Depends on "Clickable tags" (Editor).
+
 ## Interface
 
 ### Portuguese translation
