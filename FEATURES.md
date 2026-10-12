@@ -16,10 +16,6 @@ How a feature moves:
 - **Description:** a table block in notes.
 - **Motivation:** not recorded (came from the SPEC.md "Out of scope" list).
 
-## Sidebar
-
-## Interface
-
 ## Backup and settings
 
 ### Sync across computers
