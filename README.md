@@ -14,7 +14,7 @@ A Chrome extension that turns the **new tab** into a local notepad. The editor i
 ## Features
 
 - **New tab = new note**, with the cursor already in the editor. A blank note isn't saved: opening and closing a tab leaves no clutter.
-- **Markdown as you type**: headings, lists, checklists, quotes, code, dividers, bold, italic, inline code and links (table below).
+- **Markdown as you type**: headings, lists, checklists, quotes, code, dividers, bold, italic, inline code and links (table below). Backspace at the start of a code block or quote turns it back into normal text.
 - **Drag to reorder**: hover a block and drag the handle (⠿) on its left. The other blocks slide to make room.
   - List items have their own handle; a thin bar to the left of a list moves the whole list.
   - Items and paragraphs move in and out of lists: at the edge of a list, pulling the mouse left takes the item out, pulling right puts it in.

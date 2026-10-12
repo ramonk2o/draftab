@@ -4,6 +4,7 @@ import { Reorder, endDrag, startDrag } from './reorder'
 import { ListHandle } from './list-handle'
 import { contentExtensions } from './extensions'
 import { selectAndCopyBlock } from './copy-block'
+import { UnwrapBlock } from './unwrap-block'
 
 // Handle icon: six dots in two columns
 const HANDLE_ICON = `
@@ -92,6 +93,7 @@ export function createEditor(element: HTMLElement): Editor {
     extensions: [
       ...contentExtensions,
       ChecklistInsideList,
+      UnwrapBlock,
       Reorder,
       ListHandle,
       DragHandle.configure({

@@ -11,6 +11,7 @@ Ready to upload to the Chrome Web Store as an update.
 - **Note font** in Settings: sans-serif (default), serif or monospace, using system fonts (SF Pro / New York / SF Mono on macOS). Applies to note content only, in every open tab, without a flash of the wrong font on open.
 - **Double-click a handle to copy**: double-clicking a block's handle selects its content and copies it like Cmd/Ctrl+C (formatted and plain text); double-clicking the whole-list bar copies the whole list. A small "Copied" label confirms it.
 - **Export a note as Markdown**: a button on each note in the sidebar (on hover, between rename and delete) downloads it as a `.md` file named after its title. Unsaved typing in the open note is included.
+- **Backspace undoes code blocks and quotes**: with the cursor at the start of a code block, Backspace turns it into normal text, one paragraph per line; at the start of a quote, the whole quote becomes normal paragraphs. Cmd/Ctrl+Z brings the block back.
 - The new settings are included in backups.
 
 ### Changed
