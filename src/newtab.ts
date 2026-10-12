@@ -306,7 +306,7 @@ onNoteSortChanged((order) => {
   drawList()
 })
 
-// ---------- Import a file and settings (top of the sidebar) ----------
+// ---------- Import a file (next to New note) and settings (top of the sidebar) ----------
 
 const importButton = element<HTMLButtonElement>('#import')
 const settingsButton = element<HTMLButtonElement>('#open-settings')

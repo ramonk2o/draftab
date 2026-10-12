@@ -33,7 +33,7 @@
   --dialog-shadow: rgba(0, 0, 0, 0.2);
   --backdrop: rgba(20, 20, 20, 0.35);
 
-  --sidebar-width: 260px;
+  --sidebar-width: 300px;
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -197,6 +197,7 @@ body.sidebar-collapsed #sidebar {
   cursor: pointer;
 }
 
+#import,
 #new-note {
   flex: none;
   width: 32px;
