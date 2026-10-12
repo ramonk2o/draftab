@@ -7,7 +7,7 @@ import { selectAndCopyBlock } from './copy-block'
 // Whole-list handle: a thin bar to the left of the list, further out than the
 // item handles. Shows up when the mouse is at the height of a list.
 
-const DISTANCE_FROM_LIST = 44 // px to the left of the list's edge
+const DISTANCE_FROM_LIST = 36 // px to the left of the list's edge
 
 export const ListHandle = Extension.create({
   name: 'listHandle',

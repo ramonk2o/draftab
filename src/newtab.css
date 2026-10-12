@@ -569,9 +569,9 @@ body.sidebar-collapsed #sidebar {
 
 /* On list items, the handle sits before the marker (• or 1.) */
 .drag-handle.in-list {
-  /* the list indentation (the handle inherits the note's font size), minus 8px:
+  /* the list indentation (the handle inherits the note's font size), minus 16px:
      the marker already separates it from the text, and the whole-list bar needs the room */
-  transform: translateX(calc(-1.625em + 8px));
+  transform: translateX(calc(-1.625em + 16px));
 }
 
 /* ---------- Animated reordering ---------- */
