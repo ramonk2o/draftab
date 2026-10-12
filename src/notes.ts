@@ -7,6 +7,7 @@ export type Note = {
   title: string
   titleManual: boolean // true after the user renames the note
   textSize?: number // in percent, one of TEXT_SIZES; missing in notes from before it existed (= 100)
+  font?: NoteFont // missing in notes from before fonts were per note (see noteFontOf)
   createdAt: number
   updatedAt: number
 }
@@ -25,8 +26,28 @@ export function nextTextSize(size: number, direction: 1 | -1): number {
   return TEXT_SIZES[Math.min(Math.max(i, 0), TEXT_SIZES.length - 1)]
 }
 
-// textSize: the "Text size of new notes" setting
-export function newBlankNote(textSize = 100): Note {
+// Note fonts, in the order the "Aa" button switches through them
+export type NoteFont = 'sans' | 'serif' | 'mono'
+export const NOTE_FONTS: NoteFont[] = ['sans', 'serif', 'mono']
+export const FONT_NAMES: Record<NoteFont, string> = { sans: 'Sans-serif', serif: 'Serif', mono: 'Monospace' }
+
+export function isNoteFont(font: unknown): font is NoteFont {
+  return NOTE_FONTS.includes(font as NoteFont)
+}
+
+// The note's font. Notes from before fonts were per note have none of their own:
+// they use oldFont, the font that was set in Settings back then (settings.noteFont)
+export function noteFontOf(note: Note, oldFont: NoteFont): NoteFont {
+  return isNoteFont(note.font) ? note.font : oldFont
+}
+
+// The next font, back to the first after the last
+export function nextNoteFont(font: NoteFont): NoteFont {
+  return NOTE_FONTS[(NOTE_FONTS.indexOf(font) + 1) % NOTE_FONTS.length]
+}
+
+// textSize and font: the "Text size of new notes" and "Font of new notes" settings
+export function newBlankNote(textSize = 100, font: NoteFont = 'sans'): Note {
   const now = Date.now()
   return {
     id: crypto.randomUUID(),
@@ -34,6 +55,7 @@ export function newBlankNote(textSize = 100): Note {
     title: '',
     titleManual: false,
     textSize: validTextSize(textSize),
+    font,
     createdAt: now,
     updatedAt: now,
   }

@@ -11,6 +11,13 @@ How a feature moves:
 
 ## Editor
 
+### Font per note
+- **Status:** In progress — implemented; `npm test` 122/122 passing (6 new across `notes`, `storage`, `backup` and `markdown` tests), typecheck and `npm run build` OK; waiting for the test in Chrome
+- **Description:** each note has its own font (sans-serif, serif or monospace), like the text size; the Settings font becomes the font new notes start with.
+- **Motivation:** direct request: the font should be set per note, the same way as the size, with the same "default for new notes" in Settings.
+- **Deliverable:** an "Aa" button at the top right of the note page that switches the open note's font (Sans → Serif → Mono → Sans) and shows its name; `font` in the note (storage and backups); "Font of new notes" in Settings; existing notes keep the font set in Settings before the update.
+- **How to verify:** `npm test` and `npm run build`; in Chrome: switch the font of one note and check another note keeps its own; reload the tab (no flash of another font); open the same note in two tabs and switch the font in one; change "Font of new notes" and create a note; check existing notes kept the font they had; export and import a backup and check each note's font.
+
 ### Tables
 - **Status:** Idea
 - **Description:** a table block in notes.

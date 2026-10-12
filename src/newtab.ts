@@ -2,16 +2,17 @@ import { generateHTML, type JSONContent } from '@tiptap/core'
 import { EditorState } from '@tiptap/pm/state'
 import { createEditor } from './editor'
 import { element } from './dom'
-import { showCopied } from './copy-block'
+import { showCopied, showLabel } from './copy-block'
 import { characters, markdownCharacters, plainTextCharacters, selectedCharacters } from './char-count'
 import { chooseFile, exportMarkdown } from './backup-ui'
 import { noteFromFile, noteToMarkdown } from './markdown'
 import { noteToWhatsApp } from './whatsapp'
 import { openSettings } from './settings'
-import { applyNoteFont, applyTheme } from './theme'
+import { applyNoteFont, applyTheme, rememberNewNoteFont } from './theme'
 import {
   ICON_CHAT,
   ICON_COPY,
+  ICON_FONT,
   ICON_GEAR,
   ICON_IMPORT,
   ICON_MARKDOWN,
@@ -26,7 +27,10 @@ import {
   isEmptyNote,
   listDate,
   newBlankNote,
+  FONT_NAMES,
+  nextNoteFont,
   nextTextSize,
+  noteFontOf,
   TEXT_SIZES,
   validTextSize,
   renamed,
@@ -34,13 +38,14 @@ import {
   withoutFirstLine,
   withUpdatedTitle,
   type Note,
+  type NoteFont,
   type NoteSort,
 } from './notes'
 import {
   deleteNote,
   listNotes,
   onImport,
-  onNoteFontChanged,
+  onNewNoteFontChanged,
   onNoteSortChanged,
   onNewNoteTextSizeChanged,
   onNotesChanged,
@@ -70,10 +75,12 @@ let lastSaveFromThisTab = 0 // updatedAt of the last note saved by this tab
 let renaming = false // while renaming, the list isn't redrawn
 let noteSort: NoteSort = 'updated' // sidebar order, from Settings
 let newNoteTextSize = 100 // text size new notes start with, from Settings
+let newNoteFont: NoteFont = 'sans' // font new notes start with, from Settings
+let oldNoteFont: NoteFont = 'sans' // font of notes without their own (settings.noteFont)
 
-// A blank note with the text size chosen in Settings
+// A blank note with the text size and font chosen in Settings
 function newNote(): Note {
-  return newBlankNote(newNoteTextSize)
+  return newBlankNote(newNoteTextSize, newNoteFont)
 }
 
 // ---------- Saving ----------
@@ -133,6 +140,7 @@ function open(note: Note, alreadySaved: boolean) {
   currentNoteSaved = alreadySaved
   replaceDocument(note.doc)
   applyTextSize()
+  applyFont()
   updateNoteActions()
   updateTotals()
   // Reloading the tab reopens this note
@@ -197,7 +205,8 @@ onNotesChanged((changes) => {
   }
   currentNote = received
   currentNoteSaved = true
-  applyTextSize() // the size may have changed in the other tab
+  applyTextSize() // the size or font may have changed in the other tab
+  applyFont()
 })
 
 // ---------- Sidebar ----------
@@ -334,7 +343,7 @@ settingsButton.innerHTML = ICON_GEAR
 importButton.addEventListener('click', async () => {
   const file = await chooseFile('.md,.markdown,.txt,text/markdown,text/plain')
   if (!file) return
-  const note = noteFromFile(file.name, await file.text(), newNoteTextSize)
+  const note = noteFromFile(file.name, await file.text(), newNoteTextSize, newNoteFont)
   if (!note) {
     alert(`Couldn't import: "${file.name}" is empty.`)
     return
@@ -463,6 +472,34 @@ onNewNoteTextSizeChanged((size) => {
   newNoteTextSize = size
 })
 
+// ---------- Font of the open note (top right, "Aa") ----------
+
+const fontButton = element<HTMLButtonElement>('#note-font')
+fontButton.innerHTML = ICON_FONT
+
+function applyFont() {
+  const font = noteFontOf(currentNote, oldNoteFont)
+  applyNoteFont(font)
+  setLabel(fontButton, `Font: ${FONT_NAMES[font]} (click for ${FONT_NAMES[nextNoteFont(font)]})`)
+}
+
+// Like the text size, the font is part of the note and is saved right away
+fontButton.addEventListener('click', () => {
+  const font = nextNoteFont(noteFontOf(currentNote, oldNoteFont))
+  currentNote = { ...currentNote, font }
+  applyFont()
+  // The drag handle would stay where the block was; it comes back on the next mouse move
+  editor.view.dispatch(editor.state.tr.setMeta('hideDragHandle', true))
+  showLabel(fontButton, FONT_NAMES[font], true)
+  if (currentNoteSaved) saveNow()
+})
+
+// The setting only affects notes created from now on
+onNewNoteFontChanged((font) => {
+  newNoteFont = font
+  rememberNewNoteFont(font)
+})
+
 // ---------- Character counts (bottom right) ----------
 
 const noteStats = element<HTMLDivElement>('#note-stats')
@@ -516,19 +553,20 @@ sidebarButton.addEventListener('click', () => {
 
 // ---------- Theme ----------
 
-// A theme or note font chosen in any tab applies to all of them
+// A theme chosen in any tab applies to all of them
 onThemeChanged(applyTheme)
-onNoteFontChanged(applyNoteFont)
 
 // ---------- Start ----------
 
 async function start() {
   const settings = await readSettings()
   applyTheme(settings.theme)
-  applyNoteFont(settings.noteFont)
   applySidebarCollapsed(settings.sidebarCollapsed)
   noteSort = settings.noteSort
   newNoteTextSize = settings.newNoteTextSize
+  newNoteFont = settings.newNoteFont
+  oldNoteFont = settings.noteFont
+  rememberNewNoteFont(newNoteFont)
   notes = await listNotes()
 
   const openId = sessionStorage.getItem('openNoteId')

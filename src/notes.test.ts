@@ -6,7 +6,9 @@ import {
   isEmptyNote,
   listDate,
   newBlankNote,
+  nextNoteFont,
   nextTextSize,
+  noteFontOf,
   renamed,
   sortNotes,
   textOf,
@@ -174,5 +176,24 @@ describe('withoutFirstLine', () => {
 
   test('a note with only a title becomes empty', () => {
     expect(withoutFirstLine(doc(paragraph('Title'), paragraph()))).toEqual(doc())
+  })
+})
+
+describe('font', () => {
+  test('a new note starts with the font given, sans-serif by default', () => {
+    expect(newBlankNote().font).toBe('sans')
+    expect(newBlankNote(100, 'serif').font).toBe('serif')
+  })
+
+  test('the button goes through the fonts and back to the first', () => {
+    expect(nextNoteFont('sans')).toBe('serif')
+    expect(nextNoteFont('serif')).toBe('mono')
+    expect(nextNoteFont('mono')).toBe('sans')
+  })
+
+  test("a note's own font wins; without one (or an unknown one) the old setting is used", () => {
+    expect(noteFontOf(noteWith(doc(), { font: 'mono' }), 'serif')).toBe('mono')
+    expect(noteFontOf(noteWith(doc(), { font: undefined }), 'serif')).toBe('serif')
+    expect(noteFontOf(noteWith(doc(), { font: 'comic' as never }), 'serif')).toBe('serif')
   })
 })

@@ -1,5 +1,5 @@
-import { validTextSize, type Note, type NoteSort } from './notes'
-import type { NoteFont, Theme } from './theme'
+import { isNoteFont, validTextSize, type Note, type NoteFont, type NoteSort } from './notes'
+import type { Theme } from './theme'
 
 // All chrome.storage access goes through here.
 // Keys: "note:<id>" (one per note), "settings" and "meta".
@@ -15,7 +15,8 @@ export type Settings = {
   sidebarCollapsed: boolean
   theme: Theme
   noteSort: NoteSort
-  noteFont: NoteFont
+  noteFont: NoteFont // font of notes without their own (from before fonts were per note); no longer changed
+  newNoteFont: NoteFont // font new notes start with
   newNoteTextSize: number // in percent, one of TEXT_SIZES
 }
 
@@ -31,6 +32,7 @@ const DEFAULT_SETTINGS: Settings = {
   theme: 'auto',
   noteSort: 'updated',
   noteFont: 'sans',
+  newNoteFont: 'sans',
   newNoteTextSize: 100,
 }
 const DEFAULT_META: Meta = { lastChangeAt: 0, lastBackupAt: 0, lastImportAt: 0 }
@@ -124,11 +126,14 @@ function onFieldChanged(storageKey: 'settings' | 'meta', field: string, callback
 
 export async function readSettings(): Promise<Settings> {
   const { settings } = await chrome.storage.local.get('settings')
-  const result = { ...DEFAULT_SETTINGS, ...(settings as Partial<Settings> | undefined) }
+  const stored = settings as Partial<Settings> | undefined
+  const result = { ...DEFAULT_SETTINGS, ...stored }
   result.autoBackupMinutes = validInterval(result.autoBackupMinutes)
   if (!['auto', 'light', 'dark'].includes(result.theme)) result.theme = 'auto'
   if (!['updated', 'title', 'created'].includes(result.noteSort)) result.noteSort = 'updated'
-  if (!['sans', 'serif', 'mono'].includes(result.noteFont)) result.noteFont = 'sans'
+  if (!isNoteFont(result.noteFont)) result.noteFont = 'sans'
+  // Before fonts were per note, the one font in Settings was also the font of new notes
+  if (!isNoteFont(stored?.newNoteFont)) result.newNoteFont = result.noteFont
   result.newNoteTextSize = validTextSize(result.newNoteTextSize)
   return result
 }
@@ -173,8 +178,8 @@ export function onNoteSortChanged(callback: (order: NoteSort) => void) {
   onFieldChanged('settings', 'noteSort', (order) => order && callback(order))
 }
 
-export function onNoteFontChanged(callback: (font: NoteFont) => void) {
-  onFieldChanged('settings', 'noteFont', (font) => font && callback(font))
+export function onNewNoteFontChanged(callback: (font: NoteFont) => void) {
+  onFieldChanged('settings', 'newNoteFont', (font) => isNoteFont(font) && callback(font))
 }
 
 export function onNewNoteTextSizeChanged(callback: (size: number) => void) {

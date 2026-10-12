@@ -1,8 +1,9 @@
 // Appearance: light/dark theme (data-theme="light|dark" on <html>) and the note font
 // (data-note-font="sans|serif|mono"); the CSS does the rest.
 
+import type { NoteFont } from './notes'
+
 export type Theme = 'auto' | 'light' | 'dark'
-export type NoteFont = 'sans' | 'serif' | 'mono'
 
 const systemDark = matchMedia('(prefers-color-scheme: dark)')
 let chosen: Theme = 'auto'
@@ -26,11 +27,21 @@ function update() {
 // When automatic, follows the system mode switching while the page is open
 systemDark.addEventListener('change', update)
 
+// The open note's font
 export function applyNoteFont(font: NoteFont) {
   document.documentElement.dataset.noteFont = font
-  // Copy for theme-init.js, like the theme
+  // Copy for theme-init.js: a reload of this tab reopens this note
   try {
-    localStorage.setItem('noteFont', font)
+    sessionStorage.setItem('openNoteFont', font)
+  } catch {
+    // no sessionStorage: another font may just flash on reload
+  }
+}
+
+// Copy of "Font of new notes" for theme-init.js: a new tab opens a new note
+export function rememberNewNoteFont(font: NoteFont) {
+  try {
+    localStorage.setItem('newNoteFont', font)
   } catch {
     // no localStorage: the default font may just flash on open
   }

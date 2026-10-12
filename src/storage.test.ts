@@ -6,7 +6,7 @@ import {
   deleteNote,
   listNotes,
   onNewNoteTextSizeChanged,
-  onNoteFontChanged,
+  onNewNoteFontChanged,
   onNoteSortChanged,
   onNotesChanged,
   onThemeChanged,
@@ -95,13 +95,13 @@ describe('notes', () => {
 
 describe('settings', () => {
   test('with nothing saved, uses the defaults', async () => {
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteTextSize: 100 })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100 })
   })
 
   test('saving one part keeps the rest', async () => {
     await saveSettings({ autoBackupMinutes: 60 })
     await saveSettings({ sidebarCollapsed: true })
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteTextSize: 100 })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100 })
   })
 })
 
@@ -130,7 +130,7 @@ describe('deleteAllNotes', () => {
     await saveSettings({ autoBackupMinutes: 60, sidebarCollapsed: true })
     await deleteAllNotes()
     expect(await listNotes()).toEqual([])
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteTextSize: 100 })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100 })
   })
 })
 
@@ -180,12 +180,21 @@ describe('note font', () => {
     expect((await readSettings()).noteFont).toBe('sans')
   })
 
-  test('notifies tabs when the font changes, and only then', async () => {
+  test('the font of new notes starts as the old single font, until it is changed', async () => {
+    await chrome.storage.local.set({ settings: { noteFont: 'serif' } })
+    expect((await readSettings()).newNoteFont).toBe('serif')
+    await saveSettings({ newNoteFont: 'mono' })
+    expect(await readSettings()).toMatchObject({ noteFont: 'serif', newNoteFont: 'mono' })
+    await chrome.storage.local.set({ settings: { noteFont: 'serif', newNoteFont: 'comic' } })
+    expect((await readSettings()).newNoteFont).toBe('serif')
+  })
+
+  test('notifies tabs when the font of new notes changes, and only then', async () => {
     const received: string[] = []
-    onNoteFontChanged((font) => received.push(font))
-    await saveSettings({ noteFont: 'serif' })
+    onNewNoteFontChanged((font) => received.push(font))
+    await saveSettings({ newNoteFont: 'serif' })
     await saveSettings({ noteSort: 'title' })
-    await saveSettings({ noteFont: 'mono' })
+    await saveSettings({ newNoteFont: 'mono' })
     expect(received).toEqual(['serif', 'mono'])
   })
 })

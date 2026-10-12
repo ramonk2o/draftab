@@ -1,7 +1,7 @@
 import { flattenExtensions, type JSONContent } from '@tiptap/core'
 import { MarkdownManager } from '@tiptap/markdown'
 import { contentExtensions, contentSchema } from './extensions'
-import { displayTitle, isEmptyNote, newBlankNote, withUpdatedTitle, type Note } from './notes'
+import { displayTitle, isEmptyNote, newBlankNote, withUpdatedTitle, type Note, type NoteFont } from './notes'
 
 // Markdown of a note: used by the backup, by "Export as Markdown" and by importing a file.
 // Doesn't depend on an open page (the automatic backup runs in the service worker).
@@ -20,12 +20,12 @@ export function noteToMarkdown(note: Note): string {
 
 // A new note from the text of an imported file: .md/.markdown is read as markdown,
 // anything else (.txt) as plain text. Returns null when the file has no text.
-// textSize: the "Text size of new notes" setting
-export function noteFromFile(fileName: string, fileText: string, textSize = 100): Note | null {
+// textSize and font: the "Text size of new notes" and "Font of new notes" settings
+export function noteFromFile(fileName: string, fileText: string, textSize = 100, font: NoteFont = 'sans'): Note | null {
   const text = fileText.replace(/\r\n?/g, '\n') // Windows and old Mac line breaks
   const isMarkdown = /\.(md|markdown)$/i.test(fileName)
   const doc = (isMarkdown && markdownDoc(text)) || plainTextDoc(text)
-  const note = withUpdatedTitle({ ...newBlankNote(textSize), doc })
+  const note = withUpdatedTitle({ ...newBlankNote(textSize, font), doc })
   return isEmptyNote(note) ? null : note
 }
 

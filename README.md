@@ -29,7 +29,7 @@ A Chrome extension that turns the **new tab** into a local notepad. The editor i
 - **Automatic backup** to `Downloads/draftab-backups/`: every minute, hour, day, week or month, only when some note changed. Works with the tab closed, as long as Chrome is open.
 - **Copy a block with a double-click** on its handle (or a whole list on its bar): it's selected and copied, formatted and as plain text.
 - **Light, dark or automatic theme** (follows the system), chosen in Settings.
-- **Note font**: sans-serif, serif or monospace, with typography modeled on [Tailwind Typography](https://github.com/tailwindlabs/tailwindcss-typography).
+- **Font per note**: sans-serif, serif or monospace, switched with the "Aa" button at the top right; each note keeps its own, and Settings sets the font new notes start with. Typography modeled on [Tailwind Typography](https://github.com/tailwindlabs/tailwindcss-typography).
 - **Privacy**: nothing leaves your computer. The extension doesn't access the internet, has no account and collects no data.
 
 ### Markdown shortcuts
@@ -97,7 +97,7 @@ If Chrome's **"Ask where to save each file before downloading"** option is on (`
 ```
 public/
   manifest.json          extension manifest (copied to dist/)
-  theme-init.js          applies the theme and note font before the page shows up (avoids flashing)
+  theme-init.js          applies the theme and the open note's font before the page shows up (avoids flashing)
   icons/                 extension icons (16, 32, 48, 128 px)
   _locales/              extension description in English and Portuguese (store summary)
 newtab.html              new tab page (editor, sidebar, Settings lightbox)
@@ -131,8 +131,8 @@ docs/store/              Chrome Web Store images (en and pt-BR)
 
 - Everything goes to `chrome.storage.local` (with the `unlimitedStorage` permission), always through `src/storage.ts`.
 - **One key per note** (`note:<id>`), so not everything is rewritten on every keystroke. The note stores the **Tiptap JSON**, which is the source of truth; markdown only exists on export.
-- `settings` holds the settings (automatic backup interval, collapsed sidebar, theme, note sort order, note font) and `meta` holds timestamps: last change, last automatic backup and last import (which makes open tabs reload).
-- The theme and note font are also copied to the page's `localStorage`, so they're applied before the first paint; the note open in each tab is kept in its `sessionStorage`, so a reload reopens it.
+- `settings` holds the settings (automatic backup interval, collapsed sidebar, theme, note sort order, font and text size of new notes) and `meta` holds timestamps: last change, last automatic backup and last import (which makes open tabs reload).
+- The theme and the font of new notes are also copied to the page's `localStorage` (and the open note's font to `sessionStorage`), so they're applied before the first paint; the note open in each tab is kept in its `sessionStorage`, so a reload reopens it.
 - Saving is automatic, after ~500 ms without typing. Other tabs get the change through `chrome.storage.onChanged`; if two tabs edit the same note, the last write wins.
 - The full format (note, settings, backup file) is described in [SPEC.md](SPEC.md).
 

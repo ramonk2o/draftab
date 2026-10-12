@@ -8,7 +8,7 @@ Ready to upload to the Chrome Web Store as an update.
 
 ### Added
 - **Note sort order** in Settings: last modified (default), title A–Z (ignoring case and accents, numbers in natural order, untitled notes last) or date created. The date next to each note follows the order, and every open tab re-sorts immediately.
-- **Note font** in Settings: sans-serif (default), serif or monospace, using system fonts (SF Pro / New York / SF Mono on macOS). Applies to note content only, in every open tab, without a flash of the wrong font on open.
+- **Font per note**: sans-serif (default), serif or monospace, using system fonts (SF Pro / New York / SF Mono on macOS). The "Aa" button at the top right of the note page switches the open note's font; each note keeps its own, in every tab and in backups, without a flash of the wrong font on open. "Font of new notes" in Settings sets the font new notes start with. Notes from before keep the font that was set in Settings.
 - **Double-click a handle to copy**: double-clicking a block's handle selects its content and copies it like Cmd/Ctrl+C (formatted and plain text); double-clicking the whole-list bar copies the whole list. A small "Copied" label confirms it.
 - **Backspace undoes code blocks and quotes**: with the cursor at the start of a code block, Backspace turns it into normal text, one paragraph per line; at the start of a quote, the whole quote becomes normal paragraphs. Cmd/Ctrl+Z brings the block back.
 - **Import a file as a note**: an import icon to the left of the New note button turns a `.md` file (read as markdown) or a `.txt` file (one paragraph per line) into a new note and opens it.

@@ -39,6 +39,7 @@
     <main id="main">
       <!-- Actions for the open note (top right); icons filled in by newtab.ts -->
       <div id="note-actions">
+        <button id="note-font" class="icon-button" type="button"></button>
         <button id="text-smaller" class="icon-button" type="button"></button>
         <span id="text-size" aria-hidden="true"></span>
         <button id="text-bigger" class="icon-button" type="button"></button>
@@ -108,8 +109,8 @@
             </select>
           </label>
           <label class="row">
-            <span>Note font</span>
-            <select id="note-font">
+            <span>Font of new notes</span>
+            <select id="new-note-font">
               <option value="sans">Sans-serif</option>
               <option value="serif">Serif</option>
               <option value="mono">Monospace</option>

@@ -25,6 +25,9 @@ export const ICON_MARKDOWN = icon(
 export const ICON_TEXT_SMALLER = icon('<path d="m1.75 13 3.5-9.5L8.75 13" /><path d="M3 10h4.5" /><path d="M10.5 8.5h4" />')
 export const ICON_TEXT_BIGGER = icon('<path d="m1.75 13 3.5-9.5L8.75 13" /><path d="M3 10h4.5" /><path d="M10.5 8.5h4" /><path d="M12.5 6.5v4" />')
 
+// "Aa": the note's font
+export const ICON_FONT = icon('<path d="m1.25 13 3.5-9.5L8.25 13" /><path d="M2.5 10H7" /><circle cx="11.75" cy="10.75" r="2.25" /><path d="M14 8.5V13" />')
+
 export const ICON_IMPORT = icon('<path d="M8 10.5v-8" /><path d="m4.75 5.75 3.25-3.25 3.25 3.25" /><path d="M3 13.5h10" />')
 
 export const ICON_GEAR = icon(

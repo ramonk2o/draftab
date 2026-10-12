@@ -24,12 +24,17 @@ export function selectAndCopyBlock(view: EditorView, pos: number, handle: HTMLEl
 
 // Small "Copied" label above the element (or below it), fading out
 export function showCopied(element: HTMLElement, below = false) {
+  showLabel(element, 'Copied', below)
+}
+
+// Small label with any text (e.g. a font's name), the same way
+export function showLabel(element: HTMLElement, text: string, below = false) {
   // Clicking again quickly replaces the label instead of stacking another one
   document.querySelectorAll('.copied-label').forEach((old) => old.remove())
   const box = element.getBoundingClientRect()
   const label = document.createElement('div')
   label.className = below ? 'copied-label below' : 'copied-label'
-  label.textContent = 'Copied'
+  label.textContent = text
   label.style.left = `${box.left + box.width / 2}px`
   label.style.top = `${below ? box.bottom : box.top}px`
   document.body.appendChild(label)

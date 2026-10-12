@@ -48,6 +48,9 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
   - Steps, relative to the note font's normal size: 80%, 90%, 100%, 110%, 120%, 135%, 150%. One step per click; the button is disabled at the end of the range.
   - The size belongs to the note: each note keeps its own, in every tab and in backups. Changing it counts as an edit (saved right away, updates "last modified"). On a new note not saved yet, the size is saved with the first keystroke.
   - Only the note content changes size (headings, lists, code… keep their proportions).
+- Font of the note: an "Aa" button to the left of the text size switches the open note's font to the next one (Sans-serif → Serif → Monospace → Sans-serif); a small label shows the new font's name. Same fonts as described under "Settings and backup".
+  - The font belongs to the note, like the text size: each note keeps its own, in every tab and in backups. Changing it counts as an edit (saved right away, updates "last modified"). On a new note not saved yet, the font is saved with the first keystroke.
+  - Notes from before fonts were per note (no `font` of their own) use the font that was set in Settings at the time ("note font" before this change).
 - Character counts at the bottom of the page, e.g. "1,234 characters · 1,180 without markdown · 42 selected":
   - Characters: the whole note as markdown, marks included — the same text as the exported file.
   - Without markdown: the plain text, with one line break between blocks — the same text as a plain-text copy.
@@ -63,21 +66,22 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 - Backup file name (manual and automatic): `draftab_YYYY-MM-DD-HHhMM.json`, in local time.
 - Delete all notes: only after typing "delete everything" in a confirmation field. Settings are kept; open tabs reload, as with an import.
 - Theme: Automatic (follows the system's light/dark mode, live), Light or Dark. Default Automatic.
-- Note font: Sans-serif (default), Serif or Monospace, using system fonts (no downloads): SF Pro / New York / SF Mono on macOS, Segoe UI / Georgia / Consolas and similar elsewhere. Only the note content uses it.
-- Theme and note font are applied before the page shows up (no flash of the wrong ones).
+- Font of new notes: Sans-serif (default), Serif or Monospace, using system fonts (no downloads): SF Pro / New York / SF Mono on macOS, Segoe UI / Georgia / Consolas and similar elsewhere. Only the note content uses it. New notes (new tab, New note, imported file) start with it; changing it doesn't change existing notes. Until it's first changed, it's the "note font" set before fonts were per note.
+- Theme and the open note's font are applied before the page shows up (no flash of the wrong ones).
 - Text size of new notes: 80% to 150% (the note's steps), default 100%. New notes (new tab, New note, imported file) start with it; changing it doesn't change existing notes. Notes from before this setting existed are 100%.
 - Sort notes by: see "Notes and the sidebar".
 
 ## Data model
-- `Note { id: string (uuid), doc: TiptapJSON, title: string, titleManual: boolean, textSize?: number, createdAt: number, updatedAt: number }`
+- `Note { id: string (uuid), doc: TiptapJSON, title: string, titleManual: boolean, textSize?: number, font?: 'sans' | 'serif' | 'mono', createdAt: number, updatedAt: number }`
   `titleManual` = the user renamed the note; while it's `false`, `title` follows the first line.
   `textSize` = the note's text size in percent (80, 90, 100, 110, 120, 135 or 150); missing or any other value = 100.
+  `font` = the note's font; missing or any other value = the `noteFont` setting (notes from before fonts were per note).
   The Tiptap JSON is the source of truth (no conversion losses).
-- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark', noteSort: 'updated' | 'title' | 'created', noteFont: 'sans' | 'serif' | 'mono', newNoteTextSize: number }` (0 = off; `newNoteTextSize` = text size of new notes, in percent, default 100). Invalid stored values fall back to the defaults (an unknown interval moves to the closest one).
+- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark', noteSort: 'updated' | 'title' | 'created', noteFont: 'sans' | 'serif' | 'mono', newNoteFont: 'sans' | 'serif' | 'mono', newNoteTextSize: number }` (0 = off; `newNoteTextSize` = text size of new notes, in percent, default 100; `newNoteFont` = font of new notes, missing = `noteFont`; `noteFont` = the font of notes without their own, no longer changed from Settings). Invalid stored values fall back to the defaults (an unknown interval moves to the closest one).
 - `meta { lastChangeAt: number, lastBackupAt: number, lastImportAt: number }` (`lastImportAt` marks an import or the deletion of all notes, and tells open tabs to reload)
 - Backup file:
-  `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, titleManual, textSize, markdown, doc, createdAt, updatedAt }] }`
-  `markdown` is for humans to read; importing restores from `doc`. Backups without `textSize` import as 100%.
+  `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, titleManual, textSize, font, markdown, doc, createdAt, updatedAt }] }`
+  `markdown` is for humans to read; importing restores from `doc`. Backups without `textSize` import as 100%; notes without `font` use the backup's `noteFont`.
 
 ## Technical decisions
 - Manifest V3 with `chrome_url_overrides.newtab`: the current standard for extensions.
@@ -87,7 +91,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 - No React or other UI framework: the interface around the editor is small; fewer layers to read.
 - `chrome.storage.local` + `unlimitedStorage` is the source of truth for notes and settings: no ~5 MB localStorage limit, not wiped when clearing cookies, and reachable from the service worker.
 - One key per note (`note:<id>`): avoids rewriting everything on every keystroke. Open tabs update their list with just the note that changed.
-- The theme and note font are also copied to the page's `localStorage`, which can be read synchronously, so `theme-init.js` applies them before the first paint. `chrome.storage` remains the source of truth.
+- The theme and the font of new notes are also copied to the page's `localStorage`, and the open note's font to the tab's `sessionStorage` (next to the open note's id), which can be read synchronously, so `theme-init.js` applies them before the first paint. `chrome.storage` remains the source of truth.
 - `chrome.alarms` + `chrome.downloads` in the service worker: backups run even with the tab closed. The file is generated as a `data:` URL (there's no `URL.createObjectURL` in the service worker).
 - Markdown is only an export format (backup, exported file, copy, counts); notes are stored as Tiptap JSON.
 - Vitest for the data, markdown and backup layers; the editor and the UI are checked in Chrome (by hand, plus automated browser scripts during development).

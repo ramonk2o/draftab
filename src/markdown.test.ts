@@ -118,6 +118,11 @@ describe('noteFromFile', () => {
     expect(noteFromFile('a.txt', 'x')?.textSize).toBe(100)
   })
 
+  test('starts with the font given (the setting for new notes)', () => {
+    expect(noteFromFile('a.txt', 'x', 100, 'mono')?.font).toBe('mono')
+    expect(noteFromFile('a.txt', 'x')?.font).toBe('sans')
+  })
+
   test('every import is a new note', () => {
     expect(noteFromFile('a.txt', 'x')?.id).not.toBe(noteFromFile('a.txt', 'x')?.id)
   })
