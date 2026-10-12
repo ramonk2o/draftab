@@ -11,6 +11,13 @@ How a feature moves:
 
 ## Editor
 
+### More space between paragraphs
+- **Status:** In progress — implemented; `npm test` 156/156 passed, `npm run build` OK. Waiting for the check in Chrome.
+- **Description:** a little more vertical space between paragraphs in notes.
+- **Motivation:** direct request; paragraphs felt too close together.
+- **Deliverable:** paragraph margin goes from 0.25em to 0.5em (the gap between two paragraphs doubles); list items, headings and other blocks unchanged.
+- **How to verify:** `npm test` and `npm run build` pass; in Chrome, a note with several paragraphs shows more space between them, while list items stay as close as before.
+
 ### Tables
 - **Status:** Idea
 - **Description:** a table block in notes.

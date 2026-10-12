@@ -504,7 +504,7 @@ body.sidebar-collapsed #sidebar {
    Vertical margins collapse between neighbors, so the larger one wins. */
 
 .tiptap p {
-  margin: 0.25em 0;
+  margin: 0.5em 0;
 }
 
 .tiptap > :first-child {

@@ -25,6 +25,7 @@ Ready to upload to the Chrome Web Store as an update.
 - The new settings are included in backups.
 
 ### Changed
+- A little more space between paragraphs in notes (0.5em instead of 0.25em); list items stay as close as before.
 - Backup export and import moved to Settings only; the sidebar's backup icons are gone.
 - Settings: the import button reads "Import backup" (no ellipsis).
 - The sidebar is a little wider (300 px instead of 260 px), and the row with the search sits between two dividers (inset from the edges, like the one after the pinned notes). While the search has the focus or any text, it widens to the whole row, hiding the import and new note buttons.
