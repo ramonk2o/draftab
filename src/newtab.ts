@@ -2,7 +2,7 @@ import type { JSONContent } from '@tiptap/core'
 import { EditorState } from '@tiptap/pm/state'
 import { createEditor } from './editor'
 import { element } from './dom'
-import { showCopied, showLabel } from './copy-block'
+import { showCopied } from './copy-block'
 import { characters, markdownCharacters, plainTextCharacters, selectedCharacters } from './char-count'
 import { chooseFile, exportMarkdown } from './backup-ui'
 import { noteFromFile, noteToMarkdown } from './markdown'
@@ -394,6 +394,7 @@ noteCopyButton.addEventListener('click', async () => {
 const editorElement = element<HTMLDivElement>('#editor')
 const textSmallerButton = element<HTMLButtonElement>('#text-smaller')
 const textBiggerButton = element<HTMLButtonElement>('#text-bigger')
+const textSizeLabel = element<HTMLSpanElement>('#text-size')
 textSmallerButton.innerHTML = ICON_TEXT_SMALLER
 textBiggerButton.innerHTML = ICON_TEXT_BIGGER
 
@@ -403,6 +404,7 @@ const SHORTCUT = navigator.platform.startsWith('Mac') ? 'Cmd' : 'Ctrl'
 function applyTextSize() {
   const size = validTextSize(currentNote.textSize)
   editorElement.style.setProperty('--note-scale', String(size / 100))
+  textSizeLabel.textContent = `${size}%`
   textSmallerButton.disabled = size === TEXT_SIZES[0]
   textBiggerButton.disabled = size === TEXT_SIZES[TEXT_SIZES.length - 1]
   setLabel(textSmallerButton, `Smaller text (${size}%) — ${SHORTCUT}+Shift+,`)
@@ -424,7 +426,6 @@ function changeTextSize(direction: 1 | -1) {
   applyTextSize()
   // The drag handle would stay where the block was; it comes back on the next mouse move
   editor.view.dispatch(editor.state.tr.setMeta('hideDragHandle', true))
-  showLabel(direction === 1 ? textBiggerButton : textSmallerButton, `${next}%`, true)
   if (currentNoteSaved) saveNow()
 }
 

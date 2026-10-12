@@ -40,6 +40,7 @@
       <!-- Actions for the open note (top right); icons filled in by newtab.ts -->
       <div id="note-actions">
         <button id="text-smaller" class="icon-button" type="button"></button>
+        <span id="text-size" aria-hidden="true"></span>
         <button id="text-bigger" class="icon-button" type="button"></button>
         <button id="note-export" class="icon-button" type="button" title="Export as Markdown" aria-label="Export as Markdown"></button>
         <button id="note-copy" class="icon-button" type="button" title="Copy note" aria-label="Copy note"></button>
@@ -62,7 +63,7 @@
           <p class="hint">A JSON file with all notes (also in markdown) and settings. Importing replaces everything.</p>
           <div class="buttons">
             <button id="settings-export" class="button" type="button">Export backup</button>
-            <button id="settings-import" class="button" type="button">Import backup…</button>
+            <button id="settings-import" class="button" type="button">Import backup</button>
           </div>
           <p id="backup-message" class="message" role="status" aria-live="polite"></p>
           <label class="row">

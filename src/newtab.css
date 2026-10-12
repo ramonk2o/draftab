@@ -228,6 +228,17 @@ body.sidebar-collapsed #sidebar {
   height: 28px;
 }
 
+/* Current text size, between A− and A+ */
+#text-size {
+  align-self: center;
+  min-width: 3.2em; /* "80%" and "150%" take the same space: the buttons don't move */
+  color: var(--text-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  user-select: none;
+}
+
 /* Character counts for the open note, fixed at the bottom right */
 #note-stats {
   position: fixed;
