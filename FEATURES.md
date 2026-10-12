@@ -11,13 +11,6 @@ How a feature moves:
 
 ## Editor
 
-### Strikethrough and underline shortcuts
-- **Status:** Implemented, waiting for the test in Chrome. `npm test`: 156 tests passing (new: the `++` pattern while typing and pasting, including `C++`, `1 ++ 2 ++` and spaces just inside the marks left alone; `~~` / `++` in markdown export and import). `npm run build` OK. The Chrome check is pending.
-- **Description:** markdown shortcuts for strikethrough (`~~text~~`) and underline (`++text++`), while typing and when pasting.
-- **Motivation:** the two marks existed only through Cmd+Shift+S and Cmd+U; strikethrough already worked with `~~` but wasn't documented, and underline had no shortcut.
-- **Deliverable:** `++text++` becomes underlined while typing and when pasting; `~~text~~` (Tiptap's) recorded in SPEC.md; both read from and written to `.md` files (`~~` / `++`).
-- **How to verify:** `npm test` (new tests for the `++` pattern and for `~~` / `++` in markdown import and export). In Chrome: type `++word++` and `~~word~~` in a note, paste `a ++b++ c`, and export the note as Markdown.
-
 ### Tables
 - **Status:** Idea
 - **Description:** a table block in notes.
