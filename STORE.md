@@ -2,10 +2,16 @@
 
 Everything the Chrome Web Store developer dashboard asks for, ready to copy. The summary comes from the manifest (`public/_locales/*/messages.json`); the rest is filled in the dashboard.
 
+## Status
+
+- **1.0.0:** submitted, in review.
+- **1.1.0:** next update, ready to upload once 1.0.0 is live (what's in it: CHANGELOG.md).
+
 ## Package
 
 - **File:** `draftab-1.1.0.zip` (run `npm run zip`)
-- **Default language:** English (`default_locale: en`); the listing is also localized to Portuguese (Brazil)
+- **Default language:** English (`default_locale: en`); the listing is also localized to Portuguese (Brazil). The extension's interface is English-only.
+- The package includes a notices file with the licenses of the bundled dependencies (required by their MIT licenses).
 
 ## Store listing — English (en-US)
 
@@ -98,6 +104,8 @@ Dica: desinstalar a extensão apaga as notas, então exporte um backup antes.
 | Store icon | 128×128 | `public/icons/icon-128.png` |
 | Screenshots (1 to 5) | 1280×800 | `docs/store/en/screenshot-*.png` and `docs/store/pt-BR/screenshot-*.png` |
 | Small promo tile | 440×280 | `docs/store/en/promo-small.png` and `docs/store/pt-BR/promo-small.png` |
+
+Screenshots are generated from the real extension (regenerate them when something visible changes); the promo tile is the user's artwork.
 
 ## Privacy practices
 

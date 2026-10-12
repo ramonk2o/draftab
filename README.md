@@ -151,14 +151,14 @@ New permissions are only added with a reason recorded in SPEC.md.
 
 `npm test` covers the data layer and backups: saving/reading/listing/deleting notes, settings, title and search rules, lossless export → import, rejection of invalid backup files and the automatic backup decisions. `chrome.storage`, alarms and downloads are simulated in `src/fake-chrome.ts`.
 
-The editor and the interface (shortcuts, dragging, appearance) are checked in Chrome, following each stage's "How to verify" in [PLAN.md](PLAN.md).
+The editor and the interface (shortcuts, dragging, appearance) are checked in Chrome, following the "How to verify" of the stage in progress in [PLAN.md](PLAN.md) (finished stages keep theirs in the git history).
 
 ### Project documents
 
 | File | Contents |
 |---|---|
-| [SPEC.md](SPEC.md) | What Draftab does and why: scope, technical decisions, data model |
-| [PLAN.md](PLAN.md) | Development stages, how to verify each one and their status |
+| [SPEC.md](SPEC.md) | How Draftab behaves today (rules by area), data model and technical decisions |
+| [PLAN.md](PLAN.md) | The stage in progress (deliverable, how to verify, status) and the list of finished stages |
 | [FEATURES.md](FEATURES.md) | Feature idea backlog, by area, with status |
 | [CHANGELOG.md](CHANGELOG.md) | What changed in each version |
 | [STORE.md](STORE.md) | Chrome Web Store listing texts (en-US and pt-BR), privacy answers and how to submit or update |
@@ -169,7 +169,7 @@ The editor and the interface (shortcuts, dragging, appearance) are checked in Ch
 
 - Direct, readable code over abstractions; everything (code, comments, UI text, docs) in **English**.
 - All `chrome.storage` access goes through `src/storage.ts`.
-- Changes of decision go to SPEC.md first; new ideas go to FEATURES.md.
+- Changes of behavior or decision go to SPEC.md first; new ideas go to FEATURES.md.
 
 ## Contributing
 

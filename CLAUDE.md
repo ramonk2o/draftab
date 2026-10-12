@@ -1,8 +1,8 @@
 # Draftab
 
 Chrome extension (Manifest V3) that replaces the new tab with a notepad with a markdown block editor (Tiptap 3) and drag-to-reorder.
-- Specification and decisions: `SPEC.md`
-- Stages and status: `PLAN.md`
+- How it behaves today (rules, not visuals), data model and technical decisions: `SPEC.md`
+- Stage in progress and finished stages: `PLAN.md`
 
 ## Commands
 - Install: `npm install`
@@ -24,9 +24,9 @@ Chrome extension (Manifest V3) that replaces the new tab with a notepad with a m
 - Always reply to the user in Brazilian Portuguese, including intermediate messages.
 - Implement one PLAN.md stage at a time.
 - Before declaring something done, run the stage's verification and show the result.
-- When finished: update the **Status** in PLAN.md and commit.
+- When finished: update the **Status** in PLAN.md and commit. Once I approve a stage in use, move it to PLAN.md's Done list as one line.
 - When a stage or any user-visible change is done, record it in CHANGELOG.md under the version in progress (Added / Changed / Fixed).
-- Any change of decision goes to SPEC.md before the code.
+- Any change of behavior or decision goes to SPEC.md before the code. SPEC.md describes rules, not visual details.
 
 ## Feature backlog
 
