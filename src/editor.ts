@@ -5,6 +5,7 @@ import { ListHandle } from './list-handle'
 import { contentExtensions } from './extensions'
 import { selectAndCopyBlock } from './copy-block'
 import { UnwrapBlock } from './unwrap-block'
+import { Tags } from './tags'
 
 // Handle icon: six dots in two columns
 const HANDLE_ICON = `
@@ -78,8 +79,9 @@ function openLinkWithModifier(event: MouseEvent) {
   window.open(url, '_blank', 'noopener')
 }
 
-// Creates the editor with every MVP block and the drag handle
-export function createEditor(element: HTMLElement): Editor {
+// Creates the editor with every MVP block and the drag handle.
+// onTagClick: Cmd/Ctrl+click on a tag (e.g. "#idea")
+export function createEditor(element: HTMLElement, onTagClick: (tag: string) => void): Editor {
   element.addEventListener('click', openLinkWithModifier)
 
   const editor = new Editor({
@@ -94,6 +96,7 @@ export function createEditor(element: HTMLElement): Editor {
       ...contentExtensions,
       ChecklistInsideList,
       UnwrapBlock,
+      Tags.configure({ onTagClick }),
       Reorder,
       ListHandle,
       DragHandle.configure({

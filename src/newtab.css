@@ -26,6 +26,7 @@
   --hover-button: #f5f5f4;
   --item-current: #e3e3e1;
   --link: #2563eb;
+  --tag: #7c3aed;
   --block-selection: rgba(37, 99, 235, 0.12);
   --error: #b42318;
   --ok: #1a7f37;
@@ -61,6 +62,7 @@
   --hover-button: #323235;
   --item-current: #37373a;
   --link: #6ea8fe;
+  --tag: #b197fc;
   --block-selection: rgba(110, 168, 254, 0.18);
   --error: #ff7b72;
   --ok: #56d364;
@@ -529,6 +531,13 @@ body.sidebar-collapsed #sidebar {
   font-family: var(--font-mono);
   font-size: var(--code-size);
   font-weight: 500;
+}
+
+/* Tags (#idea): plain text in the note, shown in monospace and in their own color */
+.tiptap .tag {
+  color: var(--tag);
+  font-family: var(--font-mono);
+  font-size: var(--code-size);
 }
 
 .tiptap pre {

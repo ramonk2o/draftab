@@ -65,7 +65,7 @@ const sidebarButton = element<HTMLButtonElement>('#toggle-sidebar')
 const newNoteButton = element<HTMLButtonElement>('#new-note')
 const searchField = element<HTMLInputElement>('#search')
 const noteList = element<HTMLUListElement>('#note-list')
-const editor = createEditor(element('#editor'))
+const editor = createEditor(element('#editor'), searchForTag)
 
 // ---------- Tab state ----------
 
@@ -592,6 +592,16 @@ editor.on('transaction', ({ transaction }) => {
   }
   if (transaction.selectionSet || transaction.docChanged) drawStats()
 })
+
+// Cmd/Ctrl+click on a tag in the note: search for it, showing the sidebar if needed
+function searchForTag(tag: string) {
+  if (document.body.classList.contains('sidebar-collapsed')) {
+    applySidebarCollapsed(false)
+    saveSettings({ sidebarCollapsed: false })
+  }
+  searchField.value = tag
+  drawList()
+}
 
 // ---------- Collapsing the sidebar ----------
 

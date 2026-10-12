@@ -35,6 +35,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
   - Headings, quotes, code, dividers and whole lists don't go into lists.
 - Double-clicking a block's handle selects the block's content and copies it exactly like Cmd/Ctrl+C (formatted, plus plain text). The whole-list bar does the same for the whole list. A block without text (a divider) is selected and copied whole. A "Copied" label confirms it.
 - Plain-text copies (including Cmd/Ctrl+C) have one line per block.
+- Tags: `#` followed by a letter, then letters, digits, `_` or `-` (e.g. `#idea`, `#project-x`), at the start of a line or after a space. Not in code (inline or block). Tags stay plain text in the note (nothing changes in the stored content or in exports); the editor only shows them in monospace and in their own color. Cmd/Ctrl+click on a tag puts it in the sidebar search (opening the sidebar if it's collapsed); a plain click places the cursor, so the tag can be edited. The search stays a text search: `#proj` also finds `#project`.
 
 ### The note page
 - Export as Markdown: downloads the open note as `<title>.md` through a normal browser download, with the same markdown the backup's `markdown` field gets. Pending typing is saved first. The file name drops characters not allowed in file names (`/ \ : * ? " < > |` and control characters), has at most 100 characters, and is `Untitled.md` when nothing is left. Exporting is only on the note page, not in the note list.

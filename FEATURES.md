@@ -17,9 +17,11 @@ How a feature moves:
 - **Motivation:** not recorded (came from the SPEC.md "Out of scope" list).
 
 ### Clickable tags
-- **Status:** Idea
+- **Status:** In progress — implemented; `npm test` (131 passed, including 7 new tag tests: format, position, marks, line breaks, inline code and code blocks) and `npm run build` (with type check) OK. Waiting for the check in Chrome.
 - **Description:** the editor formats tags (`#example`) as links; clicking one puts the hashtag in the sidebar search.
 - **Motivation:** not recorded (direct request).
+- **Deliverable:** tags (rules in SPEC.md) shown in monospace and in their own color, without changing the stored note; Cmd/Ctrl+click puts the tag in the sidebar search and opens the sidebar if collapsed.
+- **How to verify:** `npm test` (new tests for what counts as a tag) and `npm run build`; in Chrome: type `#idea`, `#project-x`, `#ação` → monospace and colored while typing; `C#`, `site.com/#x`, `#2026`, `# heading` and tags inside code aren't; plain click puts the cursor in the tag; Cmd/Ctrl+click fills the search with the tag and filters the list (with the sidebar collapsed, it opens); export and copy still give the plain `#idea`.
 
 ## Sidebar
 
