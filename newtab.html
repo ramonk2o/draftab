@@ -3,30 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <title>New tab</title>
+    <!-- Texts marked with data-i18n* are translated by src/i18n.ts (translatePage) -->
     <!-- Before the CSS: sets the theme before the page shows up -->
     <script src="/theme-init.js"></script>
     <link rel="stylesheet" href="/src/newtab.css" />
   </head>
   <body class="loading">
     <!-- Icon filled in by newtab.ts (src/icons.ts) -->
-    <button id="toggle-sidebar" class="icon-button" type="button" title="Collapse sidebar" aria-label="Collapse sidebar"></button>
+    <button id="toggle-sidebar" class="icon-button" type="button"></button>
 
     <aside id="sidebar">
       <!-- Icons filled in by newtab.ts (src/icons.ts) -->
       <div class="sidebar-top">
-        <button id="open-settings" class="icon-button" type="button" title="Settings" aria-label="Settings"></button>
+        <button id="open-settings" class="icon-button" type="button" title="Settings" aria-label="Settings" data-i18n-title="settings" data-i18n-label="settings"></button>
       </div>
       <div class="search-row">
         <label class="search-field">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
             <circle cx="7" cy="7" r="4.25" /><path d="m10.25 10.25 3.25 3.25" />
           </svg>
-          <input id="search" type="search" placeholder="Search" aria-label="Search notes" aria-autocomplete="list" aria-controls="tag-suggestions" aria-expanded="false" />
+          <input id="search" type="search" placeholder="Search" aria-label="Search notes" data-i18n-placeholder="search" data-i18n-label="searchNotes" aria-autocomplete="list" aria-controls="tag-suggestions" aria-expanded="false" />
           <!-- Tag suggestions while typing #… (filled in by newtab.ts) -->
-          <ul id="tag-suggestions" role="listbox" aria-label="Tag suggestions" hidden></ul>
+          <ul id="tag-suggestions" role="listbox" aria-label="Tag suggestions" data-i18n-label="tagSuggestions" hidden></ul>
         </label>
-        <button id="import" class="icon-button" type="button" title="Import a .md or .txt file as a note" aria-label="Import a .md or .txt file as a note"></button>
-        <button id="new-note" class="icon-button" type="button" title="New note" aria-label="New note">
+        <button id="import" class="icon-button" type="button" title="Import a .md or .txt file as a note" aria-label="Import a .md or .txt file as a note" data-i18n-title="importFile" data-i18n-label="importFile"></button>
+        <button id="new-note" class="icon-button" type="button" title="New note" aria-label="New note" data-i18n-title="newNote" data-i18n-label="newNote">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
             <path d="M8 3v10" /><path d="M3 8h10" />
           </svg>
@@ -43,9 +44,9 @@
         <button id="text-smaller" class="icon-button" type="button"></button>
         <span id="text-size" aria-hidden="true"></span>
         <button id="text-bigger" class="icon-button" type="button"></button>
-        <button id="note-export" class="icon-button" type="button" title="Export as Markdown" aria-label="Export as Markdown"></button>
-        <button id="note-copy" class="icon-button" type="button" title="Copy note" aria-label="Copy note"></button>
-        <button id="note-copy-whatsapp" class="icon-button" type="button" title="Copy for WhatsApp (without the first line)" aria-label="Copy for WhatsApp"></button>
+        <button id="note-export" class="icon-button" type="button" title="Export as Markdown" aria-label="Export as Markdown" data-i18n-title="exportMarkdown" data-i18n-label="exportMarkdown"></button>
+        <button id="note-copy" class="icon-button" type="button" title="Copy note" aria-label="Copy note" data-i18n-title="copyNote" data-i18n-label="copyNote"></button>
+        <button id="note-copy-whatsapp" class="icon-button" type="button" title="Copy for WhatsApp (without the first line)" aria-label="Copy for WhatsApp" data-i18n-title="copyWhatsAppHint" data-i18n-label="copyWhatsApp"></button>
       </div>
       <div id="editor"></div>
       <!-- Character counts for the open note (bottom right); filled in by newtab.ts -->
@@ -56,30 +57,30 @@
     <dialog id="settings" aria-labelledby="settings-title">
       <div class="dialog-content">
         <header class="dialog-header">
-          <h1 id="settings-title">Settings</h1>
-          <button id="close-settings" class="icon-button" type="button" title="Close" aria-label="Close"></button>
+          <h1 id="settings-title" data-i18n="settings">Settings</h1>
+          <button id="close-settings" class="icon-button" type="button" title="Close" aria-label="Close" data-i18n-title="close" data-i18n-label="close"></button>
         </header>
 
         <section>
-          <h2>Backup</h2>
-          <p class="hint">A JSON file with all notes (also in markdown) and settings. Importing replaces everything.</p>
+          <h2 data-i18n="backup">Backup</h2>
+          <p class="hint" data-i18n="backupHint">A JSON file with all notes (also in markdown) and settings. Importing replaces everything.</p>
           <div class="buttons">
-            <button id="settings-export" class="button" type="button">Export backup</button>
-            <button id="settings-import" class="button" type="button">Import backup</button>
+            <button id="settings-export" class="button" type="button" data-i18n="exportBackup">Export backup</button>
+            <button id="settings-import" class="button" type="button" data-i18n="importBackup">Import backup</button>
           </div>
           <p id="backup-message" class="message" role="status" aria-live="polite"></p>
           <label class="row">
-            <span>Automatic backup</span>
+            <span data-i18n="automaticBackup">Automatic backup</span>
             <select id="interval">
-              <option value="0">Off</option>
-              <option value="1">Every minute</option>
-              <option value="60">Hourly</option>
-              <option value="1440">Daily</option>
-              <option value="10080">Weekly</option>
-              <option value="43200">Monthly</option>
+              <option value="0" data-i18n="interval.0">Off</option>
+              <option value="1" data-i18n="interval.1">Every minute</option>
+              <option value="60" data-i18n="interval.60">Hourly</option>
+              <option value="1440" data-i18n="interval.1440">Daily</option>
+              <option value="10080" data-i18n="interval.10080">Weekly</option>
+              <option value="43200" data-i18n="interval.43200">Monthly</option>
             </select>
           </label>
-          <p class="hint">
+          <p class="hint" data-i18n-html="automaticBackupHint">
             Saved to <code>Downloads/draftab-backups/</code> only when something changed, even with the tab closed.
             If Chrome asks where to save each file, it will ask every time.
           </p>
@@ -87,17 +88,25 @@
         </section>
 
         <section>
-          <h2>Appearance</h2>
+          <h2 data-i18n="appearance">Appearance</h2>
           <label class="row">
-            <span>Theme</span>
-            <select id="theme">
-              <option value="auto">Automatic (follows the system)</option>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
+            <span data-i18n="language">Language</span>
+            <select id="language">
+              <option value="auto" data-i18n="language.auto">Automatic (follows Chrome)</option>
+              <option value="en">English</option>
+              <option value="pt">Português</option>
             </select>
           </label>
           <label class="row">
-            <span>Text size of new notes</span>
+            <span data-i18n="theme">Theme</span>
+            <select id="theme">
+              <option value="auto" data-i18n="theme.auto">Automatic (follows the system)</option>
+              <option value="light" data-i18n="theme.light">Light</option>
+              <option value="dark" data-i18n="theme.dark">Dark</option>
+            </select>
+          </label>
+          <label class="row">
+            <span data-i18n="newNoteTextSize">Text size of new notes</span>
             <select id="new-note-text-size">
               <option value="80">80%</option>
               <option value="90">90%</option>
@@ -109,31 +118,31 @@
             </select>
           </label>
           <label class="row">
-            <span>Font of new notes</span>
+            <span data-i18n="newNoteFont">Font of new notes</span>
             <select id="new-note-font">
-              <option value="sans">Sans-serif</option>
-              <option value="serif">Serif</option>
-              <option value="mono">Monospace</option>
+              <option value="sans" data-i18n="font.sans">Sans-serif</option>
+              <option value="serif" data-i18n="font.serif">Serif</option>
+              <option value="mono" data-i18n="font.mono">Monospace</option>
             </select>
           </label>
           <label class="row">
-            <span>Sort notes by</span>
+            <span data-i18n="sortBy">Sort notes by</span>
             <select id="note-sort">
-              <option value="updated">Last modified</option>
-              <option value="title">Title (A–Z)</option>
-              <option value="created">Date created</option>
+              <option value="updated" data-i18n="sort.updated">Last modified</option>
+              <option value="title" data-i18n="sort.title">Title (A–Z)</option>
+              <option value="created" data-i18n="sort.created">Date created</option>
             </select>
           </label>
         </section>
 
         <section class="danger-zone">
-          <h2>Delete all notes</h2>
-          <p class="hint">Removes every note from this browser for good. Settings are kept.</p>
+          <h2 data-i18n="deleteAll">Delete all notes</h2>
+          <p class="hint" data-i18n="deleteAllHint">Removes every note from this browser for good. Settings are kept.</p>
           <label class="row">
-            <span>To confirm, type <strong>delete everything</strong>:</span>
+            <span data-i18n-html="deleteConfirmLabel">To confirm, type <strong>delete everything</strong>:</span>
             <input id="confirm-delete" type="text" autocomplete="off" spellcheck="false" />
           </label>
-          <button id="delete-all" class="button danger" type="button" disabled>Delete all notes</button>
+          <button id="delete-all" class="button danger" type="button" data-i18n="deleteAll" disabled>Delete all notes</button>
         </section>
       </div>
     </dialog>

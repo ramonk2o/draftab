@@ -1,4 +1,4 @@
-import { exportBackup, importBackup, plural } from './backup-ui'
+import { exportBackup, importBackup } from './backup-ui'
 import { element } from './dom'
 import { ICON_CLOSE } from './icons'
 import {
@@ -11,10 +11,9 @@ import {
 } from './storage'
 import type { NoteFont, NoteSort } from './notes'
 import type { Theme } from './theme'
+import { locale, t, tn, type LanguageSetting } from './i18n'
 
 // Settings lightbox: backup (manual and automatic), appearance and deleting all notes
-
-const DELETE_PHRASE = 'delete everything'
 
 const dialog = element<HTMLDialogElement>('#settings')
 const closeButton = element<HTMLButtonElement>('#close-settings')
@@ -22,6 +21,7 @@ const exportButton = element<HTMLButtonElement>('#settings-export')
 const importButton = element<HTMLButtonElement>('#settings-import')
 const backupMessage = element<HTMLParagraphElement>('#backup-message')
 const intervalSelect = element<HTMLSelectElement>('#interval')
+const languageSelect = element<HTMLSelectElement>('#language')
 const themeSelect = element<HTMLSelectElement>('#theme')
 const sortSelect = element<HTMLSelectElement>('#note-sort')
 const fontSelect = element<HTMLSelectElement>('#new-note-font')
@@ -34,8 +34,9 @@ closeButton.innerHTML = ICON_CLOSE
 
 export async function openSettings() {
   // Always opens with the current values and nothing left over from last time
-  const { autoBackupMinutes, theme, noteSort, newNoteFont, newNoteTextSize } = await readSettings()
+  const { autoBackupMinutes, language, theme, noteSort, newNoteFont, newNoteTextSize } = await readSettings()
   intervalSelect.value = String(autoBackupMinutes)
+  languageSelect.value = language
   themeSelect.value = theme
   sortSelect.value = noteSort
   fontSelect.value = newNoteFont
@@ -65,22 +66,22 @@ function showMessage(text: string, error = false) {
 
 exportButton.addEventListener('click', async () => {
   const count = await exportBackup()
-  showMessage(`Backup with ${plural(count, 'note', 'notes')} downloaded.`)
+  showMessage(tn('backupDownloaded', count))
 })
 
 importButton.addEventListener('click', async () => {
   const result = await importBackup()
   if (!result) return // gave up
   // On success, the page reloads by itself (onImport, in newtab.ts)
-  showMessage(result.ok ? result.message : `Couldn't import: ${result.message}`, !result.ok)
+  showMessage(result.ok ? result.message : t('importFailed', { error: result.message }), !result.ok)
 })
 
 // ---------- Automatic backup ----------
 
 function showLastBackup(moment: number) {
   lastBackup.textContent = moment
-    ? `Last automatic backup: ${new Date(moment).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}.`
-    : 'No automatic backup yet.'
+    ? t('lastBackup', { date: new Date(moment).toLocaleString(locale(), { dateStyle: 'short', timeStyle: 'short' }) })
+    : t('noBackupYet')
 }
 
 intervalSelect.addEventListener('change', () => {
@@ -91,6 +92,11 @@ intervalSelect.addEventListener('change', () => {
 onLastBackupChanged(showLastBackup)
 
 // ---------- Appearance ----------
+
+languageSelect.addEventListener('change', () => {
+  // Every tab (this one included) saves pending typing and reloads in the new language (onLanguageChanged)
+  saveSettings({ language: languageSelect.value as LanguageSetting })
+})
 
 themeSelect.addEventListener('change', () => {
   // Every tab (this one included) applies the theme when it notices the change (onThemeChanged)
@@ -114,12 +120,17 @@ sortSelect.addEventListener('change', () => {
 
 // ---------- Delete all notes ----------
 
+// The phrase is in the interface language ("delete everything" / "apagar tudo")
+function phraseTyped(): boolean {
+  return confirmField.value.trim().toLowerCase() === t('deletePhrase')
+}
+
 confirmField.addEventListener('input', () => {
-  deleteButton.disabled = confirmField.value.trim().toLowerCase() !== DELETE_PHRASE
+  deleteButton.disabled = !phraseTyped()
 })
 
 deleteButton.addEventListener('click', async () => {
-  if (confirmField.value.trim().toLowerCase() !== DELETE_PHRASE) return
+  if (!phraseTyped()) return
   deleteButton.disabled = true
   await deleteAllNotes()
   // Open tabs (this one included) reload by themselves, as with an import

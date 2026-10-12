@@ -1,5 +1,6 @@
 import { isNoteFont, validTextSize, type Note, type NoteFont, type NoteSort } from './notes'
 import type { Theme } from './theme'
+import { isLanguageSetting, type LanguageSetting } from './i18n'
 
 // All chrome.storage access goes through here.
 // Keys: "note:<id>" (one per note), "settings" and "meta".
@@ -18,6 +19,7 @@ export type Settings = {
   noteFont: NoteFont // font of notes without their own (from before fonts were per note); no longer changed
   newNoteFont: NoteFont // font new notes start with
   newNoteTextSize: number // in percent, one of TEXT_SIZES
+  language: LanguageSetting // interface language; auto = Chrome's
 }
 
 export type Meta = {
@@ -34,6 +36,7 @@ const DEFAULT_SETTINGS: Settings = {
   noteFont: 'sans',
   newNoteFont: 'sans',
   newNoteTextSize: 100,
+  language: 'auto',
 }
 const DEFAULT_META: Meta = { lastChangeAt: 0, lastBackupAt: 0, lastImportAt: 0 }
 
@@ -135,6 +138,7 @@ export async function readSettings(): Promise<Settings> {
   // Before fonts were per note, the one font in Settings was also the font of new notes
   if (!isNoteFont(stored?.newNoteFont)) result.newNoteFont = result.noteFont
   result.newNoteTextSize = validTextSize(result.newNoteTextSize)
+  if (!isLanguageSetting(result.language)) result.language = 'auto'
   return result
 }
 
@@ -184,6 +188,10 @@ export function onNewNoteFontChanged(callback: (font: NoteFont) => void) {
 
 export function onNewNoteTextSizeChanged(callback: (size: number) => void) {
   onFieldChanged('settings', 'newNoteTextSize', (size) => size && callback(validTextSize(size)))
+}
+
+export function onLanguageChanged(callback: (language: LanguageSetting) => void) {
+  onFieldChanged('settings', 'language', (language) => isLanguageSetting(language) && callback(language))
 }
 
 export function onBackupIntervalChanged(callback: () => void) {

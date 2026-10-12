@@ -21,9 +21,11 @@ How a feature moves:
 ## Interface
 
 ### Portuguese translation
-- **Status:** Idea
-- **Description:** translate the extension's interface into Portuguese, following the Chrome language (Portuguese when Chrome is in Portuguese).
+- **Status:** In progress — implemented; `npm test` (144 passed, including 6 new i18n tests and the backup/storage tests updated for the `language` setting) and `npm run build` (with type check) OK. Waiting for the check in Chrome.
+- **Description:** translate the extension's interface into Portuguese, following the Chrome language (Portuguese when Chrome is in Portuguese), as an option in Settings.
 - **Motivation:** not recorded (direct request).
+- **Deliverable:** "Language" in Settings (Automatic / English / Português, default Automatic); every interface text in both languages through `src/i18n.ts`; dates and numbers in the chosen language; changing it reloads the open tabs in the new language (rules in SPEC.md).
+- **How to verify:** `npm test` (new tests: language resolution, both dictionaries with the same keys and placeholders, Portuguese plurals) and `npm run build`; in Chrome: with Automatic and Chrome in Portuguese everything is in Portuguese; choose English → every open tab reloads in English, with typing kept; walk through the sidebar (empty list, search, tag suggestions, pin, rename, delete confirmation), note page buttons and tooltips, character counts, "Copied", Settings (every section, backup messages, delete phrase "apagar tudo"), import errors; export a backup → `"language"` in its settings; import a backup with another language → tabs reload in it.
 
 ## Backup and settings
 

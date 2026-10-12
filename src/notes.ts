@@ -1,4 +1,5 @@
 import type { JSONContent } from '@tiptap/core'
+import { t } from './i18n'
 
 // A note as it is stored (see "Data model" in SPEC.md)
 export type Note = {
@@ -30,7 +31,6 @@ export function nextTextSize(size: number, direction: 1 | -1): number {
 // Note fonts, in the order the "Aa" button switches through them
 export type NoteFont = 'sans' | 'serif' | 'mono'
 export const NOTE_FONTS: NoteFont[] = ['sans', 'serif', 'mono']
-export const FONT_NAMES: Record<NoteFont, string> = { sans: 'Sans-serif', serif: 'Serif', mono: 'Monospace' }
 
 export function isNoteFont(font: unknown): font is NoteFont {
   return NOTE_FONTS.includes(font as NoteFont)
@@ -108,7 +108,7 @@ export function isEmptyNote(note: Note): boolean {
 }
 
 export function displayTitle(note: Note): string {
-  return note.title || 'Untitled'
+  return note.title || t('untitled')
 }
 
 // Searches title and content, ignoring case and accents

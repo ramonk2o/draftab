@@ -76,6 +76,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 - Theme and the open note's font are applied before the page shows up (no flash of the wrong ones).
 - Text size of new notes: 80% to 150% (the note's steps), default 100%. New notes (new tab, New note, imported file) start with it; changing it doesn't change existing notes. Notes from before this setting existed are 100%.
 - Sort notes by: see "Notes and the sidebar".
+- Language: Automatic (default: Portuguese when Chrome's language is Portuguese, English otherwise), English or Português. It covers every text of the interface (buttons, hints, messages, confirmations, the "Untitled" name, the delete confirmation phrase) and the format of dates and numbers; the notes' content never changes. Changing it saves pending typing and reloads every open tab, in the new language.
 
 ## Data model
 - `Note { id: string (uuid), doc: TiptapJSON, title: string, titleManual: boolean, textSize?: number, font?: 'sans' | 'serif' | 'mono', pinned?: boolean, createdAt: number, updatedAt: number }`
@@ -84,7 +85,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
   `font` = the note's font; missing or any other value = the `noteFont` setting (notes from before fonts were per note).
   `pinned` = the note is pinned in the sidebar; missing = not pinned.
   The Tiptap JSON is the source of truth (no conversion losses).
-- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark', noteSort: 'updated' | 'title' | 'created', noteFont: 'sans' | 'serif' | 'mono', newNoteFont: 'sans' | 'serif' | 'mono', newNoteTextSize: number }` (0 = off; `newNoteTextSize` = text size of new notes, in percent, default 100; `newNoteFont` = font of new notes, missing = `noteFont`; `noteFont` = the font of notes without their own, no longer changed from Settings). Invalid stored values fall back to the defaults (an unknown interval moves to the closest one).
+- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark', noteSort: 'updated' | 'title' | 'created', noteFont: 'sans' | 'serif' | 'mono', newNoteFont: 'sans' | 'serif' | 'mono', newNoteTextSize: number, language: 'auto' | 'en' | 'pt' }` (0 = off; `newNoteTextSize` = text size of new notes, in percent, default 100; `newNoteFont` = font of new notes, missing = `noteFont`; `noteFont` = the font of notes without their own, no longer changed from Settings; `language` = the interface language, default `auto`). Invalid stored values fall back to the defaults (an unknown interval moves to the closest one).
 - `meta { lastChangeAt: number, lastBackupAt: number, lastImportAt: number }` (`lastImportAt` marks an import or the deletion of all notes, and tells open tabs to reload)
 - Backup file:
   `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, titleManual, textSize, font, pinned, markdown, doc, createdAt, updatedAt }] }`
@@ -98,6 +99,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 - No React or other UI framework: the interface around the editor is small; fewer layers to read.
 - `chrome.storage.local` + `unlimitedStorage` is the source of truth for notes and settings: no ~5 MB localStorage limit, not wiped when clearing cookies, and reachable from the service worker.
 - One key per note (`note:<id>`): avoids rewriting everything on every keystroke. Open tabs update their list with just the note that changed.
+- Interface texts come from our own dictionary (`src/i18n.ts`, English and Portuguese), not from `chrome.i18n`, which only follows Chrome's language and can't be chosen. The store listing and the extension description still use `_locales`. The language is copied to the page's `localStorage` so the texts are right from the start; a different value in `chrome.storage` (e.g. after a backup import) reloads the tab once.
 - The theme and the font of new notes are also copied to the page's `localStorage`, and the open note's font to the tab's `sessionStorage` (next to the open note's id), which can be read synchronously, so `theme-init.js` applies them before the first paint. `chrome.storage` remains the source of truth.
 - `chrome.alarms` + `chrome.downloads` in the service worker: backups run even with the tab closed. The file is generated as a `data:` URL (there's no `URL.createObjectURL` in the service worker).
 - Markdown is only an export format (backup, exported file, copy, counts); notes are stored as Tiptap JSON.

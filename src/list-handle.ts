@@ -3,6 +3,7 @@ import { NodeSelection, Plugin } from '@tiptap/pm/state'
 import type { EditorView } from '@tiptap/pm/view'
 import { endDrag, startDrag } from './reorder'
 import { selectAndCopyBlock } from './copy-block'
+import { t } from './i18n'
 
 // Whole-list handle: a thin bar to the left of the list, further out than the
 // item handles. Shows up when the mouse is at the height of a list.
@@ -20,7 +21,7 @@ export const ListHandle = Extension.create({
 
           const handle = document.createElement('div')
           handle.className = 'list-handle'
-          handle.title = 'Drag to move the whole list'
+          handle.title = t('dragList')
           handle.draggable = true
           parent.appendChild(handle)
 

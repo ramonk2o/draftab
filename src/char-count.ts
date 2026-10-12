@@ -1,6 +1,7 @@
 import type { Node } from '@tiptap/pm/model'
 import { noteToMarkdown } from './markdown'
 import type { Note } from './notes'
+import { tn } from './i18n'
 
 // Character counts shown at the bottom right of the note page
 
@@ -32,5 +33,5 @@ export function selectedCharacters(doc: Node, from: number, to: number): number 
 
 // "1 character", "1,234 characters" (separators in the browser's language)
 export function characters(count: number): string {
-  return `${count.toLocaleString()} ${count === 1 ? 'character' : 'characters'}`
+  return tn('characters', count)
 }

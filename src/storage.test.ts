@@ -95,13 +95,13 @@ describe('notes', () => {
 
 describe('settings', () => {
   test('with nothing saved, uses the defaults', async () => {
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100 })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto' })
   })
 
   test('saving one part keeps the rest', async () => {
     await saveSettings({ autoBackupMinutes: 60 })
     await saveSettings({ sidebarCollapsed: true })
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100 })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto' })
   })
 })
 
@@ -130,7 +130,7 @@ describe('deleteAllNotes', () => {
     await saveSettings({ autoBackupMinutes: 60, sidebarCollapsed: true })
     await deleteAllNotes()
     expect(await listNotes()).toEqual([])
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100 })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto' })
   })
 })
 

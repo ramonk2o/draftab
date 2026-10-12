@@ -6,6 +6,7 @@ import { contentExtensions } from './extensions'
 import { selectAndCopyBlock } from './copy-block'
 import { UnwrapBlock } from './unwrap-block'
 import { Tags } from './tags'
+import { t } from './i18n'
 
 // Handle icon: six dots in two columns
 const HANDLE_ICON = `
@@ -20,7 +21,7 @@ const handle = createHandle()
 function createHandle(): HTMLElement {
   const handle = document.createElement('div')
   handle.className = 'drag-handle'
-  handle.title = 'Drag to move'
+  handle.title = t('dragToMove')
   handle.innerHTML = HANDLE_ICON
   return handle
 }

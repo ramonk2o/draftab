@@ -1,5 +1,6 @@
 import { NodeSelection, TextSelection } from '@tiptap/pm/state'
 import type { EditorView } from '@tiptap/pm/view'
+import { t } from './i18n'
 
 // Double-clicking a handle: selects the block's content and copies it to the clipboard
 
@@ -24,7 +25,7 @@ export function selectAndCopyBlock(view: EditorView, pos: number, handle: HTMLEl
 
 // Small "Copied" label above the element (or below it), fading out
 export function showCopied(element: HTMLElement, below = false) {
-  showLabel(element, 'Copied', below)
+  showLabel(element, t('copied'), below)
 }
 
 // Small label with any text (e.g. a font's name), the same way

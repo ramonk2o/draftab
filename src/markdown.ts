@@ -2,6 +2,7 @@ import { flattenExtensions, type JSONContent } from '@tiptap/core'
 import { MarkdownManager } from '@tiptap/markdown'
 import { contentExtensions, contentSchema } from './extensions'
 import { displayTitle, isEmptyNote, newBlankNote, withUpdatedTitle, type Note, type NoteFont } from './notes'
+import { t } from './i18n'
 
 // Markdown of a note: used by the backup, by "Export as Markdown" and by importing a file.
 // Doesn't depend on an open page (the automatic backup runs in the service worker).
@@ -66,5 +67,5 @@ export function markdownFileName(note: Note): string {
     .trim()
   name = Array.from(name).slice(0, MAX_NAME_LENGTH).join('') // doesn't cut an emoji in half
   name = name.replace(/^[\s.]+|[\s.]+$/g, '') // no leading or trailing dots (hidden files, Windows)
-  return `${name || 'Untitled'}.md`
+  return `${name || t('untitled')}.md`
 }

@@ -31,7 +31,6 @@ import {
   isPinned,
   listDate,
   newBlankNote,
-  FONT_NAMES,
   nextNoteFont,
   nextTextSize,
   noteFontOf,
@@ -46,10 +45,12 @@ import {
   type NoteSort,
 } from './notes'
 import { tagSuggestions, wordAt } from './tags'
+import { locale, rememberLanguage, t, tn, translatePage } from './i18n'
 import {
   deleteNote,
   listNotes,
   onImport,
+  onLanguageChanged,
   onNewNoteFontChanged,
   onNoteSortChanged,
   onNewNoteTextSizeChanged,
@@ -60,6 +61,9 @@ import {
   saveNote,
   saveSettings,
 } from './storage'
+
+// The page's fixed texts, in the interface language
+translatePage()
 
 const SAVE_DELAY = 500 // ms without typing before saving
 const STATS_DELAY = 300 // ms without typing before recounting the note's characters
@@ -233,7 +237,7 @@ function drawList() {
   if (visible.length === 0) {
     const empty = document.createElement('li')
     empty.className = 'empty-list'
-    empty.textContent = notes.length === 0 ? 'No notes yet' : 'Nothing found'
+    empty.textContent = notes.length === 0 ? t('noNotesYet') : t('nothingFound')
     noteList.replaceChildren(empty)
     return
   }
@@ -257,7 +261,7 @@ function createItem(note: Note): HTMLLIElement {
   const title = document.createElement('span')
   title.className = 'note-title'
   title.textContent = displayTitle(note)
-  title.title = 'Double-click to rename'
+  title.title = t('doubleClickToRename')
 
   // A pinned note shows a pin instead of its date
   const date = document.createElement('span')
@@ -265,14 +269,14 @@ function createItem(note: Note): HTMLLIElement {
   if (isPinned(note)) {
     date.classList.add('pinned')
     date.innerHTML = ICON_PIN // fixed SVG from icons.ts
-    date.title = 'Pinned'
+    date.title = t('pinned')
   } else {
     date.textContent = formatDate(listDate(note, noteSort))
   }
 
-  const pin = actionButton(ICON_PIN, isPinned(note) ? 'Unpin' : 'Pin', () => togglePin(note))
-  const rename = actionButton(ICON_PENCIL, 'Rename', () => startRename(item, note))
-  const remove = actionButton(ICON_TRASH, 'Delete', () => confirmDelete(note))
+  const pin = actionButton(ICON_PIN, isPinned(note) ? t('unpin') : t('pin'), () => togglePin(note))
+  const rename = actionButton(ICON_PENCIL, t('rename'), () => startRename(item, note))
+  const remove = actionButton(ICON_TRASH, t('delete'), () => confirmDelete(note))
 
   item.append(title, date, pin, rename, remove)
   item.addEventListener('click', () => {
@@ -302,8 +306,8 @@ function startRename(item: HTMLLIElement, note: Note) {
   const field = document.createElement('input')
   field.className = 'rename-field'
   field.value = note.titleManual ? note.title : ''
-  field.placeholder = note.title || 'Automatic title'
-  field.setAttribute('aria-label', 'New title')
+  field.placeholder = note.title || t('automaticTitle')
+  field.setAttribute('aria-label', t('newTitle'))
   item.replaceChildren(field)
   item.classList.add('renaming')
   field.focus()
@@ -352,7 +356,7 @@ async function togglePin(note: Note) {
 }
 
 async function confirmDelete(note: Note) {
-  if (!confirm(`Delete the note "${displayTitle(note)}"? This can't be undone.`)) return
+  if (!confirm(t('confirmDeleteNote', { title: displayTitle(note) }))) return
   if (note.id === currentNote.id) {
     discardPending()
     currentNoteSaved = false
@@ -366,9 +370,9 @@ function formatDate(moment: number): string {
   const date = new Date(moment)
   const today = new Date()
   if (date.toDateString() === today.toDateString()) {
-    return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
+    return date.toLocaleTimeString(locale(), { hour: '2-digit', minute: '2-digit' })
   }
-  return date.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit', year: '2-digit' })
+  return date.toLocaleDateString(locale(), { day: '2-digit', month: '2-digit', year: '2-digit' })
 }
 
 // The sort order chosen in any tab applies to all of them
@@ -390,7 +394,7 @@ importButton.addEventListener('click', async () => {
   if (!file) return
   const note = noteFromFile(file.name, await file.text(), newNoteTextSize, newNoteFont)
   if (!note) {
-    alert(`Couldn't import: "${file.name}" is empty.`)
+    alert(t('fileEmpty', { name: file.name }))
     return
   }
   await saveNote(note)
@@ -437,7 +441,7 @@ notePinButton.innerHTML = ICON_PIN
 
 // Marked while the open note is pinned
 function updatePinButton() {
-  const label = isPinned(currentNote) ? 'Unpin note' : 'Pin note'
+  const label = isPinned(currentNote) ? t('unpinNote') : t('pinNote')
   notePinButton.title = label
   notePinButton.setAttribute('aria-label', label)
   notePinButton.setAttribute('aria-pressed', String(isPinned(currentNote)))
@@ -466,7 +470,7 @@ noteCopyButton.addEventListener('click', async () => {
     await navigator.clipboard.write([item])
     showCopied(noteCopyButton, true)
   } catch (error) {
-    alert(`Couldn't copy the note: ${error instanceof Error ? error.message : String(error)}`)
+    alert(t('copyFailed', { error: error instanceof Error ? error.message : String(error) }))
   }
 })
 
@@ -476,7 +480,7 @@ noteWhatsAppButton.addEventListener('click', async () => {
     await navigator.clipboard.writeText(noteToWhatsApp(editor.getJSON()))
     showCopied(noteWhatsAppButton, true)
   } catch (error) {
-    alert(`Couldn't copy the note: ${error instanceof Error ? error.message : String(error)}`)
+    alert(t('copyFailed', { error: error instanceof Error ? error.message : String(error) }))
   }
 })
 
@@ -498,8 +502,8 @@ function applyTextSize() {
   textSizeLabel.textContent = `${size}%`
   textSmallerButton.disabled = size === TEXT_SIZES[0]
   textBiggerButton.disabled = size === TEXT_SIZES[TEXT_SIZES.length - 1]
-  setLabel(textSmallerButton, `Smaller text (${size}%) — ${SHORTCUT}+Shift+,`)
-  setLabel(textBiggerButton, `Bigger text (${size}%) — ${SHORTCUT}+Shift+.`)
+  setLabel(textSmallerButton, t('smallerText', { size, shortcut: `${SHORTCUT}+Shift+,` }))
+  setLabel(textBiggerButton, t('biggerText', { size, shortcut: `${SHORTCUT}+Shift+.` }))
 }
 
 function setLabel(button: HTMLButtonElement, label: string) {
@@ -544,7 +548,7 @@ fontButton.innerHTML = ICON_FONT
 function applyFont() {
   const font = noteFontOf(currentNote, oldNoteFont)
   applyNoteFont(font)
-  setLabel(fontButton, `Font: ${FONT_NAMES[font]} (click for ${FONT_NAMES[nextNoteFont(font)]})`)
+  setLabel(fontButton, t('fontButton', { font: t(`font.${font}`), next: t(`font.${nextNoteFont(font)}`) }))
 }
 
 // Like the text size, the font is part of the note and is saved right away
@@ -554,7 +558,7 @@ fontButton.addEventListener('click', () => {
   applyFont()
   // The drag handle would stay where the block was; it comes back on the next mouse move
   editor.view.dispatch(editor.state.tr.setMeta('hideDragHandle', true))
-  showLabel(fontButton, FONT_NAMES[font], true)
+  showLabel(fontButton, t(`font.${font}`), true)
   if (currentNoteSaved) saveNow()
 })
 
@@ -567,7 +571,7 @@ onNewNoteFontChanged((font) => {
 // ---------- Character counts (bottom right) ----------
 
 const noteStats = element<HTMLDivElement>('#note-stats')
-let totals = '' // "1,234 characters · 1,180 without markdown"
+let totals = '' // e.g. "1,234 characters · 1,180 without markdown"
 let statsTimer: ReturnType<typeof setTimeout> | undefined
 
 // Recounts the whole note (converting to markdown takes a moment on long notes)
@@ -578,7 +582,7 @@ function updateTotals() {
     totals = ''
   } else {
     const withMarkdown = markdownCharacters({ ...currentNote, doc: editor.getJSON() })
-    totals = `${characters(withMarkdown)} · ${plainTextCharacters(doc).toLocaleString()} without markdown`
+    totals = `${characters(withMarkdown)} · ${t('withoutMarkdown', { n: plainTextCharacters(doc).toLocaleString(locale()) })}`
   }
   drawStats()
 }
@@ -587,7 +591,7 @@ function updateTotals() {
 function drawStats() {
   const { from, to, empty } = editor.state.selection
   const selected = empty ? 0 : selectedCharacters(editor.state.doc, from, to)
-  noteStats.textContent = selected > 0 ? `${totals} · ${selected.toLocaleString()} selected` : totals
+  noteStats.textContent = selected > 0 ? `${totals} · ${tn('selected', selected)}` : totals
   noteStats.hidden = totals === ''
 }
 
@@ -693,7 +697,7 @@ function applySidebarCollapsed(collapsed: boolean, whileTyping = false) {
   hiddenWhileTyping = collapsed && whileTyping
   document.body.classList.toggle('sidebar-collapsed', collapsed)
   sidebarButton.innerHTML = collapsed && !whileTyping ? ICON_SIDEBAR_CLOSED : ICON_SIDEBAR
-  const label = collapsed ? 'Show sidebar' : 'Collapse sidebar'
+  const label = collapsed ? t('showSidebar') : t('collapseSidebar')
   sidebarButton.title = label
   sidebarButton.setAttribute('aria-label', label)
   sidebarButton.setAttribute('aria-expanded', String(!collapsed))
@@ -724,6 +728,15 @@ document.addEventListener('mousemove', (event) => {
   if (moved > 3) applySidebarCollapsed(false)
 })
 
+// ---------- Language ----------
+
+// A language chosen in any tab: every tab saves pending typing and reloads in it
+onLanguageChanged(async (language) => {
+  rememberLanguage(language)
+  await saveIfPending()
+  location.reload()
+})
+
 // ---------- Theme ----------
 
 // A theme chosen in any tab applies to all of them
@@ -733,6 +746,11 @@ onThemeChanged(applyTheme)
 
 async function start() {
   const settings = await readSettings()
+  // The copy of the language this page opened with is outdated (e.g. after importing a backup)
+  if (rememberLanguage(settings.language)) {
+    location.reload()
+    return
+  }
   applyTheme(settings.theme)
   applySidebarCollapsed(settings.sidebarCollapsed)
   noteSort = settings.noteSort

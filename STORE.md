@@ -10,7 +10,7 @@ Everything the Chrome Web Store developer dashboard asks for, ready to copy. The
 ## Package
 
 - **File:** `draftab-1.1.0.zip` (run `npm run zip`)
-- **Default language:** English (`default_locale: en`); the listing is also localized to Portuguese (Brazil). The extension's interface is English-only.
+- **Default language:** English (`default_locale: en`); the listing is also localized to Portuguese (Brazil). The extension's interface is in English and Portuguese (Settings → Language; automatic by default, following Chrome).
 - The package includes a notices file with the licenses of the bundled dependencies (required by their MIT licenses).
 
 ## Store listing — English (en-US)

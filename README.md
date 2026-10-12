@@ -30,6 +30,7 @@ A Chrome extension that turns the **new tab** into a local notepad. The editor i
 - **Copy a block with a double-click** on its handle (or a whole list on its bar): it's selected and copied, formatted and as plain text.
 - **Light, dark or automatic theme** (follows the system), chosen in Settings.
 - **Font per note**: sans-serif, serif or monospace, switched with the "Aa" button at the top right; each note keeps its own, and Settings sets the font new notes start with. Typography modeled on [Tailwind Typography](https://github.com/tailwindlabs/tailwindcss-typography).
+- **English or Portuguese**: the interface follows Chrome's language, or the one chosen in Settings.
 - **Privacy**: nothing leaves your computer. The extension doesn't access the internet, has no account and collects no data.
 
 ### Markdown shortcuts

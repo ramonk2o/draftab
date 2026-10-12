@@ -2,6 +2,7 @@ import { contentSchema } from './extensions'
 import { noteToMarkdown } from './markdown'
 import { isNoteFont, isPinned, validTextSize, type Note } from './notes'
 import type { Settings } from './storage'
+import { t } from './i18n'
 
 // Backup file format (see SPEC.md). Doesn't depend on an open page:
 // it's also used by the automatic backup.
@@ -53,39 +54,39 @@ export function parseBackup(text: string): Backup {
   try {
     data = JSON.parse(text)
   } catch {
-    throw new Error('The file is not valid JSON.')
+    throw new Error(t('backupNotJson'))
   }
   if (!isObject(data) || data.app !== 'draftab') {
-    throw new Error('This file is not a Draftab backup.')
+    throw new Error(t('backupNotDraftab'))
   }
   if (typeof data.version !== 'number' || data.version > VERSION) {
-    throw new Error('This backup was made by a newer version of Draftab.')
+    throw new Error(t('backupNewer'))
   }
   if (data.version !== VERSION) {
-    throw new Error('Unknown backup version.')
+    throw new Error(t('backupUnknownVersion'))
   }
   if (!Array.isArray(data.notes)) {
-    throw new Error('The backup has no list of notes.')
+    throw new Error(t('backupNoNotes'))
   }
 
   const ids = new Set<string>()
   const notes = data.notes.map((note: unknown, i: number) => {
-    const which = `Note ${i + 1} in the backup`
+    const which = i + 1 // number of the note, for the messages
     if (!isObject(note) || typeof note.id !== 'string' || note.id === '') {
-      throw new Error(`${which} has no id.`)
+      throw new Error(t('noteNoId', { i: which }))
     }
-    if (ids.has(note.id)) throw new Error(`${which} is duplicated.`)
+    if (ids.has(note.id)) throw new Error(t('noteDuplicated', { i: which }))
     ids.add(note.id)
-    if (typeof note.title !== 'string') throw new Error(`${which} has no title.`)
+    if (typeof note.title !== 'string') throw new Error(t('noteNoTitle', { i: which }))
     if (typeof note.createdAt !== 'number' || typeof note.updatedAt !== 'number') {
-      throw new Error(`${which} has no valid dates.`)
+      throw new Error(t('noteNoDates', { i: which }))
     }
     // The content must be a document the editor can open
     try {
       if (!isObject(note.doc) || note.doc.type !== 'doc') throw new Error()
       contentSchema().nodeFromJSON(note.doc).check()
     } catch {
-      throw new Error(`${which} ("${note.title}") has invalid content.`)
+      throw new Error(t('noteInvalid', { i: which, title: note.title }))
     }
     return {
       id: note.id,

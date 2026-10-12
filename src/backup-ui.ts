@@ -2,6 +2,7 @@ import { backupFileName, createBackup, notesFromBackup, parseBackup } from './ba
 import { markdownFileName, noteToMarkdown } from './markdown'
 import type { Note } from './notes'
 import { listNotes, readSettings, replaceAll } from './storage'
+import { locale, t, tn } from './i18n'
 
 // Export and import a backup from a page (sidebar or Settings)
 
@@ -46,15 +47,16 @@ export async function importBackup(): Promise<ImportResult | null> {
 
   const current = (await listNotes()).length
   const when = backup.exportedAt
-    ? ` from ${new Date(backup.exportedAt).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}`
+    ? t('importWhen', { date: new Date(backup.exportedAt).toLocaleString(locale(), { dateStyle: 'short', timeStyle: 'short' }) })
     : ''
   const question =
-    `Import ${plural(backup.notes.length, 'note', 'notes')} from the backup${when}?\n\n` +
-    `This replaces ${current === 1 ? 'the current note' : `all ${plural(current, 'current note', 'current notes')}`}.`
+    tn('importQuestion', backup.notes.length, { when }) +
+    '\n\n' +
+    (current === 1 ? t('replacesCurrent') : t('replacesAll', { n: current.toLocaleString(locale()) }))
   if (!confirm(question)) return null
 
   await replaceAll(notesFromBackup(backup), backup.settings)
-  return { ok: true, message: `${plural(backup.notes.length, 'note imported', 'notes imported')}.` }
+  return { ok: true, message: tn('imported', backup.notes.length) }
 }
 
 // Opens the file picker; `accept` lists the file types offered
@@ -67,8 +69,4 @@ export function chooseFile(accept: string): Promise<File | null> {
     input.addEventListener('cancel', () => resolve(null))
     input.click()
   })
-}
-
-export function plural(n: number, singular: string, several: string): string {
-  return `${n} ${n === 1 ? singular : several}`
 }
