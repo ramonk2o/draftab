@@ -26,7 +26,7 @@ DRAG ANY BLOCK TO REORDER
 Hover a block and drag its handle. The other blocks slide out of the way so you can see where it will land. Move list items, whole lists, and take items in and out of lists. Double-click a handle to copy that block.
 
 ALL YOUR NOTES, ONE CLICK AWAY
-A collapsible sidebar lists your notes — by last edit, title or creation date — with instant search across titles and content. Rename, export a note as a Markdown file, delete, and keep several tabs open at once: what you write in one shows up in the others.
+A collapsible sidebar lists your notes — by last edit, title or creation date — with instant search across titles and content. Rename, delete, and keep several tabs open at once: what you write in one shows up in the others. Export any note as a Markdown file, or copy it whole with one click.
 
 BACKUPS YOU CAN TRUST
 Export and import a JSON backup of all notes and settings (each note also comes in plain markdown). Turn on automatic backups — every minute, hour, day, week or month — saved to Downloads/draftab-backups/, only when something changed.
@@ -62,7 +62,7 @@ ARRASTE QUALQUER BLOCO PARA REORDENAR
 Passe o mouse num bloco e arraste a alça. Os outros blocos abrem espaço para você ver onde ele vai cair. Mova itens de lista, listas inteiras e tire itens de listas ou coloque dentro delas. Dê dois cliques na alça para copiar aquele bloco.
 
 TODAS AS NOTAS A UM CLIQUE
-Uma barra lateral recolhível lista as notas — pela última edição, pelo título ou pela data de criação — com busca instantânea no título e no conteúdo. Renomeie, exporte uma nota como arquivo Markdown, exclua e use várias abas ao mesmo tempo: o que você escreve numa aparece nas outras.
+Uma barra lateral recolhível lista as notas — pela última edição, pelo título ou pela data de criação — com busca instantânea no título e no conteúdo. Renomeie, exclua e use várias abas ao mesmo tempo: o que você escreve numa aparece nas outras. Exporte qualquer nota como arquivo Markdown ou copie a nota inteira com um clique.
 
 BACKUP CONFIÁVEL
 Exporte e importe um backup em JSON com todas as notas e configurações (cada nota vem também em markdown). Ligue o backup automático — a cada minuto, hora, dia, semana ou mês — salvo em Downloads/draftab-backups/, só quando algo mudou.

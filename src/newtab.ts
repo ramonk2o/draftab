@@ -203,10 +203,9 @@ function createItem(note: Note): HTMLLIElement {
   date.textContent = formatDate(listDate(note, noteSort))
 
   const rename = actionButton(ICON_PENCIL, 'Rename', () => startRename(item, note))
-  const toMarkdown = actionButton(ICON_MARKDOWN, 'Export as Markdown', () => exportNote(note))
   const remove = actionButton(ICON_TRASH, 'Delete', () => confirmDelete(note))
 
-  item.append(title, date, rename, toMarkdown, remove)
+  item.append(title, date, rename, remove)
   item.addEventListener('click', () => {
     if (note.id !== currentNote.id) open(note, true)
   })
@@ -268,16 +267,6 @@ async function applyNewTitle(note: Note, title: string) {
   }
   const stored = await readNote(note.id)
   if (stored) await saveNote({ ...renamed(stored, title), updatedAt: Date.now() })
-}
-
-async function exportNote(note: Note) {
-  if (note.id === currentNote.id) {
-    // Include what was typed and not saved yet
-    if (hasPendingChanges()) await saveNow()
-    exportMarkdown(currentNote)
-    return
-  }
-  exportMarkdown(note)
 }
 
 async function confirmDelete(note: Note) {
@@ -354,7 +343,10 @@ function updateNoteActions() {
 
 editor.on('transaction', updateNoteActions)
 
-noteExportButton.addEventListener('click', () => exportNote(currentNote))
+noteExportButton.addEventListener('click', async () => {
+  if (hasPendingChanges()) await saveNow() // include what was just typed
+  exportMarkdown(currentNote)
+})
 
 // The whole note: formatted for apps that accept it, markdown for plain-text ones
 noteCopyButton.addEventListener('click', async () => {

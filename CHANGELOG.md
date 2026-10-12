@@ -10,10 +10,9 @@ Ready to upload to the Chrome Web Store as an update.
 - **Note sort order** in Settings: last modified (default), title A–Z (ignoring case and accents, numbers in natural order, untitled notes last) or date created. The date next to each note follows the order, and every open tab re-sorts immediately.
 - **Note font** in Settings: sans-serif (default), serif or monospace, using system fonts (SF Pro / New York / SF Mono on macOS). Applies to note content only, in every open tab, without a flash of the wrong font on open.
 - **Double-click a handle to copy**: double-clicking a block's handle selects its content and copies it like Cmd/Ctrl+C (formatted and plain text); double-clicking the whole-list bar copies the whole list. A small "Copied" label confirms it.
-- **Export a note as Markdown**: a button on each note in the sidebar (on hover, between rename and delete) downloads it as a `.md` file named after its title. Unsaved typing in the open note is included.
 - **Backspace undoes code blocks and quotes**: with the cursor at the start of a code block, Backspace turns it into normal text, one paragraph per line; at the start of a quote, the whole quote becomes normal paragraphs. Cmd/Ctrl+Z brings the block back.
 - **Import a file as a note**: an import icon to the left of the New note button turns a `.md` file (read as markdown) or a `.txt` file (one paragraph per line) into a new note and opens it.
-- **Export and copy buttons on the note page**: at the top right, Export as Markdown downloads the open note and Copy note copies all of it, formatted for apps that accept formatting and as markdown for plain-text ones.
+- **Export and copy buttons on the note page**: at the top right, Export as Markdown downloads the open note as a `.md` file named after its title (unsaved typing included), and Copy note copies all of it, formatted for apps that accept formatting and as markdown for plain-text ones.
 - The new settings are included in backups.
 
 ### Changed

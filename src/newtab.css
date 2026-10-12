@@ -267,7 +267,7 @@ body.sidebar-collapsed #sidebar {
   font-weight: normal;
 }
 
-/* Rename, export and delete replace the date on hover */
+/* Rename and delete replace the date on hover */
 .note-item .note-action {
   display: none;
   flex: none;

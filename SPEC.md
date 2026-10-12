@@ -20,7 +20,7 @@ Success: ~2 weeks of real use without losing a single note and without going bac
   - Headings, quotes, code, dividers and whole lists don't go into lists (they only move among the note's blocks).
   - Double-clicking a block's handle selects the block's content and copies it to the clipboard, exactly like selecting it and pressing Cmd/Ctrl+C (formatted for apps that accept it, plain text for the others; plain text has one line per block, for Cmd/Ctrl+C too). Double-clicking the whole-list bar does the same for the whole list. Blocks without text (a divider) are selected and copied whole. A small "Copied" label shows above the handle for about a second.
 - The sidebar lists notes (sorted as chosen in Settings, see below), with search (title and content), a "new note" button, rename (double-click the title or the ✎ button) and delete with confirmation.
-  - Export a note as Markdown: a button on each note in the list (between rename and delete, shown on hover) downloads that note as a `.md` file through a normal browser download. The file name is the note's title, without characters that aren't allowed in file names (`/ \ : * ? " < > |` and control characters), at most 100 characters, or `Untitled.md` when nothing is left. The content is the same markdown the backup's `markdown` field gets; if the open note has unsaved typing, it's saved first so the file has everything.
+  - Export a note as Markdown: only from the button on the note page (see below), which downloads the open note as a `.md` file through a normal browser download. The note list has only rename and delete. The file name is the note's title, without characters that aren't allowed in file names (`/ \ : * ? " < > |` and control characters), at most 100 characters, or `Untitled.md` when nothing is left. The content is the same markdown the backup's `markdown` field gets; if the open note has unsaved typing, it's saved first so the file has everything.
   - Sort order, chosen in Settings: last modified (default, newest first), title A–Z (ignoring case and accents, numbers in natural order, untitled notes last) or date created (newest first). The date shown next to each note follows the order: the creation date when sorting by date created, the last edit otherwise. Applies immediately to every open tab.
   - The sidebar can be collapsed; its state (open/collapsed) is remembered.
 - Note title: while the user hasn't set a title, it follows the first line of text. Renaming fixes the title; renaming to empty goes back to the automatic title.
@@ -28,7 +28,7 @@ Success: ~2 weeks of real use without losing a single note and without going bac
 - Reloading the tab reopens the same note (the id is kept in the tab's `sessionStorage`, which survives reloads and is cleared when the tab closes).
 - Autosave with a ~500 ms debounce. Changes made in another tab show up in this one (last write wins).
 - Top right of the note page (always visible, fixed while scrolling): two icon buttons for the open note.
-  - Export as Markdown: the same download as the button in the note list.
+  - Export as Markdown: downloads the note as a `.md` file (see "Export a note as Markdown" above).
   - Copy note: copies the whole note to the clipboard, formatted (HTML) for apps that accept it and as markdown (the same as the exported file) for plain-text apps. A small "Copied" label shows under the button.
   - Both are disabled while the note is empty.
 - The sidebar toggle is always visible, at the top left. The theme is chosen only in Settings (there's no theme button).
