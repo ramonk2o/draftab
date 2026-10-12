@@ -6,6 +6,9 @@ function icon(content: string): string {
 
 export const ICON_PENCIL = icon('<path d="M10.5 3 13 5.5 6 12.5 3 13l.5-3z" />')
 
+// A pushpin: pin a note to the top of the list
+export const ICON_PIN = icon('<path d="M5.5 2.5h5" /><path d="M6.5 2.5v4l-2 2.5h7l-2-2.5v-4" /><path d="M8 9v4.5" />')
+
 export const ICON_TRASH = icon(
   '<path d="M3 4.5h10" /><path d="M6.5 4.5V3h3v1.5" /><path d="M4.5 4.5 5 13h6l.5-8.5" />',
 )

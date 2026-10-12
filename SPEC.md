@@ -17,6 +17,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 - Title: while the user hasn't set one, it follows the first line of text (up to 80 characters). Renaming fixes it; renaming to empty goes back to the automatic title.
 - The sidebar lists the notes, with search (title and content, ignoring case and accents), New note, rename (double-click the title or the pencil button; Enter confirms, Esc cancels) and delete with confirmation.
 - Sort order (chosen in Settings): last modified (default, newest first), title A–Z (ignoring case and accents, numbers in natural order, untitled notes last) or date created (newest first). The date next to each note follows the order: the creation date when sorting by date created, the last edit otherwise.
+- Pinned notes: a pin button on each note in the sidebar pins or unpins it. Pinned notes come first, sorted among themselves by the chosen order, then the others; a divider separates the two groups when both have notes. A pinned note shows a pin instead of its date. Search keeps the same grouping. Pinning or unpinning doesn't count as an edit ("last modified" doesn't change); it applies to every open tab and goes into backups.
 - The sidebar can be collapsed; its state is remembered.
 - Import a file as a note (next to New note): one `.md` or `.txt` file becomes a new note, which opens.
   - `.md` / `.markdown` is read as markdown (headings, lists, checklists, quotes, code, dividers, marks, links); headings smaller than `###` become `###`. If something in it can't become a Draftab block, the file is read as plain text instead.
@@ -72,16 +73,17 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 - Sort notes by: see "Notes and the sidebar".
 
 ## Data model
-- `Note { id: string (uuid), doc: TiptapJSON, title: string, titleManual: boolean, textSize?: number, font?: 'sans' | 'serif' | 'mono', createdAt: number, updatedAt: number }`
+- `Note { id: string (uuid), doc: TiptapJSON, title: string, titleManual: boolean, textSize?: number, font?: 'sans' | 'serif' | 'mono', pinned?: boolean, createdAt: number, updatedAt: number }`
   `titleManual` = the user renamed the note; while it's `false`, `title` follows the first line.
   `textSize` = the note's text size in percent (80, 90, 100, 110, 120, 135 or 150); missing or any other value = 100.
   `font` = the note's font; missing or any other value = the `noteFont` setting (notes from before fonts were per note).
+  `pinned` = the note is pinned in the sidebar; missing = not pinned.
   The Tiptap JSON is the source of truth (no conversion losses).
 - `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark', noteSort: 'updated' | 'title' | 'created', noteFont: 'sans' | 'serif' | 'mono', newNoteFont: 'sans' | 'serif' | 'mono', newNoteTextSize: number }` (0 = off; `newNoteTextSize` = text size of new notes, in percent, default 100; `newNoteFont` = font of new notes, missing = `noteFont`; `noteFont` = the font of notes without their own, no longer changed from Settings). Invalid stored values fall back to the defaults (an unknown interval moves to the closest one).
 - `meta { lastChangeAt: number, lastBackupAt: number, lastImportAt: number }` (`lastImportAt` marks an import or the deletion of all notes, and tells open tabs to reload)
 - Backup file:
-  `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, titleManual, textSize, font, markdown, doc, createdAt, updatedAt }] }`
-  `markdown` is for humans to read; importing restores from `doc`. Backups without `textSize` import as 100%; notes without `font` use the backup's `noteFont`.
+  `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, titleManual, textSize, font, pinned, markdown, doc, createdAt, updatedAt }] }`
+  `markdown` is for humans to read; importing restores from `doc`. Backups without `textSize` import as 100%; without `pinned`, as not pinned; notes without `font` use the backup's `noteFont`.
 
 ## Technical decisions
 - Manifest V3 with `chrome_url_overrides.newtab`: the current standard for extensions.

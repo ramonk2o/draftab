@@ -318,6 +318,23 @@ body.sidebar-collapsed #sidebar {
   display: none;
 }
 
+/* The pin of a pinned note, in place of the date */
+.note-date.pinned {
+  display: flex;
+}
+
+.note-date.pinned svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* Between the pinned notes and the others */
+.list-divider {
+  height: 1px;
+  margin: 4px 8px;
+  background: var(--border);
+}
+
 .rename-field {
   box-sizing: border-box;
   width: 100%;

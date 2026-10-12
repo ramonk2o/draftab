@@ -17,6 +17,7 @@ import {
   ICON_IMPORT,
   ICON_MARKDOWN,
   ICON_PENCIL,
+  ICON_PIN,
   ICON_TEXT_BIGGER,
   ICON_TEXT_SMALLER,
   ICON_TRASH,
@@ -25,6 +26,7 @@ import {
   displayTitle,
   filterNotes,
   isEmptyNote,
+  isPinned,
   listDate,
   newBlankNote,
   FONT_NAMES,
@@ -193,6 +195,10 @@ onNotesChanged((changes) => {
     if (currentNoteSaved) open(newNote(), false)
     return
   }
+  // Pinning doesn't change updatedAt, so it's taken even when the rest is ignored below
+  // (otherwise this tab's next save would undo a pin made in another tab)
+  currentNote = { ...currentNote, pinned: isPinned(forCurrent.note) }
+
   // The notification of this tab's own saves arrives later; it may be outdated
   // compared to what has been typed since, so it's ignored
   const received = forCurrent.note
@@ -223,7 +229,16 @@ function drawList() {
     noteList.replaceChildren(empty)
     return
   }
-  noteList.replaceChildren(...visible.map(createItem))
+  const items = visible.map(createItem)
+  // A divider between the pinned notes and the others, when there are both
+  const firstUnpinned = visible.findIndex((note) => !isPinned(note))
+  if (firstUnpinned > 0) {
+    const divider = document.createElement('li')
+    divider.className = 'list-divider'
+    divider.setAttribute('role', 'separator')
+    items.splice(firstUnpinned, 0, divider)
+  }
+  noteList.replaceChildren(...items)
 }
 
 function createItem(note: Note): HTMLLIElement {
@@ -236,14 +251,22 @@ function createItem(note: Note): HTMLLIElement {
   title.textContent = displayTitle(note)
   title.title = 'Double-click to rename'
 
+  // A pinned note shows a pin instead of its date
   const date = document.createElement('span')
   date.className = 'note-date'
-  date.textContent = formatDate(listDate(note, noteSort))
+  if (isPinned(note)) {
+    date.classList.add('pinned')
+    date.innerHTML = ICON_PIN // fixed SVG from icons.ts
+    date.title = 'Pinned'
+  } else {
+    date.textContent = formatDate(listDate(note, noteSort))
+  }
 
+  const pin = actionButton(ICON_PIN, isPinned(note) ? 'Unpin' : 'Pin', () => togglePin(note))
   const rename = actionButton(ICON_PENCIL, 'Rename', () => startRename(item, note))
   const remove = actionButton(ICON_TRASH, 'Delete', () => confirmDelete(note))
 
-  item.append(title, date, rename, remove)
+  item.append(title, date, pin, rename, remove)
   item.addEventListener('click', () => {
     if (note.id !== currentNote.id) open(note, true)
   })
@@ -304,6 +327,19 @@ async function applyNewTitle(note: Note, title: string) {
   }
   const stored = await readNote(note.id)
   if (stored) await saveNote({ ...renamed(stored, title), updatedAt: Date.now() })
+}
+
+// Pinning isn't an edit: updatedAt stays the same
+async function togglePin(note: Note) {
+  const pinned = !isPinned(note)
+  if (note.id === currentNote.id) {
+    await saveIfPending() // include what was typed and not saved yet
+    currentNote = { ...currentNote, pinned }
+    await saveNote(currentNote)
+    return
+  }
+  const stored = await readNote(note.id)
+  if (stored) await saveNote({ ...stored, pinned })
 }
 
 async function confirmDelete(note: Note) {

@@ -8,6 +8,7 @@ export type Note = {
   titleManual: boolean // true after the user renames the note
   textSize?: number // in percent, one of TEXT_SIZES; missing in notes from before it existed (= 100)
   font?: NoteFont // missing in notes from before fonts were per note (see noteFontOf)
+  pinned?: boolean // pinned in the sidebar; missing = not pinned
   createdAt: number
   updatedAt: number
 }
@@ -56,6 +57,7 @@ export function newBlankNote(textSize = 100, font: NoteFont = 'sans'): Note {
     titleManual: false,
     textSize: validTextSize(textSize),
     font,
+    pinned: false,
     createdAt: now,
     updatedAt: now,
   }
@@ -119,19 +121,24 @@ export function filterNotes(notes: Note[], search: string): Note[] {
 // How the sidebar sorts notes (chosen in Settings)
 export type NoteSort = 'updated' | 'title' | 'created'
 
-// Returns a sorted copy: last modified or date created (newest first), or title A–Z
+// Returns a sorted copy: pinned notes first, then the others, each group in the order:
+// last modified or date created (newest first), or title A–Z
 // (ignoring case and accents, numbers in natural order, untitled notes last)
 export function sortNotes(notes: Note[], order: NoteSort): Note[] {
-  const copy = [...notes]
-  if (order === 'created') return copy.sort((a, b) => b.createdAt - a.createdAt)
-  if (order === 'title') {
-    return copy.sort((a, b) => {
+  return [...notes].sort((a, b) => {
+    if (isPinned(a) !== isPinned(b)) return isPinned(a) ? -1 : 1
+    if (order === 'created') return b.createdAt - a.createdAt
+    if (order === 'title') {
       if (!a.title !== !b.title) return a.title ? -1 : 1 // untitled last
       const byTitle = a.title.localeCompare(b.title, undefined, { sensitivity: 'base', numeric: true })
       return byTitle || b.updatedAt - a.updatedAt
-    })
-  }
-  return copy.sort((a, b) => b.updatedAt - a.updatedAt)
+    }
+    return b.updatedAt - a.updatedAt
+  })
+}
+
+export function isPinned(note: Note): boolean {
+  return note.pinned === true
 }
 
 // The date shown next to a note in the sidebar follows the sort order

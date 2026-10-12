@@ -125,6 +125,13 @@ describe('sortNotes', () => {
     expect(titles(sortNotes(notes, 'title'))).toEqual(['Apple', 'banana', 'Çaju', 'Note 2', 'Note 10', '(untitled)'])
   })
 
+  test('pinned notes come first, each group in the chosen order', () => {
+    const pinned = notes.map((n) => (n.title === 'banana' || n.title === 'Note 2' ? { ...n, pinned: true } : n))
+    expect(titles(sortNotes(pinned, 'updated'))).toEqual(['banana', 'Note 2', '(untitled)', 'Note 10', 'Apple', 'Çaju'])
+    expect(titles(sortNotes(pinned, 'created'))).toEqual(['Note 2', 'banana', '(untitled)', 'Çaju', 'Note 10', 'Apple'])
+    expect(titles(sortNotes(pinned, 'title'))).toEqual(['banana', 'Note 2', 'Apple', 'Çaju', 'Note 10', '(untitled)'])
+  })
+
   test('returns a copy and leaves the original list untouched', () => {
     const before = titles(notes)
     sortNotes(notes, 'title')

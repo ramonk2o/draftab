@@ -76,6 +76,16 @@ describe('round trip', () => {
     expect(notesFromBackup(parseBackup(JSON.stringify(comic)))[0].font).toBeUndefined()
   })
 
+  test('pinned notes go into the file and come back; old backups without it import as not pinned', () => {
+    const pinned = { ...simpleNote('pinned', 1), pinned: true }
+    const settings = { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100 } as const
+    const backup = createBackup([pinned], settings)
+    expect(backup.notes[0].pinned).toBe(true)
+    expect(notesFromBackup(parseBackup(JSON.stringify(backup)))[0].pinned).toBe(true)
+    const { pinned: _pinned, ...old } = backup.notes[0]
+    expect(notesFromBackup(parseBackup(JSON.stringify({ ...backup, notes: [old] })))[0].pinned).toBe(false)
+  })
+
   test('through storage: export, change everything and import restores the state', async () => {
     await saveNote(fullNote())
     await saveNote(simpleNote('second', 300))

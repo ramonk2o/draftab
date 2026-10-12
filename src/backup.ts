@@ -1,6 +1,6 @@
 import { contentSchema } from './extensions'
 import { noteToMarkdown } from './markdown'
-import { isNoteFont, validTextSize, type Note } from './notes'
+import { isNoteFont, isPinned, validTextSize, type Note } from './notes'
 import type { Settings } from './storage'
 
 // Backup file format (see SPEC.md). Doesn't depend on an open page:
@@ -30,6 +30,7 @@ export function createBackup(notes: Note[], settings: Settings, now = Date.now()
       titleManual: note.titleManual,
       textSize: validTextSize(note.textSize),
       font: note.font, // missing in notes from before fonts were per note (settings.noteFont)
+      pinned: isPinned(note),
       markdown: noteToMarkdown(note), // for humans to read only
       doc: note.doc,
       createdAt: note.createdAt,
@@ -92,6 +93,7 @@ export function parseBackup(text: string): Backup {
       titleManual: note.titleManual === true,
       textSize: validTextSize(note.textSize), // backups from before it existed: 100
       font: isNoteFont(note.font) ? note.font : undefined, // missing: the backup's settings.noteFont
+      pinned: note.pinned === true, // backups from before it existed: not pinned
       markdown: typeof note.markdown === 'string' ? note.markdown : '',
       doc: note.doc,
       createdAt: note.createdAt,
