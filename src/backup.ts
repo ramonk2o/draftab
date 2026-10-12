@@ -1,5 +1,4 @@
-import { getSchema } from '@tiptap/core'
-import { contentExtensions } from './extensions'
+import { contentSchema } from './extensions'
 import { noteToMarkdown } from './markdown'
 import type { Note } from './notes'
 import type { Settings } from './storage'
@@ -18,9 +17,6 @@ export type Backup = {
 }
 
 const VERSION = 1
-
-// Schema created once, when first needed
-let schema: ReturnType<typeof getSchema> | undefined
 
 export function createBackup(notes: Note[], settings: Settings, now = Date.now()): Backup {
   return {
@@ -69,7 +65,6 @@ export function parseBackup(text: string): Backup {
     throw new Error('The backup has no list of notes.')
   }
 
-  schema ??= getSchema(contentExtensions)
   const ids = new Set<string>()
   const notes = data.notes.map((note: unknown, i: number) => {
     const which = `Note ${i + 1} in the backup`
@@ -85,7 +80,7 @@ export function parseBackup(text: string): Backup {
     // The content must be a document the editor can open
     try {
       if (!isObject(note.doc) || note.doc.type !== 'doc') throw new Error()
-      schema!.nodeFromJSON(note.doc).check()
+      contentSchema().nodeFromJSON(note.doc).check()
     } catch {
       throw new Error(`${which} ("${note.title}") has invalid content.`)
     }

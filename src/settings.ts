@@ -1,4 +1,5 @@
 import { exportBackup, importBackup, plural } from './backup-ui'
+import { element } from './dom'
 import { ICON_CLOSE } from './icons'
 import {
   deleteAllNotes,
@@ -14,12 +15,6 @@ import type { NoteFont, Theme } from './theme'
 // Settings lightbox: backup (manual and automatic), appearance and deleting all notes
 
 const DELETE_PHRASE = 'delete everything'
-
-function element<T extends HTMLElement>(selector: string): T {
-  const el = document.querySelector<T>(selector)
-  if (!el) throw new Error(`Element ${selector} not found`)
-  return el
-}
 
 const dialog = element<HTMLDialogElement>('#settings')
 const closeButton = element<HTMLButtonElement>('#close-settings')

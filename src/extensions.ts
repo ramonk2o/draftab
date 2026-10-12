@@ -1,3 +1,4 @@
+import { getSchema } from '@tiptap/core'
 import StarterKit from '@tiptap/starter-kit'
 import { TaskList, TaskItem } from '@tiptap/extension-list'
 
@@ -20,3 +21,10 @@ export const contentExtensions = [
   TaskList,
   TaskItem.configure({ nested: true }),
 ]
+
+// The schema of these blocks, to check a document without an editor (created once, when first needed)
+let schema: ReturnType<typeof getSchema> | undefined
+export function contentSchema() {
+  schema ??= getSchema(contentExtensions)
+  return schema
+}

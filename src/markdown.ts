@@ -1,14 +1,13 @@
-import { flattenExtensions, getSchema, type JSONContent } from '@tiptap/core'
+import { flattenExtensions, type JSONContent } from '@tiptap/core'
 import { MarkdownManager } from '@tiptap/markdown'
-import { contentExtensions } from './extensions'
+import { contentExtensions, contentSchema } from './extensions'
 import { displayTitle, isEmptyNote, newBlankNote, withUpdatedTitle, type Note } from './notes'
 
 // Markdown of a note: used by the backup, by "Export as Markdown" and by importing a file.
 // Doesn't depend on an open page (the automatic backup runs in the service worker).
 
-// Converter and schema created once, when first needed
+// Converter created once, when first needed
 let markdown: MarkdownManager | undefined
-let schema: ReturnType<typeof getSchema> | undefined
 
 function converter(): MarkdownManager {
   markdown ??= new MarkdownManager({ extensions: flattenExtensions(contentExtensions) })
@@ -33,8 +32,7 @@ export function noteFromFile(fileName: string, fileText: string): Note | null {
 function markdownDoc(text: string): JSONContent | null {
   try {
     const doc = limitHeadings(converter().parse(text))
-    schema ??= getSchema(contentExtensions)
-    schema.nodeFromJSON(doc).check()
+    contentSchema().nodeFromJSON(doc).check()
     return doc
   } catch {
     return null

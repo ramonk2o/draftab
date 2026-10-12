@@ -101,12 +101,20 @@ export async function deleteAllNotes(): Promise<void> {
 
 // Notifies when an import (or deletion of all notes) happens, in this tab or another
 export function onImport(callback: () => void) {
+  onFieldChanged('meta', 'lastImportAt', () => callback())
+}
+
+// Calls back when one field of "settings" or "meta" changes (in this tab or another),
+// with its new value (`any`: each caller knows its field's type). A field not stored yet
+// counts as missing (in meta: 0).
+function onFieldChanged(storageKey: 'settings' | 'meta', field: string, callback: (value: any) => void) {
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area !== 'local' || !changes.meta) return
-    // No meta stored yet counts as 0 (the first save is not an import)
-    const before = (changes.meta.oldValue as Partial<Meta> | undefined)?.lastImportAt ?? 0
-    const after = (changes.meta.newValue as Partial<Meta> | undefined)?.lastImportAt ?? 0
-    if (after !== before) callback()
+    const change = changes[storageKey]
+    if (area !== 'local' || !change) return
+    const empty = storageKey === 'meta' ? 0 : undefined
+    const before = (change.oldValue as Record<string, unknown> | undefined)?.[field] ?? empty
+    const after = (change.newValue as Record<string, unknown> | undefined)?.[field] ?? empty
+    if (after !== before) callback(after)
   })
 }
 
@@ -149,52 +157,25 @@ export async function recordBackup(moment: number): Promise<void> {
 
 // Notifies when the date of the last automatic backup changes
 export function onLastBackupChanged(callback: (moment: number) => void) {
-  chrome.storage.onChanged.addListener((changes, area) => {
-    if (area !== 'local' || !changes.meta) return
-    const before = (changes.meta.oldValue as Partial<Meta> | undefined)?.lastBackupAt ?? 0
-    const after = (changes.meta.newValue as Partial<Meta> | undefined)?.lastBackupAt ?? 0
-    if (after !== before) callback(after)
-  })
+  onFieldChanged('meta', 'lastBackupAt', callback)
 }
 
-// Notifies when the theme changes (in this tab or another)
+// Notify when a setting changes (in this tab or another). Settings are always saved
+// whole, so a missing value only happens when it was never set (and is ignored).
 export function onThemeChanged(callback: (theme: Theme) => void) {
-  chrome.storage.onChanged.addListener((changes, area) => {
-    if (area !== 'local' || !changes.settings) return
-    const before = (changes.settings.oldValue as Partial<Settings> | undefined)?.theme
-    const after = (changes.settings.newValue as Partial<Settings> | undefined)?.theme
-    if (after && after !== before) callback(after)
-  })
+  onFieldChanged('settings', 'theme', (theme) => theme && callback(theme))
 }
 
-// Notifies when the note sort order changes (in this tab or another)
 export function onNoteSortChanged(callback: (order: NoteSort) => void) {
-  chrome.storage.onChanged.addListener((changes, area) => {
-    if (area !== 'local' || !changes.settings) return
-    const before = (changes.settings.oldValue as Partial<Settings> | undefined)?.noteSort
-    const after = (changes.settings.newValue as Partial<Settings> | undefined)?.noteSort
-    if (after && after !== before) callback(after)
-  })
+  onFieldChanged('settings', 'noteSort', (order) => order && callback(order))
 }
 
-// Notifies when the note font changes (in this tab or another)
 export function onNoteFontChanged(callback: (font: NoteFont) => void) {
-  chrome.storage.onChanged.addListener((changes, area) => {
-    if (area !== 'local' || !changes.settings) return
-    const before = (changes.settings.oldValue as Partial<Settings> | undefined)?.noteFont
-    const after = (changes.settings.newValue as Partial<Settings> | undefined)?.noteFont
-    if (after && after !== before) callback(after)
-  })
+  onFieldChanged('settings', 'noteFont', (font) => font && callback(font))
 }
 
-// Notifies when the automatic backup interval changes
 export function onBackupIntervalChanged(callback: () => void) {
-  chrome.storage.onChanged.addListener((changes, area) => {
-    if (area !== 'local' || !changes.settings) return
-    const before = (changes.settings.oldValue as Partial<Settings> | undefined)?.autoBackupMinutes
-    const after = (changes.settings.newValue as Partial<Settings> | undefined)?.autoBackupMinutes
-    if (after !== before) callback()
-  })
+  onFieldChanged('settings', 'autoBackupMinutes', () => callback())
 }
 
 export async function readMeta(): Promise<Meta> {

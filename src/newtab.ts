@@ -1,6 +1,7 @@
 import type { JSONContent } from '@tiptap/core'
 import { EditorState } from '@tiptap/pm/state'
 import { createEditor } from './editor'
+import { element } from './dom'
 import { showCopied } from './copy-block'
 import { chooseFile, exportMarkdown } from './backup-ui'
 import { noteFromFile, noteToMarkdown } from './markdown'
@@ -42,12 +43,6 @@ import {
 
 const SAVE_DELAY = 500 // ms without typing before saving
 
-function element<T extends HTMLElement>(selector: string): T {
-  const el = document.querySelector<T>(selector)
-  if (!el) throw new Error(`Element ${selector} not found`)
-  return el
-}
-
 const sidebarButton = element<HTMLButtonElement>('#toggle-sidebar')
 const newNoteButton = element<HTMLButtonElement>('#new-note')
 const searchField = element<HTMLInputElement>('#search')
@@ -77,9 +72,19 @@ function hasPendingChanges(): boolean {
   return timer !== undefined
 }
 
-async function saveNow() {
+// Saves what was typed and not saved yet, if anything
+async function saveIfPending() {
+  if (hasPendingChanges()) await saveNow()
+}
+
+// Throws away what was typed and not saved yet
+function discardPending() {
   clearTimeout(timer)
   timer = undefined
+}
+
+async function saveNow() {
+  discardPending() // the timer's job is done here
   // Read the editor before any await, so we don't pick up another note's content
   const note = withUpdatedTitle({ ...currentNote, doc: editor.getJSON(), updatedAt: Date.now() })
   currentNote = note
@@ -99,16 +104,14 @@ async function saveNow() {
 
 // Don't lose the last keystrokes when closing or switching tabs
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'hidden' && hasPendingChanges()) saveNow()
+  if (document.visibilityState === 'hidden') saveIfPending()
 })
-window.addEventListener('pagehide', () => {
-  if (hasPendingChanges()) saveNow()
-})
+window.addEventListener('pagehide', saveIfPending)
 
 // ---------- Opening notes ----------
 
 function open(note: Note, alreadySaved: boolean) {
-  if (hasPendingChanges()) saveNow()
+  saveIfPending()
   currentNote = note
   currentNoteSaved = alreadySaved
   replaceDocument(note.doc)
@@ -145,8 +148,14 @@ newNoteButton.addEventListener('click', () => open(newBlankNote(), false))
 
 // ---------- Sync with other tabs ----------
 
-onNotesChanged(async (changes) => {
-  notes = await listNotes()
+// Updates the sidebar's copy of one note (null = deleted), without reading every note again
+function updateNoteInList(id: string, note: Note | null) {
+  notes = notes.filter((n) => n.id !== id)
+  if (note) notes.push(note)
+}
+
+onNotesChanged((changes) => {
+  for (const { id, note } of changes) updateNoteInList(id, note)
   drawList()
 
   const forCurrent = changes.find((c) => c.id === currentNote.id)
@@ -258,8 +267,7 @@ function startRename(item: HTMLLIElement, note: Note) {
 
 async function applyNewTitle(note: Note, title: string) {
   if (note.id === currentNote.id) {
-    // Include what was typed and not saved yet
-    if (hasPendingChanges()) await saveNow()
+    await saveIfPending() // include what was typed and not saved yet
     currentNote = { ...renamed(currentNote, title), updatedAt: Date.now() }
     lastSaveFromThisTab = currentNote.updatedAt
     await saveNote(currentNote)
@@ -272,8 +280,7 @@ async function applyNewTitle(note: Note, title: string) {
 async function confirmDelete(note: Note) {
   if (!confirm(`Delete the note "${displayTitle(note)}"? This can't be undone.`)) return
   if (note.id === currentNote.id) {
-    clearTimeout(timer)
-    timer = undefined
+    discardPending()
     currentNoteSaved = false
     open(newBlankNote(), false)
   }
@@ -313,7 +320,7 @@ importButton.addEventListener('click', async () => {
     return
   }
   await saveNote(note)
-  notes = await listNotes()
+  updateNoteInList(note.id, note) // in the list right away, whether or not onNotesChanged came first
   open(note, true)
 })
 
@@ -322,8 +329,7 @@ settingsButton.addEventListener('click', () => openSettings())
 // After an import or deleting all notes (in this tab or another), reload with the
 // new data, discarding pending typing so it isn't written over the backup
 onImport(() => {
-  clearTimeout(timer)
-  timer = undefined
+  discardPending()
   location.reload()
 })
 
@@ -341,10 +347,13 @@ function updateNoteActions() {
   noteCopyButton.disabled = empty
 }
 
-editor.on('transaction', updateNoteActions)
+// Only when the content changes (not on every cursor movement)
+editor.on('transaction', ({ transaction }) => {
+  if (transaction.docChanged) updateNoteActions()
+})
 
 noteExportButton.addEventListener('click', async () => {
-  if (hasPendingChanges()) await saveNow() // include what was just typed
+  await saveIfPending() // include what was just typed
   exportMarkdown(currentNote)
 })
 

@@ -110,6 +110,7 @@ src/
   markdown.ts            note ↔ markdown: export a note, import a .md/.txt file
   notes.ts               note model and pure rules (title, empty note, search)
   storage.ts             the single access point to chrome.storage
+  dom.ts                 finding page elements
   backup.ts              backup file format: create, validate, restore
   backup-ui.ts           downloads and file picking from a page (backup, note export)
   auto-backup.ts         decides on and makes the automatic backup (runs in the service worker)

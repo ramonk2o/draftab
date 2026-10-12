@@ -1,10 +1,10 @@
 import { describe, expect, test } from 'vitest'
-import { getSchema, type JSONContent } from '@tiptap/core'
+import type { JSONContent } from '@tiptap/core'
 import { EditorState, TextSelection } from '@tiptap/pm/state'
-import { contentExtensions } from './extensions'
+import { contentSchema } from './extensions'
 import { unwrapBlockAtStart } from './unwrap-block'
 
-const schema = getSchema(contentExtensions)
+const schema = contentSchema()
 const text = (t: string): JSONContent => ({ type: 'text', text: t })
 const paragraph = (t?: string): JSONContent => ({ type: 'paragraph', content: t ? [text(t)] : undefined })
 const code = (t: string): JSONContent => ({ type: 'codeBlock', content: t ? [text(t)] : undefined })
