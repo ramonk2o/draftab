@@ -145,6 +145,59 @@ body.sidebar-collapsed #sidebar {
   cursor: text;
 }
 
+.search-field {
+  position: relative; /* reference for the tag suggestions */
+}
+
+/* Tag suggestions, under the search */
+#tag-suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: -1px;
+  right: -1px;
+  z-index: 30;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-field);
+  box-shadow: 0 4px 16px var(--dialog-shadow);
+  cursor: default;
+}
+
+#tag-suggestions li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#tag-suggestions li:hover,
+#tag-suggestions li[aria-selected="true"] {
+  background: var(--hover-item);
+}
+
+.suggestion-tag {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+.suggestion-count {
+  flex: none;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
 .search-field:focus-within {
   border-color: var(--border-focus);
 }

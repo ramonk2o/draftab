@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { contentSchema } from './extensions'
-import { findTags, tagDecorations } from './tags'
+import { newBlankNote, type Note } from './notes'
+import { findTags, tagDecorations, tagsOf, tagSuggestions, wordAt } from './tags'
 
 const tags = (text: string) => findTags(text).map((t) => t.tag)
 
@@ -53,5 +54,62 @@ describe('tagDecorations', () => {
         { type: 'codeBlock', content: [text('#block')] },
       ]),
     ).toEqual(['#ok'])
+  })
+})
+
+describe('tagsOf', () => {
+  test('finds tags in every block, except in code', () => {
+    const doc = {
+      type: 'doc',
+      content: [
+        { type: 'paragraph', content: [{ type: 'text', text: 'a #one ' }, { type: 'text', text: '#code', marks: [{ type: 'code' }] }] },
+        { type: 'bulletList', content: [{ type: 'listItem', content: [{ type: 'paragraph', content: [{ type: 'text', text: '#two' }] }] }] },
+        { type: 'codeBlock', content: [{ type: 'text', text: '#block' }] },
+        { type: 'paragraph', content: [{ type: 'text', text: 'x' }, { type: 'hardBreak' }, { type: 'text', text: '#three' }] },
+      ],
+    }
+    expect(tagsOf(doc)).toEqual(['#one', '#two', '#three'])
+  })
+
+  test("inline code doesn't join the text around it into a tag", () => {
+    const doc = { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'x', marks: [{ type: 'code' }] }, { type: 'text', text: '#a' }] }] }
+    expect(tagsOf(doc)).toEqual(['#a'])
+  })
+})
+
+describe('tagSuggestions', () => {
+  const note = (text: string): Note => ({ ...newBlankNote(), doc: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }] } })
+  const notes = [note('#project #prio #project'), note('#Project #ideas'), note('#projeto #ideas'), note('#prio')]
+
+  test('most used first (notes, not occurrences), ties A–Z, with the count', () => {
+    expect(tagSuggestions(notes, '#')).toEqual([
+      { tag: '#ideas', count: 2 },
+      { tag: '#prio', count: 2 },
+      { tag: '#project', count: 2 },
+      { tag: '#projeto', count: 1 },
+    ])
+  })
+
+  test('only tags that start with what was typed, ignoring case and accents', () => {
+    expect(tagSuggestions(notes, '#PRÓ').map((s) => s.tag)).toEqual(['#project', '#projeto'])
+  })
+
+  test("the tag that's exactly what was typed isn't suggested", () => {
+    expect(tagSuggestions(notes, '#prio')).toEqual([])
+    expect(tagSuggestions(notes, '#IDEAS')).toEqual([])
+  })
+
+  test('up to 8', () => {
+    const many = [note(Array.from({ length: 12 }, (_, i) => `#t${i}`).join(' '))]
+    expect(tagSuggestions(many, '#t')).toHaveLength(8)
+  })
+})
+
+describe('wordAt', () => {
+  test('the word around the cursor, between spaces', () => {
+    expect(wordAt('abc #pr', 7)).toEqual({ word: '#pr', start: 4, end: 7 })
+    expect(wordAt('abc #pr def', 6)).toEqual({ word: '#pr', start: 4, end: 7 })
+    expect(wordAt('abc ', 4)).toEqual({ word: '', start: 4, end: 4 })
+    expect(wordAt('#x', 0)).toEqual({ word: '#x', start: 0, end: 2 })
   })
 })

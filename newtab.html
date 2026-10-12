@@ -24,7 +24,9 @@
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
             <circle cx="7" cy="7" r="4.25" /><path d="m10.25 10.25 3.25 3.25" />
           </svg>
-          <input id="search" type="search" placeholder="Search" aria-label="Search notes" />
+          <input id="search" type="search" placeholder="Search" aria-label="Search notes" aria-autocomplete="list" aria-controls="tag-suggestions" aria-expanded="false" />
+          <!-- Tag suggestions while typing #… (filled in by newtab.ts) -->
+          <ul id="tag-suggestions" role="listbox" aria-label="Tag suggestions" hidden></ul>
         </label>
         <button id="import" class="icon-button" type="button" title="Import a .md or .txt file as a note" aria-label="Import a .md or .txt file as a note"></button>
         <button id="new-note" class="icon-button" type="button" title="New note" aria-label="New note">

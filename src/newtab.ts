@@ -43,6 +43,7 @@ import {
   type NoteFont,
   type NoteSort,
 } from './notes'
+import { tagSuggestions, wordAt } from './tags'
 import {
   deleteNote,
   listNotes,
@@ -219,7 +220,10 @@ onNotesChanged((changes) => {
 
 // ---------- Sidebar ----------
 
-searchField.addEventListener('input', drawList)
+searchField.addEventListener('input', () => {
+  drawList()
+  updateSuggestions()
+})
 
 function drawList() {
   if (renaming) return
@@ -592,6 +596,79 @@ editor.on('transaction', ({ transaction }) => {
   }
   if (transaction.selectionSet || transaction.docChanged) drawStats()
 })
+
+// ---------- Tag suggestions in the search ----------
+
+const suggestionList = element<HTMLUListElement>('#tag-suggestions')
+let suggestions: { tag: string; count: number }[] = []
+let highlighted = 0 // the suggestion Enter or Tab picks
+
+// Suggests tags while the word at the cursor starts with #
+function updateSuggestions() {
+  const { word } = wordAt(searchField.value, searchField.selectionStart ?? searchField.value.length)
+  suggestions = word.startsWith('#') ? tagSuggestions(notes, word) : []
+  highlighted = 0
+  drawSuggestions()
+}
+
+function closeSuggestions() {
+  suggestions = []
+  drawSuggestions()
+}
+
+function drawSuggestions() {
+  suggestionList.hidden = suggestions.length === 0
+  searchField.setAttribute('aria-expanded', String(!suggestionList.hidden))
+  const items = suggestions.map(({ tag, count }, i) => {
+    const item = document.createElement('li')
+    item.setAttribute('role', 'option')
+    item.setAttribute('aria-selected', String(i === highlighted))
+    const name = document.createElement('span')
+    name.className = 'suggestion-tag'
+    name.textContent = tag
+    const notesWithTag = document.createElement('span')
+    notesWithTag.className = 'suggestion-count'
+    notesWithTag.textContent = String(count)
+    item.append(name, notesWithTag)
+    // mousedown + preventDefault: the search keeps the focus
+    item.addEventListener('mousedown', (event) => {
+      event.preventDefault()
+      chooseSuggestion(i)
+    })
+    return item
+  })
+  suggestionList.replaceChildren(...items)
+}
+
+// Replaces the word at the cursor with the tag, keeping the rest of the search
+function chooseSuggestion(i: number) {
+  const { tag } = suggestions[i]
+  const text = searchField.value
+  const { start, end } = wordAt(text, searchField.selectionStart ?? text.length)
+  searchField.value = text.slice(0, start) + tag + text.slice(end)
+  const cursor = start + tag.length
+  searchField.setSelectionRange(cursor, cursor)
+  closeSuggestions()
+  drawList()
+}
+
+searchField.addEventListener('keydown', (event) => {
+  if (suggestions.length === 0) return
+  if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+    const step = event.key === 'ArrowDown' ? 1 : -1
+    highlighted = (highlighted + step + suggestions.length) % suggestions.length
+    drawSuggestions()
+  } else if (event.key === 'Enter' || event.key === 'Tab') {
+    chooseSuggestion(highlighted)
+  } else if (event.key === 'Escape') {
+    closeSuggestions() // only closes the list; the next Esc clears the search, as usual
+  } else {
+    return
+  }
+  event.preventDefault()
+})
+searchField.addEventListener('click', updateSuggestions) // the cursor may have moved to another word
+searchField.addEventListener('blur', closeSuggestions)
 
 // Cmd/Ctrl+click on a tag in the note: search for it, showing the sidebar if needed
 function searchForTag(tag: string) {
