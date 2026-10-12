@@ -22,9 +22,11 @@ How a feature moves:
 - **Motivation:** not recorded (direct request).
 
 ### Handle position and size
-- **Status:** Idea
+- **Status:** In progress — implemented; `npm test` (122 passed) and `npm run build` OK. Waiting for the check in Chrome.
 - **Description:** move the drag handles a bit further to the left and make their clickable area slightly bigger.
 - **Motivation:** not recorded (direct request).
+- **Deliverable:** block handles 24×28 px (were 20×26) with 8 px of gap to the text (was 4 px); the whole-list bar 20 px wide (was 16) and further out (52 px from the list, was 44), so it doesn't overlap the list items' handles.
+- **How to verify:** `npm test` and `npm run build` pass; in Chrome, the handle of paragraphs, headings and list items sits further from the text and is easier to hit; the whole-list bar is still to the left of the item handles, without overlapping; dragging and double-click to copy still work.
 
 ## Sidebar
 

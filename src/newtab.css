@@ -543,9 +543,9 @@ body.sidebar-collapsed #sidebar {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 26px;
-  margin-right: 4px;
+  width: 24px;
+  height: 28px;
+  margin-right: 8px;
   border-radius: 4px;
   color: var(--handle);
   cursor: grab;
@@ -644,7 +644,7 @@ body.reordering .drop-cursor {
 .list-handle {
   position: absolute;
   display: none;
-  width: 16px;
+  width: 20px;
   border-radius: 4px;
   cursor: grab;
 }
@@ -652,7 +652,7 @@ body.reordering .drop-cursor {
 .list-handle::before {
   content: '';
   position: absolute;
-  left: 7px;
+  left: 9px;
   top: 3px;
   bottom: 3px;
   width: 2px;
