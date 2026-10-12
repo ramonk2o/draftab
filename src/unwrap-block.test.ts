@@ -68,3 +68,24 @@ describe('quote', () => {
 test('plain paragraph: not applied', () => {
   expect(unwrapBlockAtStart(stateAt([paragraph('before'), paragraph('text')], 9))).toBeNull()
 })
+
+describe('heading', () => {
+  const heading = (level: number, ...c: JSONContent[]): JSONContent => ({ type: 'heading', attrs: { level }, content: c })
+
+  // "before" takes positions 0–7; the heading opens at 8, its text starts at 9
+  test('becomes a paragraph with the same text and marks, cursor where it was', () => {
+    const bold = { type: 'text', text: 'big', marks: [{ type: 'bold' }] }
+    const r = result(stateAt([paragraph('before'), heading(2, text('A '), bold)], 9))
+    expect(r?.content).toEqual([paragraph('before'), { type: 'paragraph', content: [text('A '), bold] }])
+    expect(r?.cursor).toBe(9)
+  })
+
+  test('also an empty heading, and inside a quote', () => {
+    expect(result(stateAt([heading(1)], 1))?.content).toEqual([{ type: 'paragraph' }])
+    expect(result(stateAt([quote(heading(3, text('q')))], 2))?.content).toEqual([quote(paragraph('q'))])
+  })
+
+  test('only at the start of the heading', () => {
+    expect(result(stateAt([heading(1, text('Title'))], 3))).toBeNull()
+  })
+})

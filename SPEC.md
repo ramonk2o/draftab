@@ -29,6 +29,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 
 ### Editor
 - Markdown shortcuts turn into blocks while typing: `#`/`##`/`###`, `-`, `1.`, `- [ ]`, `>`, ` ``` `, `---`, `**bold**`, `*italic*`, `` `code` ``, links. Cmd/Ctrl+click opens a link in a new tab (an address without a protocol gets `https://`).
+- Backspace at the start of a heading turns it into a paragraph, keeping its text and formatting (Cmd/Ctrl+Option/Alt+0 does the same, Tiptap's shortcut).
 - Backspace at the start of a code block turns it into normal text, one paragraph per line. At the start of a quote's first paragraph, the whole quote becomes normal paragraphs; at the start of a later one, that paragraph leaves the quote, splitting it. Backspace right after typing a shortcut undoes the shortcut (Tiptap's behavior). Each change is its own undo step.
 - Dragging blocks: each block shows a handle on hover; dragging it moves the block and the new order is saved.
   - List items have their own handle. A bar to the left of a list drags the whole list. Inside a quote, the handle moves the whole quote.

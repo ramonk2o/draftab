@@ -3,7 +3,7 @@ import { closeHistory } from '@tiptap/pm/history'
 import { TextSelection, type EditorState, type Transaction } from '@tiptap/pm/state'
 import { liftTarget } from '@tiptap/pm/transform'
 
-// Backspace at the start of a code block or a quote turns it back into normal text.
+// Backspace at the start of a heading, a code block or a quote turns it back into normal text.
 // Returns null when the rule doesn't apply (Backspace then works as usual).
 export function unwrapBlockAtStart(state: EditorState): Transaction | null {
   const { selection, schema } = state
@@ -11,8 +11,14 @@ export function unwrapBlockAtStart(state: EditorState): Transaction | null {
   const $from = selection.$from
   if ($from.parentOffset !== 0) return null
 
-  // Code block: one paragraph per line (an empty code block is left to Tiptap)
   const block = $from.parent
+
+  // Heading: becomes a paragraph with the same text and marks
+  if (block.type.name === 'heading') {
+    return state.tr.setBlockType($from.pos, $from.pos, schema.nodes.paragraph)
+  }
+
+  // Code block: one paragraph per line (an empty code block is left to Tiptap)
   if (block.type.name === 'codeBlock') {
     if (block.textContent === '') return null
     const paragraphs = block.textContent
@@ -40,7 +46,7 @@ export function unwrapBlockAtStart(state: EditorState): Transaction | null {
 
 export const UnwrapBlock = Extension.create({
   name: 'unwrapBlock',
-  // Runs before the code block's and the quote's own Backspace
+  // Runs before the heading's, the code block's and the quote's own Backspace
   priority: 1000,
   addKeyboardShortcuts() {
     return {
