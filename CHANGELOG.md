@@ -45,7 +45,7 @@ Ready to upload to the Chrome Web Store as an update.
 
 ## [1.0.0] — 2026-10-11
 
-First public version, submitted to the Chrome Web Store.
+First public version, published on the Chrome Web Store.
 
 ### Added
 - **New tab notepad**: every new tab opens a blank note with the cursor ready; blank notes are never saved.
