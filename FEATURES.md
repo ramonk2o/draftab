@@ -18,13 +18,6 @@ How a feature moves:
 
 ## Sidebar
 
-### Tag autocomplete in search
-- **Status:** In progress — implemented; `npm test` (138 passed, including 7 new tests for tagsOf, tagSuggestions and wordAt) and `npm run build` (with type check) OK. Waiting for the check in Chrome.
-- **Description:** the search suggests the tags that exist in the notes while typing.
-- **Motivation:** not recorded (direct request).
-- **Deliverable:** a suggestion list under the search while the word at the cursor starts with `#` (rules in SPEC.md): matching tags from all notes, most used first, with the number of notes; keyboard (↑/↓, Enter/Tab, Esc) and mouse.
-- **How to verify:** `npm test` (new tests: tags of a note, counting and ordering of suggestions, the word at the cursor) and `npm run build`; in Chrome: type `#` → every tag with its count; `#pr` → only tags starting with it; ↑/↓ and Enter/Tab complete the word and filter the list; with `abc #pr` the `abc` stays; a click on a suggestion completes; Esc and clicking outside close; tags inside code aren't suggested.
-
 ## Interface
 
 ### Portuguese translation
