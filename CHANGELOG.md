@@ -4,7 +4,7 @@ All notable changes to Draftab are documented here. The format is based on [Keep
 
 ## [1.2.0] — 2026-10-13
 
-Ready to upload to the Chrome Web Store as an update.
+Submitted to the Chrome Web Store as an update.
 
 ### Added
 - **Calculations after `=`**: typing a calculation without spaces followed by `=` (`2*5=`) writes the result right after it (`2*5=10`): `+ - * /`, parentheses and decimals, with the usual precedence. Nothing happens for invalid calculations (like `1/0=`), in code, or when pasting; Backspace right after removes the result. Settings → Calculations ("Cálculos" in Portuguese) turns them off and picks the decimal separator: Automatic (follows the interface language), `.` or `,`; both apply to every open tab and goes into backups.
