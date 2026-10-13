@@ -2,9 +2,14 @@
 
 All notable changes to Draftab are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
-## [1.1.0] — unreleased
+## [1.1.1] — unreleased
 
-Submitted to the Chrome Web Store as an update, in review.
+### Changed
+- **Copy for WhatsApp** leaves one blank line between blocks (paragraphs, lists, quotes…), so they no longer come out stuck together; list items stay together, and empty lines in the note don't add more.
+
+## [1.1.0] — 2026-10-13
+
+Published on the Chrome Web Store as an update.
 
 ### Added
 - **Clickable tags**: `#tags` in notes (a letter after `#`, then letters, digits, `_` or `-`) show in gray monospace, like links (underline and hand cursor on hover); Cmd/Ctrl+click on one searches for it in the sidebar, opening the sidebar if it's collapsed. The note's content doesn't change.
@@ -25,7 +30,6 @@ Submitted to the Chrome Web Store as an update, in review.
 - The new settings are included in backups.
 
 ### Changed
-- **Copy for WhatsApp** leaves one blank line between blocks (paragraphs, lists, quotes…), so they no longer come out stuck together; list items stay together, and empty lines in the note don't add more.
 - A little more space between paragraphs in notes (0.5em instead of 0.25em); list items stay as close as before.
 - Backup export and import moved to Settings only; the sidebar's backup icons are gone.
 - Settings: the import button reads "Import backup" (no ellipsis).
