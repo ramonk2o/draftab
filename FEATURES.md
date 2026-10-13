@@ -27,6 +27,13 @@ How a feature moves:
 - **Description:** Copy for WhatsApp adds an extra line break between blocks (e.g. between paragraphs, between a paragraph and a list, between a list and a checklist).
 - **Motivation:** today it writes one line per block (SPEC.md), so the blocks come out stuck together in WhatsApp.
 
+## Sidebar
+
+### Calendar
+- **Status:** Idea
+- **Description:** a calendar fixed at the bottom of the note list, to look at quickly. Clicking a day inserts that date where the cursor is in the note, in a configurable format.
+- **Motivation:** quick access to a calendar view while taking notes.
+
 ## Backup and settings
 
 ### Sync across computers
