@@ -13,6 +13,7 @@ import type { NoteFont, NoteSort } from './notes'
 import type { Theme } from './theme'
 import { locale, t, tn, type LanguageSetting } from './i18n'
 import { formatDate, type DateFormat } from './calendar'
+import type { DecimalSeparatorSetting } from './calculate'
 
 // Settings lightbox: backup (manual and automatic), appearance and deleting all notes
 
@@ -30,6 +31,7 @@ const textSizeSelect = element<HTMLSelectElement>('#new-note-text-size')
 const colorSwatchesBox = element<HTMLInputElement>('#color-swatches')
 const showCalendarBox = element<HTMLInputElement>('#show-calendar')
 const dateFormatSelect = element<HTMLSelectElement>('#date-format')
+const decimalSeparatorSelect = element<HTMLSelectElement>('#decimal-separator')
 const lastBackup = element<HTMLParagraphElement>('#last-backup')
 const confirmField = element<HTMLInputElement>('#confirm-delete')
 const deleteButton = element<HTMLButtonElement>('#delete-all')
@@ -38,7 +40,7 @@ closeButton.innerHTML = ICON_CLOSE
 
 export async function openSettings() {
   // Always opens with the current values and nothing left over from last time
-  const { autoBackupMinutes, language, theme, noteSort, newNoteFont, newNoteTextSize, showCalendar, dateFormat, colorSwatches } =
+  const { autoBackupMinutes, language, theme, noteSort, newNoteFont, newNoteTextSize, showCalendar, dateFormat, colorSwatches, decimalSeparator } =
     await readSettings()
   intervalSelect.value = String(autoBackupMinutes)
   languageSelect.value = language
@@ -53,6 +55,7 @@ export async function openSettings() {
     option.textContent = formatDate(new Date(), option.value as DateFormat, locale())
   }
   dateFormatSelect.value = dateFormat
+  decimalSeparatorSelect.value = decimalSeparator
   showLastBackup((await readMeta()).lastBackupAt)
   showMessage('')
   confirmField.value = ''
@@ -145,6 +148,13 @@ showCalendarBox.addEventListener('change', () => {
 
 dateFormatSelect.addEventListener('change', () => {
   saveSettings({ dateFormat: dateFormatSelect.value as DateFormat })
+})
+
+// ---------- Calculations ----------
+
+decimalSeparatorSelect.addEventListener('change', () => {
+  // Every tab (this one included) uses it when it notices the change (onDecimalSeparatorChanged)
+  saveSettings({ decimalSeparator: decimalSeparatorSelect.value as DecimalSeparatorSetting })
 })
 
 // ---------- Delete all notes ----------

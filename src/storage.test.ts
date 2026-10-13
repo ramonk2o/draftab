@@ -12,6 +12,7 @@ import {
   onDateFormatChanged,
   onShowCalendarChanged,
   onColorSwatchesChanged,
+  onDecimalSeparatorChanged,
   onThemeChanged,
   readMeta,
   readNote,
@@ -98,13 +99,13 @@ describe('notes', () => {
 
 describe('settings', () => {
   test('with nothing saved, uses the defaults', async () => {
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, decimalSeparator: 'auto' })
   })
 
   test('saving one part keeps the rest', async () => {
     await saveSettings({ autoBackupMinutes: 60 })
     await saveSettings({ sidebarCollapsed: true })
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, decimalSeparator: 'auto' })
   })
 })
 
@@ -133,7 +134,7 @@ describe('deleteAllNotes', () => {
     await saveSettings({ autoBackupMinutes: 60, sidebarCollapsed: true })
     await deleteAllNotes()
     expect(await listNotes()).toEqual([])
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, decimalSeparator: 'auto' })
   })
 })
 
@@ -262,5 +263,25 @@ describe('color swatches', () => {
     await saveSettings({ showCalendar: false })
     await saveSettings({ colorSwatches: true })
     expect(shown).toEqual([false, true])
+  })
+})
+
+describe('decimal separator', () => {
+  test('automatic by default; an invalid value goes back to automatic', async () => {
+    expect((await readSettings()).decimalSeparator).toBe('auto')
+    await saveSettings({ decimalSeparator: ',' })
+    expect((await readSettings()).decimalSeparator).toBe(',')
+    await chrome.storage.local.set({ settings: { decimalSeparator: ';' } })
+    expect((await readSettings()).decimalSeparator).toBe('auto')
+  })
+
+  test('notifies tabs when it changes, and only then', async () => {
+    const chosen: string[] = []
+    await saveSettings({})
+    onDecimalSeparatorChanged((setting) => chosen.push(setting))
+    await saveSettings({ decimalSeparator: ',' })
+    await saveSettings({ showCalendar: false })
+    await saveSettings({ decimalSeparator: '.' })
+    expect(chosen).toEqual([',', '.'])
   })
 })

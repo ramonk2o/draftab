@@ -9,6 +9,7 @@ import { noteFromFile, noteToMarkdown } from './markdown'
 import { noteToWhatsApp } from './whatsapp'
 import { openSettings } from './settings'
 import { setDateFormat, setupCalendar, showCalendar } from './calendar-ui'
+import { setDecimalSeparator } from './calculate'
 import { applyNoteFont, applyTheme, rememberNewNoteFont } from './theme'
 import {
   ICON_CHAT,
@@ -60,6 +61,7 @@ import {
   onNotesChanged,
   onShowCalendarChanged,
   onColorSwatchesChanged,
+  onDecimalSeparatorChanged,
   onThemeChanged,
   readNote,
   readSettings,
@@ -763,6 +765,11 @@ function showColorSwatches(show: boolean) {
 // Chosen in any tab, applied in all of them
 onColorSwatchesChanged(showColorSwatches)
 
+// ---------- Calculations ----------
+
+// Chosen in any tab, applied in all of them
+onDecimalSeparatorChanged(setDecimalSeparator)
+
 // ---------- Language ----------
 
 // A language chosen in any tab: every tab saves pending typing and reloads in it
@@ -794,6 +801,7 @@ async function start() {
   oldNoteFont = settings.noteFont
   rememberNewNoteFont(newNoteFont)
   showColorSwatches(settings.colorSwatches)
+  setDecimalSeparator(settings.decimalSeparator)
   setupCalendar(settings.showCalendar, settings.dateFormat, insertDate)
   notes = await listNotes()
 

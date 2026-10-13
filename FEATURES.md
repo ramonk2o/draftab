@@ -22,11 +22,12 @@ How a feature moves:
   - Markdown tables only hold formatted text in cells: lists, several paragraphs and merged cells would have to be blocked, or they'd be lost on export.
   - Check the custom drag-to-reorder and handles with tables (most likely the table moves whole), plus Copy for WhatsApp, character counts and Backspace at the start of the block.
 
-### Color picker
-- **Status:** Idea
-- **Description:** a button opens a color picker; the chosen color is inserted in the text as a hex code (e.g. `#3a7bd5`).
-- **Motivation:** quick access to colors.
-- **Button:** in the note page bar, on the left side, apart from the note's settings (font and text size).
+### Calculations after `=`
+- **Status:** Implemented, waiting for the test in Chrome. `npm test`: 14 files, 193 tests passing (new `calculate.test.ts`: operations and precedence, signs, `.` and `,` decimals, no thousands separators, invalid expressions give nothing, the `=` pattern; 2 new in `storage.test.ts`: automatic by default / invalid value back to automatic, tabs notified only when it changes; the backup round-trip test now covers `decimalSeparator: ','`); `npm run build` OK. The Chrome check is still to do.
+- **Description:** typing a math operation without spaces followed by `=` (e.g. `2*5=`) writes the result right after the `=` (`2*5=10`). Decimals follow the active locale, and Settings let you choose `.` or `,` as the decimal separator.
+- **Motivation:** quick calculations without leaving the note (direct request on 2026-10-13).
+- **Deliverable:** an editor rule that writes the result when `=` is typed after an expression (`+ - * /`, parentheses, decimals); a "Decimal separator" setting (Automatic, following the interface language / `.` / `,`) in every open tab and in backups; tests for the calculation and the setting.
+- **How to verify:** `npm test` and `npm run build`; in Chrome: `2*5=` → `2*5=10`; `0.1+0.2=` → `0.3` (or `0,1+0,2=` → `0,3` with `,`); `(2+3)*4=` → `20`; `1/0=`, `5=`, `a2*5=` and `2 * 5=` add nothing; nothing happens in inline code or code blocks; Backspace right after removes the result and keeps the `=`; changing the separator in Settings applies to the other open tab.
 
 ## Backup and settings
 
@@ -40,3 +41,9 @@ How a feature moves:
   - A synced folder the user picks (Dropbox, iCloud, Google Drive for desktop), read and written by the extension: no new permission, account or server; the simplest to build. Costs: Chrome asks for folder access again from time to time, it only works with the tab open, and it depends on one of those apps being installed.
   - Own server (Firebase, Supabase): accounts, monthly cost, maintenance and a new privacy policy; too heavy for Draftab.
   - The hard part in any option is conflicts: merge note by note (each note has an id and a last-modified date, so the most recent version of each note wins), and deleted notes leave a dated "deleted" mark so they don't come back when the other computer syncs.
+
+## Discarded
+
+### Color picker
+- **Description:** a button opens a color picker; the chosen color is inserted in the text as a hex code (e.g. `#3a7bd5`).
+- **Why discarded:** removed from the backlog by the user on 2026-10-13.

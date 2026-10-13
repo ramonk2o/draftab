@@ -2,6 +2,7 @@ import { isNoteFont, validTextSize, type Note, type NoteFont, type NoteSort } fr
 import type { Theme } from './theme'
 import { isLanguageSetting, type LanguageSetting } from './i18n'
 import { isDateFormat, type DateFormat } from './calendar'
+import { isDecimalSeparator, type DecimalSeparatorSetting } from './calculate'
 
 // All chrome.storage access goes through here.
 // Keys: "note:<id>" (one per note), "settings" and "meta".
@@ -24,6 +25,7 @@ export type Settings = {
   showCalendar: boolean // the calendar shows at the bottom of the sidebar
   dateFormat: DateFormat // format of dates inserted from the calendar
   colorSwatches: boolean // color codes (#3a7bd5) show a swatch of the color
+  decimalSeparator: DecimalSeparatorSetting // of calculations ("2*5="); auto = the interface language's
 }
 
 export type Meta = {
@@ -44,6 +46,7 @@ const DEFAULT_SETTINGS: Settings = {
   showCalendar: true,
   dateFormat: 'numeric',
   colorSwatches: true,
+  decimalSeparator: 'auto',
 }
 const DEFAULT_META: Meta = { lastChangeAt: 0, lastBackupAt: 0, lastImportAt: 0 }
 
@@ -149,6 +152,7 @@ export async function readSettings(): Promise<Settings> {
   if (typeof result.showCalendar !== 'boolean') result.showCalendar = true
   if (!isDateFormat(result.dateFormat)) result.dateFormat = 'numeric'
   if (typeof result.colorSwatches !== 'boolean') result.colorSwatches = true
+  if (!isDecimalSeparator(result.decimalSeparator)) result.decimalSeparator = 'auto'
   return result
 }
 
@@ -214,6 +218,10 @@ export function onDateFormatChanged(callback: (format: DateFormat) => void) {
 
 export function onColorSwatchesChanged(callback: (show: boolean) => void) {
   onFieldChanged('settings', 'colorSwatches', (show) => typeof show === 'boolean' && callback(show))
+}
+
+export function onDecimalSeparatorChanged(callback: (setting: DecimalSeparatorSetting) => void) {
+  onFieldChanged('settings', 'decimalSeparator', (setting) => isDecimalSeparator(setting) && callback(setting))
 }
 
 export function onBackupIntervalChanged(callback: () => void) {

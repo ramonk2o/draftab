@@ -7,6 +7,7 @@ import { selectAndCopyBlock } from './copy-block'
 import { UnwrapBlock } from './unwrap-block'
 import { Tags } from './tags'
 import { ColorSwatches } from './colors'
+import { Calculations } from './calculate'
 import { UnderlineShortcut } from './underline-shortcut'
 import { t } from './i18n'
 
@@ -102,6 +103,7 @@ export function createEditor(element: HTMLElement, onTagClick: (tag: string) => 
       UnwrapBlock,
       Tags.configure({ onTagClick }),
       ColorSwatches,
+      Calculations,
       Reorder,
       ListHandle,
       DragHandle.configure({
