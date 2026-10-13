@@ -743,6 +743,11 @@ body.sidebar-collapsed #sidebar {
     conic-gradient(#ccc 25%, #fff 0 50%, #ccc 0 75%, #fff 0) 0 0 / 50% 50%;
 }
 
+/* Turned off in Settings */
+.no-color-swatches .tiptap .color-swatch {
+  display: none;
+}
+
 .tiptap pre {
   margin: 1.25em 0;
   padding: 0.857em 1.143em;

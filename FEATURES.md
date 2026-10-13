@@ -23,7 +23,7 @@ How a feature moves:
   - Check the custom drag-to-reorder and handles with tables (most likely the table moves whole), plus Copy for WhatsApp, character counts and Backspace at the start of the block.
 
 ### Setting to turn off color swatches
-- **Status:** In progress
+- **Status:** Implemented, waiting for the test in Chrome. `npm test`: 13 files, 182 tests passing (2 new in `storage.test.ts`: on by default / invalid value back to on, tabs notified only when it changes; the backup round-trip test now covers `colorSwatches: false`); `npm run build` OK. The Chrome check is still to do.
 - **Description:** an option in Settings to turn off the color swatches next to color codes.
 - **Motivation:** not everyone wants the swatches.
 - **Deliverable:** a "Show color swatches" checkbox in Settings → Appearance (on by default); turning it off hides the swatches in every open tab right away; saved with the settings and in backups; rule in SPEC.md.

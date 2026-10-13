@@ -23,6 +23,7 @@ export type Settings = {
   language: LanguageSetting // interface language; auto = Chrome's
   showCalendar: boolean // the calendar shows at the bottom of the sidebar
   dateFormat: DateFormat // format of dates inserted from the calendar
+  colorSwatches: boolean // color codes (#3a7bd5) show a swatch of the color
 }
 
 export type Meta = {
@@ -42,6 +43,7 @@ const DEFAULT_SETTINGS: Settings = {
   language: 'auto',
   showCalendar: true,
   dateFormat: 'numeric',
+  colorSwatches: true,
 }
 const DEFAULT_META: Meta = { lastChangeAt: 0, lastBackupAt: 0, lastImportAt: 0 }
 
@@ -146,6 +148,7 @@ export async function readSettings(): Promise<Settings> {
   if (!isLanguageSetting(result.language)) result.language = 'auto'
   if (typeof result.showCalendar !== 'boolean') result.showCalendar = true
   if (!isDateFormat(result.dateFormat)) result.dateFormat = 'numeric'
+  if (typeof result.colorSwatches !== 'boolean') result.colorSwatches = true
   return result
 }
 
@@ -207,6 +210,10 @@ export function onShowCalendarChanged(callback: (show: boolean) => void) {
 
 export function onDateFormatChanged(callback: (format: DateFormat) => void) {
   onFieldChanged('settings', 'dateFormat', (format) => isDateFormat(format) && callback(format))
+}
+
+export function onColorSwatchesChanged(callback: (show: boolean) => void) {
+  onFieldChanged('settings', 'colorSwatches', (show) => typeof show === 'boolean' && callback(show))
 }
 
 export function onBackupIntervalChanged(callback: () => void) {

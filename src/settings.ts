@@ -27,6 +27,7 @@ const themeSelect = element<HTMLSelectElement>('#theme')
 const sortSelect = element<HTMLSelectElement>('#note-sort')
 const fontSelect = element<HTMLSelectElement>('#new-note-font')
 const textSizeSelect = element<HTMLSelectElement>('#new-note-text-size')
+const colorSwatchesBox = element<HTMLInputElement>('#color-swatches')
 const showCalendarBox = element<HTMLInputElement>('#show-calendar')
 const dateFormatSelect = element<HTMLSelectElement>('#date-format')
 const lastBackup = element<HTMLParagraphElement>('#last-backup')
@@ -37,7 +38,7 @@ closeButton.innerHTML = ICON_CLOSE
 
 export async function openSettings() {
   // Always opens with the current values and nothing left over from last time
-  const { autoBackupMinutes, language, theme, noteSort, newNoteFont, newNoteTextSize, showCalendar, dateFormat } =
+  const { autoBackupMinutes, language, theme, noteSort, newNoteFont, newNoteTextSize, showCalendar, dateFormat, colorSwatches } =
     await readSettings()
   intervalSelect.value = String(autoBackupMinutes)
   languageSelect.value = language
@@ -45,6 +46,7 @@ export async function openSettings() {
   sortSelect.value = noteSort
   fontSelect.value = newNoteFont
   textSizeSelect.value = String(newNoteTextSize)
+  colorSwatchesBox.checked = colorSwatches
   showCalendarBox.checked = showCalendar
   // Each format shown with today's date
   for (const option of dateFormatSelect.options) {
@@ -126,6 +128,11 @@ textSizeSelect.addEventListener('change', () => {
 sortSelect.addEventListener('change', () => {
   // Every tab (this one included) re-sorts its sidebar when it notices the change (onNoteSortChanged)
   saveSettings({ noteSort: sortSelect.value as NoteSort })
+})
+
+colorSwatchesBox.addEventListener('change', () => {
+  // Every tab (this one included) shows or hides them when it notices the change (onColorSwatchesChanged)
+  saveSettings({ colorSwatches: colorSwatchesBox.checked })
 })
 
 // ---------- Calendar ----------

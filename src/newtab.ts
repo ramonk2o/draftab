@@ -59,6 +59,7 @@ import {
   onNewNoteTextSizeChanged,
   onNotesChanged,
   onShowCalendarChanged,
+  onColorSwatchesChanged,
   onThemeChanged,
   readNote,
   readSettings,
@@ -752,6 +753,16 @@ function insertDate(text: string) {
 onShowCalendarChanged(showCalendar)
 onDateFormatChanged(setDateFormat)
 
+// ---------- Color swatches ----------
+
+// Hidden with a class on the page; the editor keeps creating them
+function showColorSwatches(show: boolean) {
+  document.body.classList.toggle('no-color-swatches', !show)
+}
+
+// Chosen in any tab, applied in all of them
+onColorSwatchesChanged(showColorSwatches)
+
 // ---------- Language ----------
 
 // A language chosen in any tab: every tab saves pending typing and reloads in it
@@ -782,6 +793,7 @@ async function start() {
   newNoteFont = settings.newNoteFont
   oldNoteFont = settings.noteFont
   rememberNewNoteFont(newNoteFont)
+  showColorSwatches(settings.colorSwatches)
   setupCalendar(settings.showCalendar, settings.dateFormat, insertDate)
   notes = await listNotes()
 
