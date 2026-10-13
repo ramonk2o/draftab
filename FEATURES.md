@@ -22,11 +22,13 @@ How a feature moves:
   - Markdown tables only hold formatted text in cells: lists, several paragraphs and merged cells would have to be blocked, or they'd be lost on export.
   - Check the custom drag-to-reorder and handles with tables (most likely the table moves whole), plus Copy for WhatsApp, character counts and Backspace at the start of the block.
 
-### Color picker
+### Hex colors
 - **Status:** Idea
-- **Description:** a button opens a color picker; the chosen color is inserted in the text as a hex code (e.g. `#3a7bd5`).
-- **Motivation:** not recorded.
-- **Open decision:** where the button goes.
+- **Description:**
+  - Color picker: a button opens a color picker; the chosen color is inserted in the text as a hex code (e.g. `#3a7bd5`).
+  - Color swatch: RGB hex codes written in the note show a small sample of the color next to them, so the user sees what the code stands for.
+- **Motivation:** quick access to colors.
+- **Button:** in the note page bar, on the left side, apart from the note's settings (font and text size).
 
 ## Note page
 
