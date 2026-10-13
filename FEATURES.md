@@ -22,13 +22,12 @@ How a feature moves:
   - Markdown tables only hold formatted text in cells: lists, several paragraphs and merged cells would have to be blocked, or they'd be lost on export.
   - Check the custom drag-to-reorder and handles with tables (most likely the table moves whole), plus Copy for WhatsApp, character counts and Backspace at the start of the block.
 
-### Color swatches
-- **Status:** Implemented, waiting for the test in Chrome. `npm test`: 13 files, 180 tests passing (8 new in `colors.test.ts`: formats, boundaries, out-of-range values, positions in text, inline code and code blocks); `npm run build` OK. The Chrome check is still to do.
-- **Description:** color codes written in the note (hex like `#3a7bd5`, `rgb(…)`, `rgba(…)`) show a small sample of the color next to them, so the user sees what the code stands for. No color picker.
-- **Motivation:** quick access to colors.
-- **Decisions (2026-10-13):** formats `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`, `rgb()`/`rgba()` with commas or spaces; also inside inline code and code blocks; a code that is also a tag (`#cafe`) gets the swatch and stays a tag.
-- **Deliverable:** a swatch before each color code in the editor (a decoration: nothing changes in the stored note, exports or copies); rules in SPEC.md; tests for the detection.
-- **How to verify:** `npm test` (detection: formats, boundaries, invalid values, code blocks); in Chrome, type `#3a7bd5`, `#fff`, `rgb(255, 0, 0)`, `rgba(0 0 0 / 50%)` in text, in `code` and in a code block and see the swatch; edit a code and the swatch follows; `#cafe` still Cmd/Ctrl+click-searches; export as Markdown and copy the note without swatches.
+### Setting to turn off color swatches
+- **Status:** In progress
+- **Description:** an option in Settings to turn off the color swatches next to color codes.
+- **Motivation:** not everyone wants the swatches.
+- **Deliverable:** a "Show color swatches" checkbox in Settings → Appearance (on by default); turning it off hides the swatches in every open tab right away; saved with the settings and in backups; rule in SPEC.md.
+- **How to verify:** `npm test` (default on, invalid value falls back to on, tabs notified on change, field in backups); in Chrome, uncheck it and the swatches disappear (also in another open tab), check it and they come back; reloading keeps the choice.
 
 ### Color picker
 - **Status:** Idea
