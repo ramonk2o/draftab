@@ -233,7 +233,6 @@ Contributions are welcome. To propose a change:
 ### Known limitations
 
 - Notes only exist in this browser; there's no sync across computers (the JSON backup covers moving them manually).
-- **Shift+Tab** doesn't outdent list items: Chrome switches tabs instead. Drag the item to the left with its handle.
 
 ## License
 

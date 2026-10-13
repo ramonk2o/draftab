@@ -9,14 +9,14 @@ How a feature moves:
 - Once done, it **leaves this file**: what changed goes to CHANGELOG.md (under the version in progress) and the rules to SPEC.md. The full detail stays in the git history.
 - A discarded idea goes to a "Discarded" section at the end, so it isn't proposed again.
 
-## Documentation
+## Release
 
-### Better README and store descriptions
-- **Status:** Done, waiting for the user's review. Checked against SPEC.md and CHANGELOG.md: every feature is in the README (by area, plus the shortcut table, structure, stored settings and tests) and in both store descriptions. Store descriptions: 3,329 (en) and 3,557 (pt-BR) of 16,000 characters; summaries 130 and 131 of 132. `npm run build` OK with the new summaries. The README links to the Chrome Web Store listing (at the top and in Install, with building from the source as a second option).
-- **Description:** explain every feature better: in the README, in a technical way; in the Chrome Web Store listing (en-US and pt-BR, in STORE.md), in a marketing way.
-- **Motivation:** the texts were missing recent features (direct request on 2026-10-13).
-- **Deliverable:** README with every current feature (shortcuts, rules and limits), the project structure and the stored settings up to date; STORE.md descriptions in English and Portuguese covering every feature, written to sell.
-- **How to verify:** compare the README and STORE.md against SPEC.md and CHANGELOG.md (no feature missing, nothing that doesn't exist); the store descriptions fit the store's limit (16,000 characters) and the summaries the manifest's (132).
+### Version 1.2.0 for the Chrome Web Store
+- **Status:** Ready, waiting for the user to submit it. `npm test`: 14 files, 195 tests passing; `npm run zip` built `draftab-1.2.0.zip` (212 KB, manifest version 1.2.0). Screenshots regenerated from the real extension in headless Chrome (clean profile, demo notes), all 1280×800: 1 main note (tags, color swatches, calculations typed live — `3*120+45=405`, `187.50/4=46.875` / `187,50/4=46,875` — and a date inserted from the calendar), 2 dragging a block, 3 tag suggestions, 4 dark theme with serif font, 5 Settings (appearance, calendar, calculations); in English and Portuguese. README screenshots are the English 1 and 4.
+- **Description:** everything ready to submit the update: version, screenshots and package.
+- **Motivation:** direct request on 2026-10-13.
+- **Deliverable:** version 1.2.0 in `package.json`, `public/manifest.json`, CHANGELOG.md and STORE.md; the 5 store screenshots (en and pt-BR) and the README screenshots regenerated from the real extension, showing the new features; `draftab-1.2.0.zip`.
+- **How to verify:** `npm test` and `npm run zip` pass; the zip has version 1.2.0 in its manifest; look at every screenshot (1280×800, right language, new features visible).
 
 ## Editor
 
