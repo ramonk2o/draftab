@@ -25,6 +25,7 @@ Submitted to the Chrome Web Store as an update, in review.
 - The new settings are included in backups.
 
 ### Changed
+- **Copy for WhatsApp** leaves one blank line between blocks (paragraphs, lists, quotes…), so they no longer come out stuck together; list items stay together, and empty lines in the note don't add more.
 - A little more space between paragraphs in notes (0.5em instead of 0.25em); list items stay as close as before.
 - Backup export and import moved to Settings only; the sidebar's backup icons are gone.
 - Settings: the import button reads "Import backup" (no ellipsis).

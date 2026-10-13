@@ -49,7 +49,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
   - Bold `*x*`, italic `_x_`, strikethrough `~x~`, inline code `` `x` ``; underline has no equivalent and becomes plain text. Spaces at the edges of a formatted piece stay outside the marks (WhatsApp ignores marks next to a space).
   - Headings become a bold line. Bullet list `- `, numbered list `1. `, checklist `☐ ` / `☑ `; nested levels are indented 2 spaces per level. Quote: each line starts with `> `. Code block between ` ``` `. Divider `———`.
   - Link: `text (url)`, or only the url when the text is the url itself.
-  - One line per block, like the plain-text copy; an empty paragraph is an empty line.
+  - Top-level blocks are separated by one blank line; the lines inside a block (list items, quote lines, code lines, line breaks in a paragraph) stay together. Empty paragraphs don't add blank lines: there's never more than one blank line in a row.
 - Export, copy and pin are disabled while the note is empty (an empty note isn't saved).
 - Text size of the note: smaller (A−) and bigger (A+) buttons with the current size between them, also Cmd/Ctrl+Shift+, (smaller) and Cmd/Ctrl+Shift+. (bigger). Cmd/Ctrl + and − stay Chrome's zoom.
   - Steps, relative to the note font's normal size: 80%, 90%, 100%, 110%, 120%, 135%, 150%. One step per click; the button is disabled at the end of the range.

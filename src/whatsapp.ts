@@ -6,11 +6,12 @@ import { withoutFirstLine } from './notes'
 
 export function noteToWhatsApp(doc: JSONContent): string {
   const blocks = withoutFirstLine(doc).content ?? []
-  const lines = blocks.flatMap((block) => blockLines(block, 0))
-  // No empty lines at the start or at the end
-  while (lines.length > 0 && lines[0].trim() === '') lines.shift()
-  while (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop()
-  return lines.join('\n')
+  // One blank line between blocks; empty blocks (empty paragraphs) are skipped,
+  // so there's never more than one blank line in a row
+  return blocks
+    .map((block) => blockLines(block, 0).join('\n'))
+    .filter((text) => text.trim() !== '')
+    .join('\n\n')
 }
 
 // The lines of one block; depth is the list level (for the indentation)

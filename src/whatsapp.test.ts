@@ -24,8 +24,19 @@ describe('noteToWhatsApp', () => {
     expect(noteToWhatsApp({ type: 'doc', content: [title] })).toBe('')
   })
 
-  test('keeps empty lines between blocks', () => {
-    expect(whatsApp(paragraph(text('a')), empty, paragraph(text('b')))).toBe('a\n\nb')
+  test('one blank line between blocks, never more', () => {
+    expect(whatsApp(paragraph(text('a')), paragraph(text('b')))).toBe('a\n\nb')
+    expect(whatsApp(paragraph(text('a')), empty, empty, paragraph(text('b')))).toBe('a\n\nb')
+  })
+
+  test('the lines inside a block stay together', () => {
+    expect(
+      whatsApp(
+        paragraph(text('intro')),
+        { type: 'bulletList', content: [item(paragraph(text('one'))), item(paragraph(text('two')))] },
+        paragraph(text('end')),
+      ),
+    ).toBe('intro\n\n- one\n- two\n\nend')
   })
 
   test('converts each mark', () => {
@@ -77,7 +88,7 @@ describe('noteToWhatsApp', () => {
           ],
         },
       ),
-    ).toBe('- one\n  - inner\n- two\n1. first\n2. second\n☐ todo\n☑ done')
+    ).toBe('- one\n  - inner\n- two\n\n1. first\n2. second\n\n☐ todo\n☑ done')
   })
 
   test('quotes, code blocks and dividers', () => {
@@ -87,7 +98,7 @@ describe('noteToWhatsApp', () => {
         { type: 'codeBlock', content: [text('let a = 1\nlet b = 2')] },
         { type: 'horizontalRule' },
       ),
-    ).toBe('> quoted\n> more\n```\nlet a = 1\nlet b = 2\n```\n———')
+    ).toBe('> quoted\n> more\n\n```\nlet a = 1\nlet b = 2\n```\n\n———')
   })
 
   test('links show the address after the text, or only the address', () => {

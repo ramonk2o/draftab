@@ -33,9 +33,11 @@ How a feature moves:
 ## Note page
 
 ### Blank line between blocks in Copy for WhatsApp
-- **Status:** Idea
+- **Status:** Implemented, waiting for the user's test in Chrome. `npm test`: 157 tests passing (new: one blank line between blocks, empty paragraphs don't add more, list items stay together); `npm run build` OK.
 - **Description:** Copy for WhatsApp adds an extra line break between blocks (e.g. between paragraphs, between a paragraph and a list, between a list and a checklist).
 - **Motivation:** today it writes one line per block (SPEC.md), so the blocks come out stuck together in WhatsApp.
+- **Deliverable:** top-level blocks separated by one blank line in Copy for WhatsApp; lines inside a list, quote or code block stay together; empty paragraphs in the note don't add more, so there's never more than one blank line in a row.
+- **How to verify:** `npm test` (new cases in `whatsapp.test.ts`); in Chrome, a note with paragraphs, a list, a checklist and empty lines between some blocks → Copy for WhatsApp → paste in WhatsApp Web: one blank line between blocks, list items together.
 
 ### Note title in the browser tab
 - **Status:** Idea
