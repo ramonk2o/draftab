@@ -22,13 +22,6 @@ How a feature moves:
   - Markdown tables only hold formatted text in cells: lists, several paragraphs and merged cells would have to be blocked, or they'd be lost on export.
   - Check the custom drag-to-reorder and handles with tables (most likely the table moves whole), plus Copy for WhatsApp, character counts and Backspace at the start of the block.
 
-### Calculations after `=`
-- **Status:** Implemented, waiting for the test in Chrome. `npm test`: 14 files, 195 tests passing (`calculate.test.ts`: operations and precedence, signs, `.` and `,` decimals, no thousands separators, invalid expressions give nothing, the `=` pattern; 4 new in `storage.test.ts`: calculations and decimal separator each with their default / invalid value back to the default, and tabs notified only when they change; the backup round-trip test covers `calculations: false` and `decimalSeparator: ','`); `npm run build` OK. Tested by the user in Chrome on 2026-10-13: works; the option's text went to a line below its checkbox in Settings, fixed (the text next to a checkbox now wraps on its own line), waiting for the user's look.
-- **Description:** typing a math operation without spaces followed by `=` (e.g. `2*5=`) writes the result right after the `=` (`2*5=10`). Decimals follow the active locale, and Settings let you choose `.` or `,` as the decimal separator, and turn the function off.
-- **Motivation:** quick calculations without leaving the note (direct request on 2026-10-13).
-- **Deliverable:** an editor rule that writes the result when `=` is typed after an expression (`+ - * /`, parentheses, decimals); a "Calculations" section in Settings ("Cálculos" in Portuguese) with an on/off option (on by default) and "Decimal separator" (Automatic, following the interface language / `.` / `,`), both in every open tab and in backups; tests for the calculation and the setting.
-- **How to verify:** `npm test` and `npm run build`; in Chrome: `2*5=` → `2*5=10`; `0.1+0.2=` → `0.3` (or `0,1+0,2=` → `0,3` with `,`); `(2+3)*4=` → `20`; `1/0=`, `5=`, `a2*5=` and `2 * 5=` add nothing; nothing happens in inline code or code blocks; Backspace right after removes the result and keeps the `=`; changing the separator in Settings applies to the other open tab; turning calculations off makes `2*5=` stay as typed, in every open tab.
-
 ## Backup and settings
 
 ### Sync across computers
