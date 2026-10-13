@@ -27,6 +27,13 @@ How a feature moves:
 - **Description:** Copy for WhatsApp adds an extra line break between blocks (e.g. between paragraphs, between a paragraph and a list, between a list and a checklist).
 - **Motivation:** today it writes one line per block (SPEC.md), so the blocks come out stuck together in WhatsApp.
 
+## Note page
+
+### Note title in the browser tab
+- **Status:** Idea
+- **Description:** when a saved note is open, the browser tab shows its title; with no note selected (new note), the tab keeps the normal title ("New tab" / "Nova guia").
+- **Motivation:** today every Draftab tab has the same fixed title, whatever note is open.
+
 ## Sidebar
 
 ### Calendar
