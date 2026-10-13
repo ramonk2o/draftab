@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { afterEach, describe, expect, test } from 'vitest'
 import type { JSONContent } from '@tiptap/core'
 import {
   filterNotes,
@@ -11,12 +11,14 @@ import {
   noteFontOf,
   renamed,
   sortNotes,
+  tabTitle,
   textOf,
   validTextSize,
   withoutFirstLine,
   withUpdatedTitle,
   type Note,
 } from './notes'
+import { useLanguage } from './i18n'
 
 const text = (t: string): JSONContent => ({ type: 'text', text: t })
 const paragraph = (t?: string): JSONContent => ({ type: 'paragraph', content: t ? [text(t)] : undefined })
@@ -61,6 +63,21 @@ describe('title', () => {
   test('renaming to empty goes back to automatic', () => {
     const note = renamed(noteWith(doc(paragraph('first')), { title: 'X', titleManual: true }), '   ')
     expect(note).toMatchObject({ title: 'first', titleManual: false })
+  })
+})
+
+describe('tabTitle', () => {
+  afterEach(() => useLanguage('en'))
+
+  test('the tab shows the note title, automatic or renamed', () => {
+    expect(tabTitle(withUpdatedTitle(noteWith(doc(paragraph('Shopping list')))))).toBe('Shopping list')
+    expect(tabTitle(renamed(noteWith(doc(paragraph('text'))), 'Trip'))).toBe('Trip')
+  })
+
+  test('a note without a title shows the normal title, in the interface language', () => {
+    expect(tabTitle(newBlankNote())).toBe('New tab')
+    useLanguage('pt')
+    expect(tabTitle(newBlankNote())).toBe('Nova guia')
   })
 })
 

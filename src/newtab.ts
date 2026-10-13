@@ -38,6 +38,7 @@ import {
   validTextSize,
   renamed,
   sortNotes,
+  tabTitle,
   withoutFirstLine,
   withUpdatedTitle,
   type Note,
@@ -121,6 +122,7 @@ async function saveNow() {
   // Read the editor before any await, so we don't pick up another note's content
   const note = withUpdatedTitle({ ...currentNote, doc: editor.getJSON(), updatedAt: Date.now() })
   currentNote = note
+  updateTabTitle()
 
   if (isEmptyNote(note)) {
     // An empty note isn't stored; if it was, it leaves the list
@@ -153,6 +155,7 @@ function open(note: Note, alreadySaved: boolean) {
   updateNoteActions()
   updatePinButton()
   updateTotals()
+  updateTabTitle()
   // Reloading the tab reopens this note
   sessionStorage.setItem('openNoteId', note.id)
   drawList()
@@ -160,6 +163,11 @@ function open(note: Note, alreadySaved: boolean) {
   // would lose the first keystrokes typed right after clicking "New note")
   editor.view.focus()
   editor.commands.focus(alreadySaved ? 'end' : 'start')
+}
+
+// The browser tab shows the open note's title
+function updateTabTitle() {
+  document.title = tabTitle(currentNote)
 }
 
 // Replaces the editor content and resets undo (Cmd+Z doesn't go back to the previous note)
@@ -220,6 +228,7 @@ onNotesChanged((changes) => {
   }
   currentNote = received
   currentNoteSaved = true
+  updateTabTitle() // it may have been renamed in the other tab
   applyTextSize() // the size or font may have changed in the other tab
   applyFont()
 })
@@ -333,6 +342,7 @@ async function applyNewTitle(note: Note, title: string) {
   if (note.id === currentNote.id) {
     await saveIfPending() // include what was typed and not saved yet
     currentNote = { ...renamed(currentNote, title), updatedAt: Date.now() }
+    updateTabTitle()
     lastSaveFromThisTab = currentNote.updatedAt
     await saveNote(currentNote)
     return

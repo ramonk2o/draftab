@@ -33,7 +33,7 @@ How a feature moves:
 ## Note page
 
 ### Note title in the browser tab
-- **Status:** In progress
+- **Status:** Implemented, waiting for the user's test in Chrome. `npm test`: 159 tests passing (new: the tab shows the automatic or renamed title; a note without a title shows "New tab" / "Nova guia"); `npm run build` OK.
 - **Description:** when a saved note is open, the browser tab shows its title; with no note selected (new note), the tab keeps the normal title ("New tab" / "Nova guia").
 - **Motivation:** today every Draftab tab has the same fixed title, whatever note is open.
 - **Deliverable:** the tab's title is the open note's title (automatic or renamed); a new blank note shows "New tab" / "Nova guia". It follows renaming, the first line changing as you type (after the autosave), switching notes, edits from another tab, and the note being emptied or deleted.

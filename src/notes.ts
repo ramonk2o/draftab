@@ -111,6 +111,11 @@ export function displayTitle(note: Note): string {
   return note.title || t('untitled')
 }
 
+// The browser tab shows the note's title; with none yet (e.g. a new blank note), the normal title
+export function tabTitle(note: Note): string {
+  return note.title || t('pageTitle')
+}
+
 // Searches title and content, ignoring case and accents
 export function filterNotes(notes: Note[], search: string): Note[] {
   const term = normalize(search.trim())

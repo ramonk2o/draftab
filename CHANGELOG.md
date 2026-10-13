@@ -4,6 +4,9 @@ All notable changes to Draftab are documented here. The format is based on [Keep
 
 ## [1.1.1] — unreleased
 
+### Added
+- **Note title in the browser tab**: the tab shows the open note's title, following renames and the first line as you type; a new blank note keeps "New tab".
+
 ### Changed
 - **Copy for WhatsApp** leaves one blank line between blocks (paragraphs, lists, quotes…), so they no longer come out stuck together; list items stay together, and empty lines in the note don't add more.
 
