@@ -1005,6 +1005,11 @@ body.reordering .drop-cursor {
   margin-bottom: 12px;
 }
 
+/* The text next to a checkbox stays on its line, wrapping inside it when long */
+.row > input[type='checkbox'] + span {
+  flex: 1 1 0;
+}
+
 .button {
   padding: 7px 14px;
   border: 1px solid var(--border-field);
