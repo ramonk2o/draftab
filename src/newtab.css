@@ -729,6 +729,20 @@ body.sidebar-collapsed #sidebar {
   text-decoration: underline;
 }
 
+/* Color swatch before a color code (#3a7bd5): the color over a checkerboard, so transparency shows */
+.tiptap .color-swatch {
+  display: inline-block;
+  width: 0.75em;
+  height: 0.75em;
+  margin-right: 0.25em;
+  vertical-align: -0.05em;
+  border: 1px solid var(--border-field);
+  border-radius: 3px;
+  background:
+    linear-gradient(var(--swatch), var(--swatch)),
+    conic-gradient(#ccc 25%, #fff 0 50%, #ccc 0 75%, #fff 0) 0 0 / 50% 50%;
+}
+
 .tiptap pre {
   margin: 1.25em 0;
   padding: 0.857em 1.143em;

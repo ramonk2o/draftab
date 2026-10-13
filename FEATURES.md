@@ -22,11 +22,17 @@ How a feature moves:
   - Markdown tables only hold formatted text in cells: lists, several paragraphs and merged cells would have to be blocked, or they'd be lost on export.
   - Check the custom drag-to-reorder and handles with tables (most likely the table moves whole), plus Copy for WhatsApp, character counts and Backspace at the start of the block.
 
-### Hex colors
+### Color swatches
+- **Status:** Implemented, waiting for the test in Chrome. `npm test`: 13 files, 180 tests passing (8 new in `colors.test.ts`: formats, boundaries, out-of-range values, positions in text, inline code and code blocks); `npm run build` OK. The Chrome check is still to do.
+- **Description:** color codes written in the note (hex like `#3a7bd5`, `rgb(…)`, `rgba(…)`) show a small sample of the color next to them, so the user sees what the code stands for. No color picker.
+- **Motivation:** quick access to colors.
+- **Decisions (2026-10-13):** formats `#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`, `rgb()`/`rgba()` with commas or spaces; also inside inline code and code blocks; a code that is also a tag (`#cafe`) gets the swatch and stays a tag.
+- **Deliverable:** a swatch before each color code in the editor (a decoration: nothing changes in the stored note, exports or copies); rules in SPEC.md; tests for the detection.
+- **How to verify:** `npm test` (detection: formats, boundaries, invalid values, code blocks); in Chrome, type `#3a7bd5`, `#fff`, `rgb(255, 0, 0)`, `rgba(0 0 0 / 50%)` in text, in `code` and in a code block and see the swatch; edit a code and the swatch follows; `#cafe` still Cmd/Ctrl+click-searches; export as Markdown and copy the note without swatches.
+
+### Color picker
 - **Status:** Idea
-- **Description:**
-  - Color picker: a button opens a color picker; the chosen color is inserted in the text as a hex code (e.g. `#3a7bd5`).
-  - Color swatch: RGB hex codes written in the note show a small sample of the color next to them, so the user sees what the code stands for.
+- **Description:** a button opens a color picker; the chosen color is inserted in the text as a hex code (e.g. `#3a7bd5`).
 - **Motivation:** quick access to colors.
 - **Button:** in the note page bar, on the left side, apart from the note's settings (font and text size).
 
