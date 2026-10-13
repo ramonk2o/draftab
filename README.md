@@ -13,25 +13,59 @@ A Chrome extension that turns the **new tab** into a local notepad. The editor i
 
 ## Features
 
-- **New tab = new note**, with the cursor already in the editor. A blank note isn't saved: opening and closing a tab leaves no clutter.
-- **Markdown as you type**: headings, lists, checklists, quotes, code, dividers, bold, italic, inline code and links (table below). Backspace at the start of a code block or quote turns it back into normal text.
-- **Drag to reorder**: hover a block and drag the handle (⠿) on its left. The other blocks slide to make room.
-  - List items have their own handle; a thin bar to the left of a list moves the whole list.
-  - Items and paragraphs move in and out of lists: at the edge of a list, pulling the mouse left takes the item out, pulling right puts it in.
-- **Collapsible sidebar** with your notes sorted by last edit, title or creation date (your choice in Settings), search across title and content (accent-insensitive), rename and delete.
-- **Export and copy the open note** with the buttons at the top right: a Markdown `.md` file, or the whole note on the clipboard (formatted, and as markdown for plain-text apps).
-- **Text size per note**: A− / A+ at the top right (or Cmd/Ctrl+Shift+, and Cmd/Ctrl+Shift+.) from 80% to 150%; each note keeps its own size, and Settings sets the size new notes start with.
-- **Character counts** at the bottom right: the note's characters with markdown, without markdown, and how many are selected.
-- **Import a file as a note**: the import icon next to the New note button turns a `.md` (read as markdown) or `.txt` (one paragraph per line) file into a new note.
-- **Automatic title**: until the note is renamed, its title follows the first line.
-- **Several tabs at once**: what you write in one tab shows up in the others.
-- **Backup** (in Settings): export and import a JSON file with all notes and settings (each note also goes in markdown, readable without Draftab).
-- **Automatic backup** to `Downloads/draftab-backups/`: every minute, hour, day, week or month, only when some note changed. Works with the tab closed, as long as Chrome is open.
-- **Copy a block with a double-click** on its handle (or a whole list on its bar): it's selected and copied, formatted and as plain text.
-- **Light, dark or automatic theme** (follows the system), chosen in Settings.
-- **Font per note**: sans-serif, serif or monospace, switched with the "Aa" button at the top right; each note keeps its own, and Settings sets the font new notes start with. Typography modeled on [Tailwind Typography](https://github.com/tailwindlabs/tailwindcss-typography).
-- **English or Portuguese**: the interface follows Chrome's language, or the one chosen in Settings.
-- **Privacy**: nothing leaves your computer. The extension doesn't access the internet, has no account and collects no data.
+Everything below is described as rules in [SPEC.md](SPEC.md); this is the overview.
+
+### Notes
+
+- **New tab = new note**, with the cursor already in the editor. An empty note (no text and no title of its own) is never saved, so opening and closing tabs leaves no clutter; a note that becomes empty leaves the list.
+- **Autosave**: the first keystroke creates the note; after that it saves ~500 ms after typing stops, and pending typing is saved when the tab is hidden or closed.
+- **Automatic title**: until you rename a note, its title is its first line (up to 80 characters). Renaming to empty goes back to automatic. The browser tab shows the open note's title.
+- **Several tabs at once**: a change in one tab shows up in the others (last write wins); a note deleted elsewhere is replaced by a blank one. Reloading a tab reopens the same note.
+
+### Writing
+
+- **Markdown as you type**: headings, lists, checklists, quotes, code, dividers, bold, italic, strikethrough, underline, inline code and links ([table below](#markdown-shortcuts)). Pasted `~~text~~` and `++text++` get the same marks.
+- **Backspace undoes blocks**: at the start of a heading it becomes a paragraph; at the start of a code block, normal text (one paragraph per line); at the start of a quote, normal paragraphs. Backspace right after a shortcut undoes the shortcut. Cmd/Ctrl+Z brings the block back.
+- **Links**: Cmd/Ctrl+click opens a link in a new tab (an address without a protocol gets `https://`); a plain click edits it.
+- **Tags**: `#` followed by a letter, then letters, digits, `_` or `-` (`#idea`, `#project-x`), at the start of a line or after a space, outside code. They're shown like links; Cmd/Ctrl+click puts the tag in the sidebar search. Tags are plain text: nothing changes in the stored note or exports.
+- **Calculations**: typing `=` right after a calculation without spaces writes the result (`2*5=` → `2*5=10`). `+ - * /`, parentheses, signs and decimals, with the usual precedence; results are rounded to 12 significant digits (`0.1+0.2=` → `0.3`). Invalid calculations (`1/0=`, `5=`), pasted text and code are left alone; Backspace right after removes the result. The decimal separator follows the interface language or is chosen in Settings, where calculations can also be turned off.
+- **Color swatches**: color codes (`#fff`, `#3a7bd5`, `#3a7bd580`, `rgb(255, 0, 0)`, `rgba(0 0 0 / 50%)`) show a small sample of the color before them, in code too. Display only, like tags; can be turned off in Settings.
+- **Calendar** at the bottom of the sidebar: a month view (today marked, previous/next month); clicking a day inserts the date at the cursor, as numeric (`13/10/2026` / `10/13/2026`), ISO (`2026-10-13`), short (`13 Oct 2026`) or long (`Tuesday, October 13, 2026`), following the interface language. Can be hidden in Settings.
+
+### Drag to reorder
+
+- Hover a block and drag the handle (⠿) on its left; the other blocks slide to open space where it will land.
+- List items have their own handle; a thin bar to the left of a list moves the whole list; inside a quote, the handle moves the whole quote.
+- Items and paragraphs change level: at the edge of a list, moving left takes the block out and moving right puts it in. A paragraph that enters a list becomes an item, list ↔ checklist items convert to the target list, and adjacent lists of the same type merge. Headings, quotes, code, dividers and whole lists don't go into lists.
+- **Double-click a handle** to select the block and copy it like Cmd/Ctrl+C (formatted and plain text); on the list bar, the whole list. A "Copied" label confirms it.
+
+### The sidebar
+
+- Notes sorted by last modified, title A–Z (ignoring case and accents, numbers in natural order) or date created, chosen in Settings.
+- **Search** across titles and content, ignoring case and accents. Typing `#` suggests the tags in your notes that start with what was typed, most used first, with the number of notes (↑/↓, Enter/Tab or click to complete, Esc to close).
+- **Pin** notes to the top (a pin on each note, or on the note page); pinning doesn't change "last modified".
+- Rename (double-click or the pencil), delete (with confirmation), **New note** and **import a file as a note**: `.md` is read as markdown, `.txt` as one paragraph per line.
+- It collapses with its button and **steps aside while you type**, coming back when the mouse moves; neither moves the note's text.
+
+### The note page
+
+Buttons at the top right of the note (disabled while it's empty):
+
+- **Font** ("Aa"): sans-serif, serif or monospace, using system fonts (SF Pro / New York / SF Mono on macOS). Each note keeps its own; Settings sets the font new notes start with.
+- **Text size** (A− / A+, or Cmd/Ctrl+Shift+, and Cmd/Ctrl+Shift+.): 80% to 150%, per note; Settings sets the size of new notes.
+- **Pin**, **Export as Markdown** (downloads `<title>.md`), **Copy note** (without its first line, the title: formatted for apps that accept it, markdown for plain-text ones) and **Copy for WhatsApp** (in WhatsApp's formatting: `*bold*`, `_italic_`, `~strikethrough~`, headings as bold lines, `☐` checklists, `> ` quotes).
+
+At the bottom right, **character counts**: the note as markdown (the same text as the exported file), without markdown, and how many are selected.
+
+### Settings, backup and privacy
+
+- **Backup**: export and import a JSON file with every note and setting (each note also in markdown, readable without Draftab). Importing validates the file, asks for confirmation and replaces everything; open tabs reload.
+- **Automatic backup** to `Downloads/draftab-backups/`: every minute, hour, day, week or month, only when something changed, even with no tab open (as long as Chrome is running). Files are named `draftab_YYYY-MM-DD-HHhMM.json`.
+- **Appearance**: light, dark or automatic theme (follows the system, live); interface in English or Portuguese (automatic follows Chrome); font and text size of new notes; sort order; color swatches on/off.
+- **Calendar** (show it, date format) and **Calculations** (on/off, decimal separator).
+- **Delete all notes**, after typing a confirmation phrase; settings are kept.
+- Every setting applies to all open tabs immediately and goes into backups.
+- **Privacy**: nothing leaves your computer. No account, no server, no analytics; the extension makes no network requests.
 
 ### Markdown shortcuts
 
@@ -46,10 +80,12 @@ A Chrome extension that turns the **new tab** into a local notepad. The editor i
 | `---` | Divider |
 | `**text**` | **Bold** |
 | `*text*` | *Italic* |
+| `~~text~~` | ~~Strikethrough~~ |
+| `++text++` | Underline (also Cmd/Ctrl+U) |
 | `` `text` `` | `Code` |
 | `[text](address)` | Link (opens with Cmd/Ctrl + click) |
 
-Pasted or typed addresses (`https://...`) also become links. In lists, **Tab** indents the item.
+Pasted or typed addresses (`https://...`) also become links. In lists, **Tab** indents the item. In `.md` files (export and import), strikethrough and underline are `~~` and `++` too.
 
 ## Install
 
@@ -109,7 +145,16 @@ src/
   reorder.ts             animated drag and drop, across levels (lists, items, paragraphs)
   list-handle.ts         handle that moves a whole list
   copy-block.ts          double-click on a handle: select and copy the block
-  unwrap-block.ts        Backspace at the start of a code block or quote turns it into text
+  unwrap-block.ts        Backspace at the start of a heading, code block or quote turns it into text
+  underline-shortcut.ts  ++text++ becomes underlined (typing and pasting)
+  tags.ts                #tags: finding, highlighting, Cmd/Ctrl+click, search suggestions
+  colors.ts              color swatches next to #hex and rgb() codes
+  calculate.ts           calculations after "=" and the decimal separator
+  calendar.ts            month grid and date formats (pure)
+  calendar-ui.ts         the calendar at the bottom of the sidebar
+  whatsapp.ts            note → WhatsApp formatting (Copy for WhatsApp)
+  char-count.ts          character counts (with and without markdown, selection)
+  i18n.ts                interface texts in English and Portuguese, locale for dates and numbers
   markdown.ts            note ↔ markdown: export a note, import a .md/.txt file
   notes.ts               note model and pure rules (title, empty note, search)
   storage.ts             the single access point to chrome.storage
@@ -132,8 +177,9 @@ docs/store/              Chrome Web Store images (en and pt-BR)
 
 - Everything goes to `chrome.storage.local` (with the `unlimitedStorage` permission), always through `src/storage.ts`.
 - **One key per note** (`note:<id>`), so not everything is rewritten on every keystroke. The note stores the **Tiptap JSON**, which is the source of truth; markdown only exists on export.
-- `settings` holds the settings (automatic backup interval, collapsed sidebar, theme, note sort order, font and text size of new notes) and `meta` holds timestamps: last change, last automatic backup and last import (which makes open tabs reload).
-- The theme and the font of new notes are also copied to the page's `localStorage` (and the open note's font to `sessionStorage`), so they're applied before the first paint; the note open in each tab is kept in its `sessionStorage`, so a reload reopens it.
+- `settings` holds the settings (automatic backup interval, collapsed sidebar, theme, note sort order, font and text size of new notes, language, calendar and date format, color swatches, calculations and decimal separator) and `meta` holds timestamps: last change, last automatic backup and last import (which makes open tabs reload).
+- Each note keeps its own font, text size and pinned state. Tags, color swatches and other highlights are only editor decorations: the stored note never changes because of them.
+- The language, the theme and the font of new notes are also copied to the page's `localStorage` (and the open note's font to `sessionStorage`), so they're applied before the first paint; the note open in each tab is kept in its `sessionStorage`, so a reload reopens it.
 - Saving is automatic, after ~500 ms without typing. Other tabs get the change through `chrome.storage.onChanged`; if two tabs edit the same note, the last write wins.
 - The full format (note, settings, backup file) is described in [SPEC.md](SPEC.md).
 
@@ -150,7 +196,7 @@ New permissions are only added with a reason recorded in SPEC.md.
 
 ### Tests
 
-`npm test` covers the data layer and backups: saving/reading/listing/deleting notes, settings, title and search rules, lossless export → import, rejection of invalid backup files and the automatic backup decisions. `chrome.storage`, alarms and downloads are simulated in `src/fake-chrome.ts`.
+`npm test` covers everything that doesn't need a browser: saving/reading/listing/deleting notes and settings, title, search and sort rules, lossless backup export → import, rejection of invalid backup files, the automatic backup decisions, markdown export and `.md`/`.txt` import, Copy for WhatsApp, character counts, tags and suggestions, color codes, calculations, calendar dates and the translations. `chrome.storage`, alarms and downloads are simulated in `src/fake-chrome.ts`.
 
 The editor and the interface (shortcuts, dragging, appearance) are checked in Chrome, following the "How to verify" of the feature in progress in [FEATURES.md](FEATURES.md) (finished ones keep theirs in the git history).
 
@@ -183,7 +229,7 @@ Contributions are welcome. To propose a change:
 ### Known limitations
 
 - Notes only exist in this browser; there's no sync across computers (the JSON backup covers moving them manually).
-- **Shift+Tab** doesn't outdent list items yet: Chrome switches tabs instead ([recorded in the backlog](FEATURES.md)).
+- **Shift+Tab** doesn't outdent list items: Chrome switches tabs instead. Drag the item to the left with its handle.
 
 ## License
 

@@ -5,7 +5,8 @@ Everything the Chrome Web Store developer dashboard asks for, ready to copy. The
 ## Status
 
 - **1.0.0:** live on the Chrome Web Store.
-- **1.1.0:** submitted as an update, in review (what's in it: CHANGELOG.md); the listing texts and screenshots below are for 1.1.0.
+- **1.1.0:** submitted as an update, in review (what's in it: CHANGELOG.md).
+- **1.1.1 (next update):** the listing texts below already describe it (calculations, calendar, color swatches, note title in the browser tab): paste them when submitting 1.1.1, not before. The summaries come from the manifest, so they change with the 1.1.1 package. The screenshots are still the 1.1.0 ones.
 
 ## Package
 
@@ -17,40 +18,49 @@ Everything the Chrome Web Store developer dashboard asks for, ready to copy. The
 
 **Name:** Draftab
 
-**Summary** (from the manifest, 126/132 characters):
-> A markdown block notepad in your new tab. Drag to reorder, dark mode, automatic backups. Your notes never leave your computer.
+**Summary** (from the manifest, 130/132 characters):
+> A markdown notepad in your new tab: drag blocks, tags, quick math, a calendar, auto backups. Your notes never leave your computer.
 
 **Description:**
 
 ```
-Draftab turns every new tab into a clean notepad. Open a tab and start typing: the cursor is already there.
+Every new tab is a blank page, ready for your next idea. Draftab turns it into a fast, beautiful notepad: open a tab and start typing — the cursor is already there, and everything saves itself.
 
-WRITE IN MARKDOWN, SEE IT FORMATTED
-Type # for a heading, - for a list, [ ] for a checklist, > for a quote, ``` for code, --- for a divider, **bold**, *italic*, ~~strikethrough~~, ++underline++, `code` and [links](https://example.com). Everything becomes formatting as you type.
+✍️ WRITE IN MARKDOWN, SEE IT FORMATTED
+Type # for a heading, - for a list, [ ] for a checklist, > for a quote, ``` for code and --- for a divider. **Bold**, *italic*, ~~strikethrough~~, ++underline++, `code` and [links](https://example.com) turn into formatting the moment you type them. Changed your mind? Backspace turns a heading, quote or code block back into plain text.
 
-DRAG ANY BLOCK TO REORDER
-Hover a block and drag its handle. The other blocks slide out of the way so you can see where it will land. Move list items, whole lists, and take items in and out of lists. Double-click a handle to copy that block.
+↕️ DRAG ANY BLOCK WHERE IT BELONGS
+Grab the handle next to any paragraph, heading or list item and drag it. The other blocks slide out of the way so you see exactly where it will land. Move single items or whole lists, nest items, pull them out of a list — and double-click a handle to copy that block in one go.
 
-ALL YOUR NOTES, ONE CLICK AWAY
-A sidebar lists your notes — by last edit, title or creation date — with instant search across titles and content. Pin the notes you use most to the top. The sidebar steps aside while you type and comes back when you move the mouse. Rename, delete, and keep several tabs open at once: what you write in one shows up in the others.
+🧮 QUICK MATH, RIGHT IN YOUR NOTES
+Type 2*5= and Draftab writes 10 for you. Add, subtract, multiply and divide, with parentheses and decimals — perfect for splitting a bill, adding up a budget or checking a number without opening a calculator. Choose a dot or a comma for decimals.
 
-TAGS
-Write #tags anywhere in a note. Cmd/Ctrl+click a tag to find every note that has it, or type # in the search to pick from the tags you use.
+📅 A CALENDAR AT HAND
+A small month calendar sits in the sidebar. Click a day and the date goes straight into your note, in the format you like: 10/13/2026, 2026-10-13, 13 Oct 2026 or Tuesday, October 13, 2026.
 
-COPY, EXPORT, IMPORT
-Export any note as a Markdown file, or copy it whole with one click — formatted, or ready to paste into WhatsApp. Turn a .md or .txt file into a new note. A counter shows the note's characters, with and without markdown.
+🏷️ TAGS THAT FIND THINGS FOR YOU
+Write #tags anywhere. Cmd/Ctrl+click a tag to see every note that has it, or type # in the search and pick from the tags you use most.
 
-BACKUPS YOU CAN TRUST
-Export and import a JSON backup of all notes and settings (each note also comes in plain markdown). Turn on automatic backups — every minute, hour, day, week or month — saved to Downloads/draftab-backups/, only when something changed.
+🎨 SEE YOUR COLORS
+Writing about design? Color codes like #3a7bd5 or rgb(255, 0, 0) show a little swatch of the actual color right next to them.
 
-YOUR LOOK
-Light, dark, or automatic theme that follows your system. Each note keeps its own font — sans-serif, serif or monospace — and its own text size, with clean, comfortable typography. The interface is in English or Portuguese.
+🗂️ ALL YOUR NOTES, ONE CLICK AWAY
+The sidebar lists every note — by last edit, title or creation date — with instant search across titles and content. Pin your favorites to the top. The sidebar steps aside while you type and comes back when you move the mouse. Each note is titled by its first line, and the browser tab shows it too.
 
-PRIVATE BY DESIGN
-Your notes are stored only in your browser, on your computer. Draftab has no account, no server, no analytics and no tracking. It never sends your data anywhere.
+📤 COPY, EXPORT, IMPORT
+Export any note as a Markdown file. Copy a note with one click — formatted for email and docs, or ready to paste into WhatsApp with bold, italic and lists intact. Turn any .md or .txt file into a new note. A live counter shows characters with and without markdown, and how many are selected.
 
-OPEN SOURCE
-Draftab is free and open source under the MIT license: https://github.com/ramonk2o/draftab
+💾 BACKUPS YOU CAN TRUST
+Export a complete backup of your notes and settings whenever you want — each note also comes as plain markdown, readable anywhere. Or turn on automatic backups every minute, hour, day, week or month, saved quietly to Downloads/draftab-backups/, only when something changed.
+
+🖋️ MAKE IT YOURS
+Light, dark, or automatic theme that follows your system. Give each note its own font — sans-serif, serif or monospace — and its own text size, with clean, comfortable typography. Work in several tabs at once: what you write in one shows up in the others. The interface speaks English and Portuguese.
+
+🔒 PRIVATE BY DESIGN
+Your notes live only in your browser, on your computer. No account, no server, no analytics, no tracking. Draftab never sends your data anywhere.
+
+💚 FREE AND OPEN SOURCE
+Draftab is free forever and open source under the MIT license: https://github.com/ramonk2o/draftab
 
 Tip: uninstalling the extension deletes its notes, so export a backup first.
 ```
@@ -60,39 +70,48 @@ Tip: uninstalling the extension deletes its notes, so export a backup first.
 **Name:** Draftab
 
 **Summary** (from the manifest, 131/132 characters):
-> Bloco de notas em markdown na nova aba. Arraste para reordenar, tema escuro e backup automático. Suas notas não saem do computador.
+> Bloco de notas em markdown na nova aba: blocos arrastáveis, tags, cálculos, calendário e backup. Suas notas não saem do computador.
 
 **Description:**
 
 ```
-O Draftab transforma cada nova aba num bloco de notas limpo. Abra uma aba e comece a digitar: o cursor já está lá.
+Toda nova aba é uma página em branco, pronta para a sua próxima ideia. O Draftab transforma essa página num bloco de notas rápido e bonito: abra uma aba e comece a digitar — o cursor já está lá, e tudo se salva sozinho.
 
-ESCREVA EM MARKDOWN, VEJA FORMATADO
-Digite # para um título, - para uma lista, [ ] para um checklist, > para uma citação, ``` para código, --- para um divisor, **negrito**, *itálico*, ~~riscado~~, ++sublinhado++, `código` e [links](https://example.com). Tudo vira formatação enquanto você digita.
+✍️ ESCREVA EM MARKDOWN, VEJA FORMATADO
+Digite # para um título, - para uma lista, [ ] para um checklist, > para uma citação, ``` para código e --- para um divisor. **Negrito**, *itálico*, ~~riscado~~, ++sublinhado++, `código` e [links](https://example.com) viram formatação no instante em que você digita. Mudou de ideia? O Backspace transforma título, citação ou bloco de código de volta em texto normal.
 
-ARRASTE QUALQUER BLOCO PARA REORDENAR
-Passe o mouse num bloco e arraste a alça. Os outros blocos abrem espaço para você ver onde ele vai cair. Mova itens de lista, listas inteiras e tire itens de listas ou coloque dentro delas. Dê dois cliques na alça para copiar aquele bloco.
+↕️ ARRASTE CADA BLOCO PARA O LUGAR CERTO
+Pegue a alça ao lado de qualquer parágrafo, título ou item de lista e arraste. Os outros blocos abrem espaço para você ver exatamente onde ele vai cair. Mova itens soltos ou listas inteiras, coloque itens dentro de listas ou tire de lá — e dê dois cliques na alça para copiar aquele bloco de uma vez.
 
-TODAS AS NOTAS A UM CLIQUE
-Uma barra lateral lista as notas — pela última edição, pelo título ou pela data de criação — com busca instantânea no título e no conteúdo. Fixe no topo as notas que você mais usa. A barra sai da frente enquanto você digita e volta quando você mexe o mouse. Renomeie, exclua e use várias abas ao mesmo tempo: o que você escreve numa aparece nas outras.
+🧮 CÁLCULOS RÁPIDOS, DENTRO DA NOTA
+Digite 2*5= e o Draftab escreve 10 para você. Some, subtraia, multiplique e divida, com parênteses e decimais — ótimo para dividir uma conta, fechar um orçamento ou conferir um número sem abrir a calculadora. Escolha vírgula ou ponto para os decimais.
 
-TAGS
-Escreva #tags em qualquer parte da nota. Cmd/Ctrl+clique numa tag para achar todas as notas que a têm, ou digite # na busca para escolher entre as tags que você usa.
+📅 UM CALENDÁRIO À MÃO
+Um pequeno calendário do mês fica na barra lateral. Clique num dia e a data entra direto na nota, no formato que você preferir: 13/10/2026, 2026-10-13, 13 out 2026 ou terça-feira, 13 de outubro de 2026.
 
-COPIE, EXPORTE, IMPORTE
-Exporte qualquer nota como arquivo Markdown ou copie a nota inteira com um clique — formatada ou pronta para colar no WhatsApp. Transforme um arquivo .md ou .txt numa nota nova. Um contador mostra os caracteres da nota, com e sem markdown.
+🏷️ TAGS QUE ACHAM AS COISAS PARA VOCÊ
+Escreva #tags em qualquer lugar. Cmd/Ctrl+clique numa tag para ver todas as notas que a têm, ou digite # na busca e escolha entre as tags que você mais usa.
 
-BACKUP CONFIÁVEL
-Exporte e importe um backup em JSON com todas as notas e configurações (cada nota vem também em markdown). Ligue o backup automático — a cada minuto, hora, dia, semana ou mês — salvo em Downloads/draftab-backups/, só quando algo mudou.
+🎨 VEJA SUAS CORES
+Escrevendo sobre design? Códigos de cor como #3a7bd5 ou rgb(255, 0, 0) mostram uma pequena amostra da cor logo ao lado.
 
-DO SEU JEITO
-Tema claro, escuro ou automático, que segue o sistema. Cada nota guarda a sua fonte — sem serifa, serifada ou monoespaçada — e o seu tamanho de texto, numa tipografia limpa e confortável. A interface está em português ou inglês.
+🗂️ TODAS AS NOTAS A UM CLIQUE
+A barra lateral lista todas as notas — pela última edição, pelo título ou pela data de criação — com busca instantânea no título e no conteúdo. Fixe as favoritas no topo. A barra sai da frente enquanto você digita e volta quando você mexe o mouse. Cada nota ganha como título a sua primeira linha, que aparece também na aba do navegador.
 
-PRIVADO DE VERDADE
-Suas notas ficam só no seu navegador, no seu computador. O Draftab não tem conta, servidor, estatísticas de uso nem rastreamento. Ele nunca envia seus dados para lugar nenhum.
+📤 COPIE, EXPORTE, IMPORTE
+Exporte qualquer nota como arquivo Markdown. Copie uma nota com um clique — formatada para e-mails e documentos, ou pronta para colar no WhatsApp com negrito, itálico e listas no lugar. Transforme qualquer arquivo .md ou .txt numa nota nova. Um contador mostra os caracteres com e sem markdown, e quantos estão selecionados.
 
-CÓDIGO ABERTO
-O Draftab é gratuito e open source, com licença MIT: https://github.com/ramonk2o/draftab
+💾 BACKUP CONFIÁVEL
+Exporte um backup completo das notas e configurações quando quiser — cada nota vem também em markdown, legível em qualquer lugar. Ou ligue o backup automático a cada minuto, hora, dia, semana ou mês, salvo discretamente em Downloads/draftab-backups/, só quando algo mudou.
+
+🖋️ DO SEU JEITO
+Tema claro, escuro ou automático, que segue o sistema. Dê a cada nota a sua fonte — sem serifa, serifada ou monoespaçada — e o seu tamanho de texto, numa tipografia limpa e confortável. Use várias abas ao mesmo tempo: o que você escreve numa aparece nas outras. A interface fala português e inglês.
+
+🔒 PRIVADO DE VERDADE
+Suas notas ficam só no seu navegador, no seu computador. Sem conta, sem servidor, sem estatísticas de uso, sem rastreamento. O Draftab nunca envia seus dados para lugar nenhum.
+
+💚 GRATUITO E DE CÓDIGO ABERTO
+O Draftab é gratuito para sempre e open source, com licença MIT: https://github.com/ramonk2o/draftab
 
 Dica: desinstalar a extensão apaga as notas, então exporte um backup antes.
 ```

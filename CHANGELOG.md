@@ -11,6 +11,7 @@ All notable changes to Draftab are documented here. The format is based on [Keep
 - **Calendar** at the bottom of the sidebar: a month view (weeks starting on Sunday, today marked) with previous/next month buttons; clicking the month name goes back to the current month. Clicking a day inserts the date at the cursor in the note. In Settings, a "Calendar" section shows or hides it and picks the date format: numeric (`13/10/2026` / `10/13/2026`), ISO (`2026-10-13`), short month (`13 out 2026`) or long (`terça-feira, 13 de outubro de 2026`), following the interface language. Both settings apply to every open tab and go into backups.
 
 ### Changed
+- The extension's description (Chrome and the store summary) now mentions tags, calculations and the calendar.
 - **Copy for WhatsApp** leaves one blank line between blocks (paragraphs, lists, quotes…), so they no longer come out stuck together; list items stay together, and empty lines in the note don't add more.
 - The note list now scrolls on its own between the search and the bottom of the sidebar (before, the whole sidebar scrolled).
 
