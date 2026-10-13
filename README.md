@@ -1,6 +1,6 @@
 # Draftab
 
-A Chrome extension that turns the **new tab** into a local notepad. The editor is made of blocks: you type markdown and it becomes formatting right away, and you can **drag any block** to reorder it. Everything is stored in your browser, with JSON backups (manual and automatic).
+A Chrome extension ([Chrome Web Store](https://chromewebstore.google.com/detail/draftab/oamemjkhgfcoelilpnjpemllbmladaog)) that turns the **new tab** into a local notepad. The editor is made of blocks: you type markdown and it becomes formatting right away, and you can **drag any block** to reorder it. Everything is stored in your browser, with JSON backups (manual and automatic).
 
 ![Draftab in the light theme](docs/screenshots/light.png)
 
@@ -89,7 +89,11 @@ Pasted or typed addresses (`https://...`) also become links. In lists, **Tab** i
 
 ## Install
 
-Draftab has been submitted to the Chrome Web Store and will be linked here once it's live. Meanwhile, build the extension from the source:
+**[Install Draftab from the Chrome Web Store](https://chromewebstore.google.com/detail/draftab/oamemjkhgfcoelilpnjpemllbmladaog)** and open a new tab. Chrome keeps it up to date.
+
+### From the source
+
+To run the latest code (it may have features not yet in the store):
 
 1. Install [Node.js](https://nodejs.org) (20.19+ or 22.12+; the current LTS works) and have Google Chrome.
 2. Get the code and build the extension:

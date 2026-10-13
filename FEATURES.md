@@ -12,7 +12,7 @@ How a feature moves:
 ## Documentation
 
 ### Better README and store descriptions
-- **Status:** Done, waiting for the user's review. Checked against SPEC.md and CHANGELOG.md: every feature is in the README (by area, plus the shortcut table, structure, stored settings and tests) and in both store descriptions. Store descriptions: 3,329 (en) and 3,557 (pt-BR) of 16,000 characters; summaries 130 and 131 of 132. `npm run build` OK with the new summaries. The Chrome Web Store link isn't in the README yet (unknown).
+- **Status:** Done, waiting for the user's review. Checked against SPEC.md and CHANGELOG.md: every feature is in the README (by area, plus the shortcut table, structure, stored settings and tests) and in both store descriptions. Store descriptions: 3,329 (en) and 3,557 (pt-BR) of 16,000 characters; summaries 130 and 131 of 132. `npm run build` OK with the new summaries. The README links to the Chrome Web Store listing (at the top and in Install, with building from the source as a second option).
 - **Description:** explain every feature better: in the README, in a technical way; in the Chrome Web Store listing (en-US and pt-BR, in STORE.md), in a marketing way.
 - **Motivation:** the texts were missing recent features (direct request on 2026-10-13).
 - **Deliverable:** README with every current feature (shortcuts, rules and limits), the project structure and the stored settings up to date; STORE.md descriptions in English and Portuguese covering every feature, written to sell.

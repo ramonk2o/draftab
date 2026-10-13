@@ -4,7 +4,7 @@ Everything the Chrome Web Store developer dashboard asks for, ready to copy. The
 
 ## Status
 
-- **1.0.0:** live on the Chrome Web Store.
+- **1.0.0:** live on the Chrome Web Store: https://chromewebstore.google.com/detail/draftab/oamemjkhgfcoelilpnjpemllbmladaog
 - **1.1.0:** submitted as an update, in review (what's in it: CHANGELOG.md).
 - **1.1.1 (next update):** the listing texts below already describe it (calculations, calendar, color swatches, note title in the browser tab): paste them when submitting 1.1.1, not before. The summaries come from the manifest, so they change with the 1.1.1 package. The screenshots are still the 1.1.0 ones.
 
