@@ -12,6 +12,7 @@ import {
 import type { NoteFont, NoteSort } from './notes'
 import type { Theme } from './theme'
 import { locale, t, tn, type LanguageSetting } from './i18n'
+import { formatDate, type DateFormat } from './calendar'
 
 // Settings lightbox: backup (manual and automatic), appearance and deleting all notes
 
@@ -26,6 +27,8 @@ const themeSelect = element<HTMLSelectElement>('#theme')
 const sortSelect = element<HTMLSelectElement>('#note-sort')
 const fontSelect = element<HTMLSelectElement>('#new-note-font')
 const textSizeSelect = element<HTMLSelectElement>('#new-note-text-size')
+const showCalendarBox = element<HTMLInputElement>('#show-calendar')
+const dateFormatSelect = element<HTMLSelectElement>('#date-format')
 const lastBackup = element<HTMLParagraphElement>('#last-backup')
 const confirmField = element<HTMLInputElement>('#confirm-delete')
 const deleteButton = element<HTMLButtonElement>('#delete-all')
@@ -34,13 +37,20 @@ closeButton.innerHTML = ICON_CLOSE
 
 export async function openSettings() {
   // Always opens with the current values and nothing left over from last time
-  const { autoBackupMinutes, language, theme, noteSort, newNoteFont, newNoteTextSize } = await readSettings()
+  const { autoBackupMinutes, language, theme, noteSort, newNoteFont, newNoteTextSize, showCalendar, dateFormat } =
+    await readSettings()
   intervalSelect.value = String(autoBackupMinutes)
   languageSelect.value = language
   themeSelect.value = theme
   sortSelect.value = noteSort
   fontSelect.value = newNoteFont
   textSizeSelect.value = String(newNoteTextSize)
+  showCalendarBox.checked = showCalendar
+  // Each format shown with today's date
+  for (const option of dateFormatSelect.options) {
+    option.textContent = formatDate(new Date(), option.value as DateFormat, locale())
+  }
+  dateFormatSelect.value = dateFormat
   showLastBackup((await readMeta()).lastBackupAt)
   showMessage('')
   confirmField.value = ''
@@ -116,6 +126,18 @@ textSizeSelect.addEventListener('change', () => {
 sortSelect.addEventListener('change', () => {
   // Every tab (this one included) re-sorts its sidebar when it notices the change (onNoteSortChanged)
   saveSettings({ noteSort: sortSelect.value as NoteSort })
+})
+
+// ---------- Calendar ----------
+
+// Every tab (this one included) applies them when it notices the change
+// (onShowCalendarChanged, onDateFormatChanged)
+showCalendarBox.addEventListener('change', () => {
+  saveSettings({ showCalendar: showCalendarBox.checked })
+})
+
+dateFormatSelect.addEventListener('change', () => {
+  saveSettings({ dateFormat: dateFormatSelect.value as DateFormat })
 })
 
 // ---------- Delete all notes ----------

@@ -1,6 +1,7 @@
 import { isNoteFont, validTextSize, type Note, type NoteFont, type NoteSort } from './notes'
 import type { Theme } from './theme'
 import { isLanguageSetting, type LanguageSetting } from './i18n'
+import { isDateFormat, type DateFormat } from './calendar'
 
 // All chrome.storage access goes through here.
 // Keys: "note:<id>" (one per note), "settings" and "meta".
@@ -20,6 +21,8 @@ export type Settings = {
   newNoteFont: NoteFont // font new notes start with
   newNoteTextSize: number // in percent, one of TEXT_SIZES
   language: LanguageSetting // interface language; auto = Chrome's
+  showCalendar: boolean // the calendar shows at the bottom of the sidebar
+  dateFormat: DateFormat // format of dates inserted from the calendar
 }
 
 export type Meta = {
@@ -37,6 +40,8 @@ const DEFAULT_SETTINGS: Settings = {
   newNoteFont: 'sans',
   newNoteTextSize: 100,
   language: 'auto',
+  showCalendar: true,
+  dateFormat: 'numeric',
 }
 const DEFAULT_META: Meta = { lastChangeAt: 0, lastBackupAt: 0, lastImportAt: 0 }
 
@@ -139,6 +144,8 @@ export async function readSettings(): Promise<Settings> {
   if (!isNoteFont(stored?.newNoteFont)) result.newNoteFont = result.noteFont
   result.newNoteTextSize = validTextSize(result.newNoteTextSize)
   if (!isLanguageSetting(result.language)) result.language = 'auto'
+  if (typeof result.showCalendar !== 'boolean') result.showCalendar = true
+  if (!isDateFormat(result.dateFormat)) result.dateFormat = 'numeric'
   return result
 }
 
@@ -192,6 +199,14 @@ export function onNewNoteTextSizeChanged(callback: (size: number) => void) {
 
 export function onLanguageChanged(callback: (language: LanguageSetting) => void) {
   onFieldChanged('settings', 'language', (language) => isLanguageSetting(language) && callback(language))
+}
+
+export function onShowCalendarChanged(callback: (show: boolean) => void) {
+  onFieldChanged('settings', 'showCalendar', (show) => typeof show === 'boolean' && callback(show))
+}
+
+export function onDateFormatChanged(callback: (format: DateFormat) => void) {
+  onFieldChanged('settings', 'dateFormat', (format) => isDateFormat(format) && callback(format))
 }
 
 export function onBackupIntervalChanged(callback: () => void) {

@@ -9,6 +9,8 @@ import {
   onNewNoteFontChanged,
   onNoteSortChanged,
   onNotesChanged,
+  onDateFormatChanged,
+  onShowCalendarChanged,
   onThemeChanged,
   readMeta,
   readNote,
@@ -95,13 +97,13 @@ describe('notes', () => {
 
 describe('settings', () => {
   test('with nothing saved, uses the defaults', async () => {
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric' })
   })
 
   test('saving one part keeps the rest', async () => {
     await saveSettings({ autoBackupMinutes: 60 })
     await saveSettings({ sidebarCollapsed: true })
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric' })
   })
 })
 
@@ -130,7 +132,7 @@ describe('deleteAllNotes', () => {
     await saveSettings({ autoBackupMinutes: 60, sidebarCollapsed: true })
     await deleteAllNotes()
     expect(await listNotes()).toEqual([])
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric' })
   })
 })
 
@@ -215,5 +217,29 @@ describe('text size of new notes', () => {
     await saveSettings({ noteSort: 'title' })
     await saveSettings({ newNoteTextSize: 90 })
     expect(received).toEqual([110, 90])
+  })
+})
+
+describe('calendar', () => {
+  test('shown by default, with the numeric format; invalid values go back to the defaults', async () => {
+    expect(await readSettings()).toMatchObject({ showCalendar: true, dateFormat: 'numeric' })
+    await saveSettings({ showCalendar: false, dateFormat: 'long' })
+    expect(await readSettings()).toMatchObject({ showCalendar: false, dateFormat: 'long' })
+    await chrome.storage.local.set({ settings: { showCalendar: 'no', dateFormat: 'dd/mm' } })
+    expect(await readSettings()).toMatchObject({ showCalendar: true, dateFormat: 'numeric' })
+  })
+
+  test('notifies tabs when each one changes, and only then', async () => {
+    const shown: boolean[] = []
+    const formats: string[] = []
+    await saveSettings({}) // settings already stored (the first save stores every field)
+    onShowCalendarChanged((show) => shown.push(show))
+    onDateFormatChanged((format) => formats.push(format))
+    await saveSettings({ showCalendar: false })
+    await saveSettings({ dateFormat: 'iso' })
+    await saveSettings({ noteSort: 'title' })
+    await saveSettings({ showCalendar: true })
+    expect(shown).toEqual([false, true])
+    expect(formats).toEqual(['iso'])
   })
 })

@@ -27,6 +27,18 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
   - `.txt` is plain text: each line becomes a paragraph. Windows and old Mac line breaks are accepted.
   - The title is automatic and the text size is the one set for new notes. An empty file creates nothing and shows a message.
 
+### Calendar
+- A month calendar at the bottom of the sidebar, below the note list (the list scrolls above it). It hides with the sidebar.
+- Weeks start on Sunday. Days of the previous and next months fill the first and last weeks (always 6 weeks, so the height doesn't change). Today is marked.
+- Buttons go to the previous and next month; clicking the month name goes back to the current month. The month shown isn't remembered: a new tab opens on the current month.
+- Clicking a day inserts that date in the note at the cursor (replacing the selection, if any), as typed text: it counts as an edit and the note is saved as usual. The editor keeps the focus.
+- Date formats (Settings → Calendar → "Date format"), following the interface language:
+  - Numeric (default): `13/10/2026` in Portuguese, `10/13/2026` in English.
+  - ISO: `2026-10-13`.
+  - Short month: `13 out 2026` / `13 Oct 2026`.
+  - Long: `terça-feira, 13 de outubro de 2026` / `Tuesday, October 13, 2026`.
+- "Show calendar" in Settings (on by default) shows or hides it, in every open tab.
+
 ### Editor
 - Markdown shortcuts turn into blocks while typing: `#`/`##`/`###`, `-`, `1.`, `- [ ]`, `>`, ` ``` `, `---`, `**bold**`, `*italic*`, `~~strikethrough~~`, `++underline++`, `` `code` ``, links. Pasted text with `~~…~~` or `++…++` gets the same marks. Strikethrough and underline are `~~` and `++` in `.md` files too (export and import). Cmd/Ctrl+click opens a link in a new tab (an address without a protocol gets `https://`).
 - Backspace at the start of a heading turns it into a paragraph, keeping its text and formatting (Cmd/Ctrl+Option/Alt+0 does the same, Tiptap's shortcut).
@@ -78,6 +90,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 - Theme and the open note's font are applied before the page shows up (no flash of the wrong ones).
 - Text size of new notes: 80% to 150% (the note's steps), default 100%. New notes (new tab, New note, imported file) start with it; changing it doesn't change existing notes. Notes from before this setting existed are 100%.
 - Sort notes by: see "Notes and the sidebar".
+- Calendar (show it, date format): see "Calendar".
 - Language: Automatic (default: Portuguese when Chrome's language is Portuguese, English otherwise), English or Português. It covers every text of the interface (buttons, hints, messages, confirmations, the "Untitled" name, the delete confirmation phrase) and the format of dates and numbers; the notes' content never changes. Changing it saves pending typing and reloads every open tab, in the new language.
 
 ## Data model
@@ -87,7 +100,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
   `font` = the note's font; missing or any other value = the `noteFont` setting (notes from before fonts were per note).
   `pinned` = the note is pinned in the sidebar; missing = not pinned.
   The Tiptap JSON is the source of truth (no conversion losses).
-- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark', noteSort: 'updated' | 'title' | 'created', noteFont: 'sans' | 'serif' | 'mono', newNoteFont: 'sans' | 'serif' | 'mono', newNoteTextSize: number, language: 'auto' | 'en' | 'pt' }` (0 = off; `newNoteTextSize` = text size of new notes, in percent, default 100; `newNoteFont` = font of new notes, missing = `noteFont`; `noteFont` = the font of notes without their own, no longer changed from Settings; `language` = the interface language, default `auto`). Invalid stored values fall back to the defaults (an unknown interval moves to the closest one).
+- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark', noteSort: 'updated' | 'title' | 'created', noteFont: 'sans' | 'serif' | 'mono', newNoteFont: 'sans' | 'serif' | 'mono', newNoteTextSize: number, language: 'auto' | 'en' | 'pt', showCalendar: boolean, dateFormat: 'numeric' | 'iso' | 'short' | 'long' }` (0 = off; `newNoteTextSize` = text size of new notes, in percent, default 100; `newNoteFont` = font of new notes, missing = `noteFont`; `noteFont` = the font of notes without their own, no longer changed from Settings; `language` = the interface language, default `auto`; `showCalendar` = the calendar shows in the sidebar, default `true`; `dateFormat` = the format of dates inserted from the calendar, default `numeric`). Invalid stored values fall back to the defaults (an unknown interval moves to the closest one).
 - `meta { lastChangeAt: number, lastBackupAt: number, lastImportAt: number }` (`lastImportAt` marks an import or the deletion of all notes, and tells open tabs to reload)
 - Backup file:
   `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, titleManual, textSize, font, pinned, markdown, doc, createdAt, updatedAt }] }`

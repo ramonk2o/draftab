@@ -86,16 +86,18 @@ body.loading * {
   transition: none !important;
 }
 
-/* Over the page: opening or closing it doesn't move the note's text */
+/* Over the page: opening or closing it doesn't move the note's text.
+   A column: the note list scrolls between the search and the calendar. */
 #sidebar {
   box-sizing: border-box;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 15; /* under the sidebar button (20) */
+  display: flex;
+  flex-direction: column;
   width: var(--sidebar-width);
   height: 100vh;
-  overflow-y: auto;
   padding: 12px 10px 16px;
   background: var(--bg-sidebar);
   border-right: 1px solid var(--border);
@@ -349,9 +351,101 @@ body.sidebar-collapsed #sidebar {
 }
 
 #note-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+/* ---------- Calendar (bottom of the sidebar) ---------- */
+
+#calendar {
+  flex: none;
+  margin-top: 10px;
+  padding: 10px 8px 0;
+  border-top: 1px solid var(--border);
+}
+
+#calendar[hidden] {
+  display: none;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 4px;
+}
+
+.calendar-header button {
+  height: 26px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.calendar-header button:hover,
+.calendar-day:hover {
+  background: var(--hover);
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  color: var(--icon) !important;
+}
+
+.calendar-nav:hover {
+  color: var(--text) !important;
+}
+
+.calendar-month {
+  flex: 1;
+  font-weight: 600;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  text-align: center;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.calendar-weekday {
+  padding: 4px 0;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.calendar-day {
+  height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.calendar-day.other-month {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.calendar-day.today {
+  background: var(--link);
+  color: var(--bg);
+  font-weight: 600;
 }
 
 .note-item {

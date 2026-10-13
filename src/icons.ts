@@ -44,3 +44,7 @@ export const ICON_SIDEBAR_CLOSED = icon(
 )
 
 export const ICON_CLOSE = icon('<path d="M4 4l8 8" /><path d="M12 4l-8 8" />')
+
+// Chevrons: previous and next month in the calendar
+export const ICON_CHEVRON_LEFT = icon('<path d="M10 3.5 5.5 8l4.5 4.5" />')
+export const ICON_CHEVRON_RIGHT = icon('<path d="M6 3.5 10.5 8 6 12.5" />')

@@ -63,6 +63,13 @@ const EN = {
   dragList: 'Drag to move the whole list',
   untitled: 'Untitled',
 
+  // Calendar (sidebar)
+  calendar: 'Calendar',
+  previousMonth: 'Previous month',
+  nextMonth: 'Next month',
+  backToToday: 'Back to the current month',
+  insertDate: 'Insert {date}',
+
   // Settings
   close: 'Close',
   backup: 'Backup',
@@ -96,6 +103,9 @@ const EN = {
   'sort.created': 'Date created',
   language: 'Language',
   'language.auto': 'Automatic (follows Chrome)',
+  showCalendar: 'Show the calendar in the sidebar',
+  dateFormat: 'Date format',
+  calendarHint: 'Clicking a day inserts the date at the cursor in the note.',
   deleteAll: 'Delete all notes',
   deleteAllHint: 'Removes every note from this browser for good. Settings are kept.',
   deleteConfirmLabel: 'To confirm, type <strong>{phrase}</strong>:',
@@ -171,6 +181,13 @@ const PT: Record<Key, string> = {
   dragList: 'Arraste para mover a lista inteira',
   untitled: 'Sem título',
 
+  // Calendário (barra lateral)
+  calendar: 'Calendário',
+  previousMonth: 'Mês anterior',
+  nextMonth: 'Próximo mês',
+  backToToday: 'Voltar ao mês atual',
+  insertDate: 'Inserir {date}',
+
   close: 'Fechar',
   backup: 'Backup',
   backupHint: 'Um arquivo JSON com todas as notas (também em markdown) e as configurações. Importar substitui tudo.',
@@ -203,6 +220,9 @@ const PT: Record<Key, string> = {
   'sort.created': 'Data de criação',
   language: 'Idioma',
   'language.auto': 'Automático (segue o Chrome)',
+  showCalendar: 'Mostrar o calendário na barra lateral',
+  dateFormat: 'Formato da data',
+  calendarHint: 'Clicar num dia insere a data no cursor da nota.',
   deleteAll: 'Apagar todas as notas',
   deleteAllHint: 'Remove todas as notas deste navegador, para sempre. As configurações são mantidas.',
   deleteConfirmLabel: 'Para confirmar, digite <strong>{phrase}</strong>:',

@@ -34,6 +34,8 @@
         </button>
       </div>
       <ul id="note-list"></ul>
+      <!-- Month calendar (bottom of the sidebar); filled in by src/calendar-ui.ts -->
+      <section id="calendar" aria-label="Calendar" data-i18n-label="calendar" hidden></section>
     </aside>
 
     <main id="main">
@@ -133,6 +135,25 @@
               <option value="created" data-i18n="sort.created">Date created</option>
             </select>
           </label>
+        </section>
+
+        <section>
+          <h2 data-i18n="calendar">Calendar</h2>
+          <label class="row">
+            <input id="show-calendar" type="checkbox" />
+            <span data-i18n="showCalendar">Show the calendar in the sidebar</span>
+          </label>
+          <label class="row">
+            <span data-i18n="dateFormat">Date format</span>
+            <!-- Each option shows today's date in that format (filled in by settings.ts) -->
+            <select id="date-format">
+              <option value="numeric"></option>
+              <option value="iso"></option>
+              <option value="short"></option>
+              <option value="long"></option>
+            </select>
+          </label>
+          <p class="hint" data-i18n="calendarHint">Clicking a day inserts the date at the cursor in the note.</p>
         </section>
 
         <section class="danger-zone">

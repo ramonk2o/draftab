@@ -8,6 +8,7 @@ import { chooseFile, exportMarkdown } from './backup-ui'
 import { noteFromFile, noteToMarkdown } from './markdown'
 import { noteToWhatsApp } from './whatsapp'
 import { openSettings } from './settings'
+import { setDateFormat, setupCalendar, showCalendar } from './calendar-ui'
 import { applyNoteFont, applyTheme, rememberNewNoteFont } from './theme'
 import {
   ICON_CHAT,
@@ -50,12 +51,14 @@ import { locale, rememberLanguage, t, tn, translatePage } from './i18n'
 import {
   deleteNote,
   listNotes,
+  onDateFormatChanged,
   onImport,
   onLanguageChanged,
   onNewNoteFontChanged,
   onNoteSortChanged,
   onNewNoteTextSizeChanged,
   onNotesChanged,
+  onShowCalendarChanged,
   onThemeChanged,
   readNote,
   readSettings,
@@ -738,6 +741,17 @@ document.addEventListener('mousemove', (event) => {
   if (moved > 3) applySidebarCollapsed(false)
 })
 
+// ---------- Calendar (bottom of the sidebar) ----------
+
+// Clicking a day: the date goes in at the cursor, as if typed (the update saves it)
+function insertDate(text: string) {
+  editor.chain().focus().insertContent({ type: 'text', text }).run()
+}
+
+// Chosen in any tab, applied in all of them
+onShowCalendarChanged(showCalendar)
+onDateFormatChanged(setDateFormat)
+
 // ---------- Language ----------
 
 // A language chosen in any tab: every tab saves pending typing and reloads in it
@@ -768,6 +782,7 @@ async function start() {
   newNoteFont = settings.newNoteFont
   oldNoteFont = settings.noteFont
   rememberNewNoteFont(newNoteFont)
+  setupCalendar(settings.showCalendar, settings.dateFormat, insertDate)
   notes = await listNotes()
 
   const openId = sessionStorage.getItem('openNoteId')

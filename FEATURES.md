@@ -33,9 +33,12 @@ How a feature moves:
 ## Sidebar
 
 ### Calendar
-- **Status:** Idea
+- **Status:** Implemented on 2026-10-13, waiting for the user's test in Chrome. `npm test`: 172 tests pass (new: month grid, the 4 formats in Portuguese and English, settings validation and sync, calendar settings in backups). `npm run build`: OK. The Chrome checks weren't run (the browser automation extension wasn't connected).
 - **Description:** a calendar fixed at the bottom of the note list, to look at quickly. Clicking a day inserts that date where the cursor is in the note, in a configurable format.
 - **Motivation:** quick access to a calendar view while taking notes.
+- **Decisions (2026-10-13):** date format picked from a fixed list in Settings (numeric, ISO, short month, long with weekday; following the interface language); weeks start on Sunday; a Settings option shows or hides the calendar (shown by default).
+- **Deliverable:** a month calendar at the bottom of the sidebar (previous/next month, the month name goes back to the current month, today marked); clicking a day inserts the date at the cursor in the note; a "Calendar" section in Settings with "Show calendar" and "Date format"; both settings sync across tabs and go into backups.
+- **How to verify:** `npm test` (month grid and date formats in both languages; settings validation); `npm run build`; in Chrome: the calendar shows the current month with today marked, ‹ › change month and the month name comes back to today; clicking a day with the cursor in the middle of a line inserts the date there and the note is saved; changing the format in Settings changes what's inserted; turning "Show calendar" off hides it in every open tab; the note list scrolls above the calendar with many notes.
 
 ## Backup and settings
 
