@@ -22,12 +22,18 @@ How a feature moves:
   - Markdown tables only hold formatted text in cells: lists, several paragraphs and merged cells would have to be blocked, or they'd be lost on export.
   - Check the custom drag-to-reorder and handles with tables (most likely the table moves whole), plus Copy for WhatsApp, character counts and Backspace at the start of the block.
 
+### Color picker
+- **Status:** Idea
+- **Description:** a button opens a color picker; the chosen color is inserted in the text as a hex code (e.g. `#3a7bd5`).
+- **Motivation:** not recorded.
+- **Open decision:** where the button goes.
+
+## Note page
+
 ### Blank line between blocks in Copy for WhatsApp
 - **Status:** Idea
 - **Description:** Copy for WhatsApp adds an extra line break between blocks (e.g. between paragraphs, between a paragraph and a list, between a list and a checklist).
 - **Motivation:** today it writes one line per block (SPEC.md), so the blocks come out stuck together in WhatsApp.
-
-## Note page
 
 ### Note title in the browser tab
 - **Status:** Idea
