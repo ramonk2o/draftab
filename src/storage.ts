@@ -25,6 +25,7 @@ export type Settings = {
   showCalendar: boolean // the calendar shows at the bottom of the sidebar
   dateFormat: DateFormat // format of dates inserted from the calendar
   colorSwatches: boolean // color codes (#3a7bd5) show a swatch of the color
+  calculations: boolean // typing "=" after a calculation ("2*5=") writes the result
   decimalSeparator: DecimalSeparatorSetting // of calculations ("2*5="); auto = the interface language's
 }
 
@@ -46,6 +47,7 @@ const DEFAULT_SETTINGS: Settings = {
   showCalendar: true,
   dateFormat: 'numeric',
   colorSwatches: true,
+  calculations: true,
   decimalSeparator: 'auto',
 }
 const DEFAULT_META: Meta = { lastChangeAt: 0, lastBackupAt: 0, lastImportAt: 0 }
@@ -152,6 +154,7 @@ export async function readSettings(): Promise<Settings> {
   if (typeof result.showCalendar !== 'boolean') result.showCalendar = true
   if (!isDateFormat(result.dateFormat)) result.dateFormat = 'numeric'
   if (typeof result.colorSwatches !== 'boolean') result.colorSwatches = true
+  if (typeof result.calculations !== 'boolean') result.calculations = true
   if (!isDecimalSeparator(result.decimalSeparator)) result.decimalSeparator = 'auto'
   return result
 }
@@ -218,6 +221,10 @@ export function onDateFormatChanged(callback: (format: DateFormat) => void) {
 
 export function onColorSwatchesChanged(callback: (show: boolean) => void) {
   onFieldChanged('settings', 'colorSwatches', (show) => typeof show === 'boolean' && callback(show))
+}
+
+export function onCalculationsChanged(callback: (on: boolean) => void) {
+  onFieldChanged('settings', 'calculations', (on) => typeof on === 'boolean' && callback(on))
 }
 
 export function onDecimalSeparatorChanged(callback: (setting: DecimalSeparatorSetting) => void) {

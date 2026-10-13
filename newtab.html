@@ -163,6 +163,10 @@
         <section>
           <h2 data-i18n="calculations">Calculations</h2>
           <label class="row">
+            <input id="calculations" type="checkbox" />
+            <span data-i18n="calculationsOn">Write the result when typing = after a calculation without spaces (2*5=)</span>
+          </label>
+          <label class="row">
             <span data-i18n="decimalSeparator">Decimal separator</span>
             <select id="decimal-separator">
               <option value="auto" data-i18n="decimalSeparator.auto">Automatic (follows the language)</option>
@@ -170,7 +174,6 @@
               <option value=",">1,5</option>
             </select>
           </label>
-          <p class="hint" data-i18n="calculationsHint">Typing a calculation without spaces followed by = (2*5=) writes the result.</p>
         </section>
 
         <section class="danger-zone">

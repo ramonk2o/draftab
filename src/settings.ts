@@ -31,6 +31,7 @@ const textSizeSelect = element<HTMLSelectElement>('#new-note-text-size')
 const colorSwatchesBox = element<HTMLInputElement>('#color-swatches')
 const showCalendarBox = element<HTMLInputElement>('#show-calendar')
 const dateFormatSelect = element<HTMLSelectElement>('#date-format')
+const calculationsBox = element<HTMLInputElement>('#calculations')
 const decimalSeparatorSelect = element<HTMLSelectElement>('#decimal-separator')
 const lastBackup = element<HTMLParagraphElement>('#last-backup')
 const confirmField = element<HTMLInputElement>('#confirm-delete')
@@ -40,7 +41,7 @@ closeButton.innerHTML = ICON_CLOSE
 
 export async function openSettings() {
   // Always opens with the current values and nothing left over from last time
-  const { autoBackupMinutes, language, theme, noteSort, newNoteFont, newNoteTextSize, showCalendar, dateFormat, colorSwatches, decimalSeparator } =
+  const { autoBackupMinutes, language, theme, noteSort, newNoteFont, newNoteTextSize, showCalendar, dateFormat, colorSwatches, calculations, decimalSeparator } =
     await readSettings()
   intervalSelect.value = String(autoBackupMinutes)
   languageSelect.value = language
@@ -55,6 +56,7 @@ export async function openSettings() {
     option.textContent = formatDate(new Date(), option.value as DateFormat, locale())
   }
   dateFormatSelect.value = dateFormat
+  calculationsBox.checked = calculations
   decimalSeparatorSelect.value = decimalSeparator
   showLastBackup((await readMeta()).lastBackupAt)
   showMessage('')
@@ -152,8 +154,13 @@ dateFormatSelect.addEventListener('change', () => {
 
 // ---------- Calculations ----------
 
+// Every tab (this one included) applies them when it notices the change
+// (onCalculationsChanged, onDecimalSeparatorChanged)
+calculationsBox.addEventListener('change', () => {
+  saveSettings({ calculations: calculationsBox.checked })
+})
+
 decimalSeparatorSelect.addEventListener('change', () => {
-  // Every tab (this one included) uses it when it notices the change (onDecimalSeparatorChanged)
   saveSettings({ decimalSeparator: decimalSeparatorSelect.value as DecimalSeparatorSetting })
 })
 

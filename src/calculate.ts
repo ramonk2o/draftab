@@ -85,7 +85,13 @@ export function calculate(expression: string, separator: DecimalSeparator): stri
 // line or after a space
 export const calculationRegex = /(?<!\S)([\d.,+\-*/()]+)=$/
 
+let enabled = true
 let separator: DecimalSeparator = '.'
+
+// Turned on or off in Settings (applied when it changes, in every tab)
+export function setCalculationsEnabled(on: boolean) {
+  enabled = on
+}
 
 // Chosen in Settings (applied when it changes, in every tab)
 export function setDecimalSeparator(setting: DecimalSeparatorSetting) {
@@ -101,6 +107,7 @@ export const Calculations = Extension.create({
         // The "=" is already in the note; the result goes right after it.
         // Tiptap doesn't run input rules in code, and Backspace right after undoes it.
         handler: ({ state, range, match }) => {
+          if (!enabled) return null
           const result = calculate(match[1], separator)
           if (result === null) return null
           state.tr.insertText(result, range.to)
