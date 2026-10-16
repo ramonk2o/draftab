@@ -3,6 +3,7 @@ import { DOMParser as SchemaParser } from '@tiptap/pm/model'
 import { contentSchema } from './extensions'
 import { newBlankNote, textOf, withUpdatedTitle, type Note, type NoteFont } from './notes'
 import { t } from './i18n'
+import { isWebAddress } from './images'
 
 // Saving web pages (see "Saving web pages" in SPEC.md): what the capture in the page
 // hands to the new tab, and how it becomes a note.
@@ -17,7 +18,7 @@ export type ClipError = 'unavailable' | 'empty'
 
 // Elements whose content never goes into the note
 const DROPPED =
-  'script, style, noscript, template, img, picture, video, audio, iframe, object, embed, svg, canvas, math, form, button, input, select, textarea'
+  'script, style, noscript, template, source, video, audio, iframe, object, embed, svg, canvas, math, form, button, input, select, textarea'
 
 // Elements that are blocks in a note
 const BLOCKS = 'p, ul, ol, blockquote, pre, hr, h2, h3'
@@ -82,6 +83,13 @@ export function htmlToBlocks(html: string, baseUrl: string): JSONContent[] {
     table.replaceWith(...rows)
   }
 
+  // Images: absolute web addresses; without an address, data: or declared tiny (icons, tracking pixels) are dropped
+  for (const img of body.querySelectorAll('img')) {
+    const src = absoluteUrl(img.getAttribute('src'), baseUrl)
+    if (isWebAddress(src) && !isTiny(img)) img.setAttribute('src', src)
+    else img.remove()
+  }
+
   // Links: absolute addresses, only http, https and mailto; others keep just their text
   for (const link of body.querySelectorAll('a')) {
     const href = absoluteUrl(link.getAttribute('href'), baseUrl)
@@ -96,6 +104,11 @@ export function htmlToBlocks(html: string, baseUrl: string): JSONContent[] {
 
 function hasText(blocks: JSONContent[]): boolean {
   return textOf({ type: 'doc', content: blocks }).trim() !== ''
+}
+
+// Width or height declared under 50px
+function isTiny(img: Element): boolean {
+  return [img.getAttribute('width'), img.getAttribute('height')].some((size) => size !== null && parseFloat(size) < 50)
 }
 
 // One paragraph per line with text

@@ -51,12 +51,41 @@ describe('htmlToBlocks', () => {
     expect(marksOf(p).map((m) => m.attrs?.href)).toEqual(['mailto:a@b.c'])
   })
 
-  test('drops images, media, iframes, scripts, styles and forms', () => {
+  test('drops media, iframes, scripts, styles and forms; nothing runs', () => {
     const html =
-      '<p>a<img src="x.png" onerror="window.ran = true"></p><iframe src="https://x.com"></iframe>' +
+      '<p>a<img src="x.png" onerror="window.ran = true"></p><video src="v.mp4"></video><iframe src="https://x.com"></iframe>' +
       '<script>window.ran = true</script><style>p { color: red }</style><form><input value="v"><button>Send</button></form><p>b</p>'
-    expect(text(htmlToBlocks(html, BASE))).toBe('a\nb')
+    const blocks = htmlToBlocks(html, BASE)
+    expect(blocks.map((b) => b.type)).toEqual(['paragraph', 'image', 'paragraph'])
+    expect(text(blocks)).toBe('a\n\nb')
     expect((window as unknown as { ran?: boolean }).ran).toBeUndefined()
+  })
+
+  test('keeps images, with absolute addresses', () => {
+    const blocks = htmlToBlocks('<p>a</p><img src="/i/cat.png" alt="cat"><p>b</p>', BASE)
+    expect(blocks.map((b) => b.type)).toEqual(['paragraph', 'image', 'paragraph'])
+    expect(blocks[1].attrs).toEqual({ src: 'https://example.com/i/cat.png', alt: 'cat', title: null })
+  })
+
+  test('drops images without an address, with data: or declared smaller than 50px', () => {
+    const html =
+      '<img><img src="data:image/png;base64,AAAA"><img src="/px.gif" width="1" height="1">' +
+      '<img src="/icon.png" width="32"><img src="/ok.png" width="600" height="400"><p>t</p>'
+    const images = htmlToBlocks(html, BASE).filter((b) => b.type === 'image')
+    expect(images.map((b) => b.attrs?.src)).toEqual(['https://example.com/ok.png'])
+  })
+
+  test('an image inside a link or a picture keeps only the image', () => {
+    const blocks = htmlToBlocks('<a href="/big.png"><img src="/small.png"></a><picture><source srcset="/x.webp"><img src="/p.png"></picture>', BASE)
+    expect(blocks).toEqual([
+      { type: 'image', attrs: { src: 'https://example.com/small.png', alt: null, title: null } },
+      { type: 'image', attrs: { src: 'https://example.com/p.png', alt: null, title: null } },
+    ])
+  })
+
+  test('an image in the middle of a paragraph splits it', () => {
+    const blocks = htmlToBlocks('<p>before <img src="/a.png"> after</p>', BASE)
+    expect(blocks.map((b) => b.type)).toEqual(['paragraph', 'image', 'paragraph'])
   })
 
   test('a table becomes one paragraph per row', () => {
@@ -91,6 +120,10 @@ describe('htmlToBlocks', () => {
 
 describe('clipToNote', () => {
   const clip = { title: '  My   page\n', url: 'https://example.com/post', html: '<p>Hello</p>' }
+
+  test('content with images but no text is "no text"', () => {
+    expect(clipToNote({ ...clip, html: '<img src="/a.png">' })).toBeNull()
+  })
 
   test('title heading, link to the page, then the content', () => {
     const note = clipToNote(clip)!
