@@ -13,7 +13,8 @@ Draftab is a Chrome extension that turns the new tab into a notepad. It is built
 ## What Draftab does not do
 
 - It does **not** collect, transmit, sell or share any data.
-- It does **not** connect to any server: there is no account, no sync service, no analytics, no ads and no tracking.
+- It does **not** connect to any server of its own: there is no account, no sync service, no analytics, no ads and no tracking.
+- **Images in notes**: a note keeps only an image's web address. When a note with images is shown, Chrome loads them from the sites that host them, like any web page with images; those sites see that request (your IP address, for example), but nothing from your notes is sent.
 - It does **not** read your browsing history or the pages you visit. It reads a page only when you click its toolbar icon or "Save to Draftab", and only that page (or the selected text), to save it as a note on your device.
 
 ## Permissions
@@ -56,7 +57,8 @@ O Draftab é uma extensão do Chrome que transforma a nova aba num bloco de nota
 ## O que o Draftab não faz
 
 - **Não** coleta, transmite, vende nem compartilha nenhum dado.
-- **Não** se conecta a nenhum servidor: não há conta, serviço de sincronização, estatísticas de uso, anúncios nem rastreamento.
+- **Não** se conecta a nenhum servidor próprio: não há conta, serviço de sincronização, estatísticas de uso, anúncios nem rastreamento.
+- **Imagens nas notas**: uma nota guarda só o endereço da imagem na web. Quando uma nota com imagens é exibida, o Chrome as carrega dos sites onde estão hospedadas, como em qualquer página com imagens; esses sites veem esse pedido (seu endereço IP, por exemplo), mas nada das suas notas é enviado.
 - **Não** lê seu histórico de navegação nem as páginas que você visita. Ele lê uma página só quando você clica no ícone dele na barra ou em "Salvar no Draftab", e só aquela página (ou o texto selecionado), para salvá-la como nota no seu dispositivo.
 
 ## Permissões

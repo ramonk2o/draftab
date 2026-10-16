@@ -102,9 +102,16 @@ export function renamed(note: Note, newTitle: string): Note {
   return { ...note, title, titleManual: true }
 }
 
-// A note with no text and no user-given title isn't stored
+// Whether there's anything in the content: text or an image
+export function hasContent(node: JSONContent): boolean {
+  if (node.type === 'image') return true
+  if (node.type === 'text') return (node.text ?? '').trim() !== ''
+  return (node.content ?? []).some(hasContent)
+}
+
+// A note with no content and no user-given title isn't stored
 export function isEmptyNote(note: Note): boolean {
-  return !note.titleManual && textOf(note.doc).trim() === ''
+  return !note.titleManual && !hasContent(note.doc)
 }
 
 export function displayTitle(note: Note): string {

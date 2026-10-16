@@ -52,6 +52,15 @@ export function htmlToBlocks(html: string, baseUrl: string): JSONContent[] {
 
   for (const el of body.querySelectorAll(DROPPED)) el.remove()
 
+  // An image in a list item goes to the end of the item, and one in a heading right after the
+  // heading (in reverse, so several keep their order): the list stays whole, the heading keeps its text
+  for (const img of body.querySelectorAll('li img')) {
+    if (!img.closest('h1, h2, h3, h4, h5, h6')) img.closest('li')!.append(img)
+  }
+  for (const img of [...body.querySelectorAll('h1 img, h2 img, h3 img, h4 img, h5 img, h6 img')].reverse()) {
+    img.closest('h1, h2, h3, h4, h5, h6')!.after(img)
+  }
+
   // The page title is the note's only level 1: h1/h2 → level 2, h3-h6 → level 3.
   // In a list item a heading becomes a bold paragraph (an item must start with a paragraph).
   for (const old of body.querySelectorAll('h1, h2, h3, h4, h5, h6')) {

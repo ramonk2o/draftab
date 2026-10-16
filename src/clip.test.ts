@@ -83,6 +83,31 @@ describe('htmlToBlocks', () => {
     ])
   })
 
+  test('an image in a list item goes after the item\'s text, keeping the list whole', () => {
+    const blocks = htmlToBlocks('<ul><li><img src="/a.png">caption</li><li>b</li></ul>', BASE)
+    expect(blocks).toEqual([
+      {
+        type: 'bulletList',
+        content: [
+          {
+            type: 'listItem',
+            content: [
+              { type: 'paragraph', content: [{ type: 'text', text: 'caption' }] },
+              { type: 'image', attrs: { src: 'https://example.com/a.png', alt: null, title: null } },
+            ],
+          },
+          { type: 'listItem', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'b' }] }] },
+        ],
+      },
+    ])
+  })
+
+  test('an image in a heading goes after the heading, which keeps its text', () => {
+    const blocks = htmlToBlocks('<h2><a href="/"><img src="/logo.png"></a> Title</h2><p>t</p>', BASE)
+    expect(blocks.map((b) => b.type)).toEqual(['heading', 'image', 'paragraph'])
+    expect(text([blocks[0]]).trim()).toBe('Title')
+  })
+
   test('an image in the middle of a paragraph splits it', () => {
     const blocks = htmlToBlocks('<p>before <img src="/a.png"> after</p>', BASE)
     expect(blocks.map((b) => b.type)).toEqual(['paragraph', 'image', 'paragraph'])

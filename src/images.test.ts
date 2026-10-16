@@ -38,6 +38,10 @@ describe('plainTextOf', () => {
 })
 
 describe('schema', () => {
+  test('an image moves only with the handle, not by dragging the picture', () => {
+    expect(schema.nodes.image.spec.draggable).toBe(false)
+  })
+
   test('an image stores only src, alt and title', () => {
     expect(Object.keys(schema.nodes.image.spec.attrs ?? {})).toEqual(['src', 'alt', 'title'])
   })

@@ -46,6 +46,9 @@ export function pasteImageAddress(state: EditorState, text: string): Transaction
 }
 
 export const DraftabImage = Image.extend({
+  // Moved only with the handle (dragging the picture would skip the rules of reordering)
+  draggable: false,
+
   // Only the address, description and title: the picture shows at its natural size
   addAttributes() {
     return { src: { default: null }, alt: { default: null }, title: { default: null } }

@@ -90,6 +90,13 @@ describe('isEmptyNote', () => {
     expect(isEmptyNote(noteWith(doc(paragraph('a'))))).toBe(false)
   })
 
+  test('an image, even without text, is not empty', () => {
+    const image: JSONContent = { type: 'image', attrs: { src: 'https://x/a.png', alt: null, title: null } }
+    expect(isEmptyNote(noteWith(doc(paragraph(), image)))).toBe(false)
+    const quote: JSONContent = { type: 'blockquote', content: [image] }
+    expect(isEmptyNote(noteWith(doc(quote)))).toBe(false)
+  })
+
   test('no text but renamed is not empty', () => {
     expect(isEmptyNote(noteWith(doc(paragraph()), { title: 'List', titleManual: true }))).toBe(false)
   })

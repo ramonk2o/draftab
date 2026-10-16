@@ -61,7 +61,7 @@ At the bottom right, **character counts**: the note as markdown (the same text a
 
 - **Toolbar icon**: click Draftab's icon on any page to save its main text (without menus, ads or footers, found with Mozilla Readability) as a new note.
 - **Right-click → Save to Draftab** on selected text saves just that passage, as a note titled "Excerpt: <page title>".
-- The note starts with the page title and a link to the page, then the content as Draftab blocks: headings, lists, quotes, code, links and formatting are kept; images and table layouts are not. It opens in a new Draftab tab, next to the page.
+- The note starts with the page title and a link to the page, then the content as Draftab blocks: headings, lists, quotes, code, links, formatting and images are kept (minus tiny ones like icons); table layouts are not. It opens in a new Draftab tab, next to the page.
 - The page is read only when you click, only that tab, and nothing is sent anywhere. When nothing can be saved, no tab opens: the icon shows a red "!" for a few seconds, with the reason in its tooltip (pages Chrome doesn't let extensions read, like `chrome://` pages and the Web Store), or a notice appears in the corner of the page (no main text found).
 
 ### Settings, backup and privacy
@@ -72,7 +72,7 @@ At the bottom right, **character counts**: the note as markdown (the same text a
 - **Calendar** (show it, date format) and **Calculations** (on/off, decimal separator).
 - **Delete all notes**, after typing a confirmation phrase; settings are kept.
 - Every setting applies to all open tabs immediately and goes into backups.
-- **Privacy**: nothing leaves your computer. No account, no server, no analytics; the extension makes no network requests.
+- **Privacy**: nothing leaves your computer. No account, no server, no analytics. The only network requests are the images in your notes, loaded from the sites that host them (like any web page with images).
 
 ### Markdown shortcuts
 

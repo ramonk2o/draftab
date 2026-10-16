@@ -119,6 +119,12 @@ describe('noteFromFile', () => {
     expect(list?.content?.[0].content).toEqual([paragraph(text('![a](https://x/a.png)'))])
   })
 
+  test('a file with only an image is a note', () => {
+    expect(noteFromFile('a.md', '![a](https://x/a.png)')?.doc.content).toEqual([
+      { type: 'image', attrs: { src: 'https://x/a.png', alt: 'a', title: null } },
+    ])
+  })
+
   test('formatting next to an inline image is kept', () => {
     expect(noteFromFile('a.md', '**b** ![a](https://x/a.png)')?.doc.content).toEqual([
       paragraph(text('b', [{ type: 'bold' }]), text(' ![a](https://x/a.png)')),

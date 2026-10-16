@@ -31,6 +31,7 @@ import {
   displayTitle,
   filterNotes,
   isEmptyNote,
+  hasContent,
   isPinned,
   listDate,
   newBlankNote,
@@ -472,7 +473,7 @@ noteWhatsAppButton.innerHTML = ICON_CHAT
 
 // Nothing to export or copy while the note is empty
 function updateNoteActions() {
-  const empty = editor.state.doc.textContent.trim() === ''
+  const empty = !hasContent(editor.getJSON())
   noteExportButton.disabled = empty
   noteCopyButton.disabled = empty
   noteWhatsAppButton.disabled = empty
