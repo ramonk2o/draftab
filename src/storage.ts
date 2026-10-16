@@ -151,7 +151,8 @@ export async function saveClip(clip: PageClip): Promise<string> {
   return id
 }
 
-// Reads the clip and deletes it, so reloading the tab doesn't create the note again
+// Reads the clip and deletes it, so reloading the tab doesn't create the note again.
+// null when it's missing or not a captured page (e.g. an error stored by an older version)
 export async function takeClip(id: string): Promise<PageClip | null> {
   const key = CLIP_PREFIX + id
   const result = await chrome.storage.local.get(key)
@@ -159,7 +160,8 @@ export async function takeClip(id: string): Promise<PageClip | null> {
   if (!stored) return null
   await chrome.storage.local.remove(key)
   const { createdAt, ...clip } = stored
-  return clip
+  const isPage = typeof clip.title === 'string' && typeof clip.url === 'string' && typeof clip.html === 'string'
+  return isPage ? clip : null
 }
 
 // Clips whose tab never opened them (closed too soon). Only old ones, so two quick

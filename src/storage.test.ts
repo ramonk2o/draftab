@@ -319,6 +319,12 @@ describe('clips (pages waiting to become notes)', () => {
     expect(await takeClip(id)).toBeNull()
   })
 
+  test('a clip stored by an older version (an error, without title or html) is deleted and ignored', async () => {
+    await chrome.storage.local.set({ 'clip:old': { error: 'empty', createdAt: Date.now() } })
+    expect(await takeClip('old')).toBeNull()
+    expect(await chrome.storage.local.get('clip:old')).toEqual({})
+  })
+
   test("clips aren't notes and don't count as a change", async () => {
     await saveClip(clip)
     expect(await listNotes()).toEqual([])
