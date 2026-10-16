@@ -10,6 +10,7 @@ import { ColorSwatches } from './colors'
 import { Calculations } from './calculate'
 import { UnderlineShortcut } from './underline-shortcut'
 import { plainTextOf } from './images'
+import { ImagePaste } from './image-paste'
 import { t } from './i18n'
 
 // Handle icon: six dots in two columns
@@ -104,6 +105,7 @@ export function createEditor(element: HTMLElement, onTagClick: (tag: string) => 
       ...contentExtensions,
       ChecklistInsideList,
       UnderlineShortcut,
+      ImagePaste,
       UnwrapBlock,
       Tags.configure({ onTagClick }),
       ColorSwatches,

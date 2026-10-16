@@ -1,4 +1,5 @@
 import type { Fragment, Node as PMNode } from '@tiptap/pm/model'
+import type { EditorState, Transaction } from '@tiptap/pm/state'
 import { InputRule } from '@tiptap/core'
 import { Image } from '@tiptap/extension-image'
 
@@ -25,6 +26,23 @@ export function plainTextOf(fragment: Fragment): string {
     if (leaf.type.name === 'hardBreak') return '\n'
     return ''
   })
+}
+
+// The pasted text when it's only an image's web address (ends in an image extension,
+// a ?query or #fragment after it is fine); null otherwise
+export function imageAddress(text: string): string | null {
+  const address = text.trim()
+  return /^https?:\/\/\S+\.(png|jpe?g|gif|webp|svg|avif)([?#]\S*)?$/i.test(address) ? address : null
+}
+
+// Pasting an image address alone on an empty line outside lists and quotes: the image goes in
+// above the line and the cursor stays on it. null = paste normally (the address becomes a link)
+export function pasteImageAddress(state: EditorState, text: string): Transaction | null {
+  const src = imageAddress(text)
+  const { $from, empty } = state.selection
+  const onEmptyLine = empty && $from.depth === 1 && $from.parent.type.name === 'paragraph' && $from.parent.content.size === 0
+  if (!src || !onEmptyLine) return null
+  return state.tr.insert($from.before(), state.schema.nodes.image.create({ src })).scrollIntoView()
 }
 
 export const DraftabImage = Image.extend({
