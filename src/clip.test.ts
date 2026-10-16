@@ -1,0 +1,99 @@
+// @vitest-environment happy-dom
+import { describe, expect, test } from 'vitest'
+import type { JSONContent } from '@tiptap/core'
+import { clipToNote, htmlToBlocks } from './clip'
+import { textOf } from './notes'
+
+const BASE = 'https://example.com/blog/post'
+
+const text = (blocks: JSONContent[]) => textOf({ type: 'doc', content: blocks })
+
+// All marks in the blocks, in order
+function marksOf(node: JSONContent): JSONContent[] {
+  return [...(node.marks ?? []), ...(node.content ?? []).flatMap(marksOf)]
+}
+
+describe('htmlToBlocks', () => {
+  test('content headings move down a level; h4-h6 become level 3', () => {
+    const blocks = htmlToBlocks('<h1>A</h1><h2>B</h2><h3>C</h3><h4>D</h4><h6>E</h6>', BASE)
+    expect(blocks.map((b) => [b.type, b.attrs?.level])).toEqual([
+      ['heading', 2], ['heading', 2], ['heading', 3], ['heading', 3], ['heading', 3],
+    ])
+    expect(text(blocks)).toBe('A\nB\nC\nD\nE')
+  })
+
+  test('keeps nested lists', () => {
+    const [list] = htmlToBlocks('<ul><li>a<ul><li>b</li></ul></li></ul>', BASE)
+    expect(list.type).toBe('bulletList')
+    expect(list.content![0].content!.map((c) => c.type)).toEqual(['paragraph', 'bulletList'])
+    expect(text([list])).toBe('a\nb')
+  })
+
+  test('keeps quotes, code blocks, dividers and ordered lists', () => {
+    const blocks = htmlToBlocks('<blockquote><p>q</p></blockquote><pre><code>x = 1</code></pre><hr><ol><li>one</li></ol>', BASE)
+    expect(blocks.map((b) => b.type)).toEqual(['blockquote', 'codeBlock', 'horizontalRule', 'orderedList'])
+  })
+
+  test('keeps bold, italic, strikethrough, underline and inline code', () => {
+    const [p] = htmlToBlocks('<p><strong>b</strong> <em>i</em> <s>s</s> <u>u</u> <code>c</code></p>', BASE)
+    expect(marksOf(p).map((m) => m.type)).toEqual(['bold', 'italic', 'strike', 'underline', 'code'])
+  })
+
+  test('links become absolute', () => {
+    const [p] = htmlToBlocks('<p><a href="../other">x</a> <a href="#part">y</a></p>', BASE)
+    expect(marksOf(p).map((m) => m.attrs?.href)).toEqual(['https://example.com/other', 'https://example.com/blog/post#part'])
+  })
+
+  test('drops links that are not http, https or mailto, keeping the text', () => {
+    const [p] = htmlToBlocks('<p><a href="javascript:alert(1)">bad</a> <a href="mailto:a@b.c">mail</a> <a>anchor</a></p>', BASE)
+    expect(text([p])).toBe('bad mail anchor')
+    expect(marksOf(p).map((m) => m.attrs?.href)).toEqual(['mailto:a@b.c'])
+  })
+
+  test('drops images, media, iframes, scripts, styles and forms', () => {
+    const html =
+      '<p>a<img src="x.png" onerror="window.ran = true"></p><iframe src="https://x.com"></iframe>' +
+      '<script>window.ran = true</script><style>p { color: red }</style><form><input value="v"><button>Send</button></form><p>b</p>'
+    expect(text(htmlToBlocks(html, BASE))).toBe('a\nb')
+    expect((window as unknown as { ran?: boolean }).ran).toBeUndefined()
+  })
+
+  test('a table becomes one paragraph per row', () => {
+    const blocks = htmlToBlocks('<table><tr><th>Name</th><th>Age</th></tr><tr><td>Ana</td><td>30</td></tr></table>', BASE)
+    expect(blocks.map((b) => b.type)).toEqual(['paragraph', 'paragraph'])
+    expect(text(blocks)).toBe('Name · Age\nAna · 30')
+  })
+
+  test('drops empty paragraphs', () => {
+    expect(htmlToBlocks('<p>a</p><p></p><p> </p><div></div><p>b</p>', BASE).map((b) => b.type)).toEqual(['paragraph', 'paragraph'])
+  })
+})
+
+describe('clipToNote', () => {
+  const clip = { title: '  My   page\n', url: 'https://example.com/post', html: '<p>Hello</p>' }
+
+  test('title heading, link to the page, then the content', () => {
+    const note = clipToNote(clip)!
+    const [heading, link, body] = note.doc.content!
+    expect(heading).toMatchObject({ type: 'heading', attrs: { level: 1 }, content: [{ type: 'text', text: 'My page' }] })
+    expect(link.content![0].text).toBe('https://example.com/post')
+    expect(link.content![0].marks![0]).toMatchObject({ type: 'link', attrs: { href: 'https://example.com/post' } })
+    expect(text([body])).toBe('Hello')
+    expect(note.title).toBe('My page')
+    expect(note.titleManual).toBe(false)
+  })
+
+  test('a page without a title uses the domain', () => {
+    expect(clipToNote({ ...clip, title: ' ' })!.title).toBe('example.com')
+  })
+
+  test('uses the new-note text size and font', () => {
+    const note = clipToNote(clip, 120, 'serif')!
+    expect([note.textSize, note.font]).toEqual([120, 'serif'])
+  })
+
+  test('null when the content has no text', () => {
+    expect(clipToNote({ ...clip, html: '<p><img src="x.png"></p>' })).toBeNull()
+    expect(clipToNote({ ...clip, html: '' })).toBeNull()
+  })
+})
