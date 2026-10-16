@@ -319,11 +319,6 @@ describe('clips (pages waiting to become notes)', () => {
     expect(await takeClip(id)).toBeNull()
   })
 
-  test('errors are stored too', async () => {
-    const id = await saveClip({ error: 'unavailable' })
-    expect(await takeClip(id)).toEqual({ error: 'unavailable' })
-  })
-
   test("clips aren't notes and don't count as a change", async () => {
     await saveClip(clip)
     expect(await listNotes()).toEqual([])

@@ -2,15 +2,18 @@ import type { JSONContent } from '@tiptap/core'
 import { DOMParser as SchemaParser } from '@tiptap/pm/model'
 import { contentSchema } from './extensions'
 import { newBlankNote, textOf, withUpdatedTitle, type Note, type NoteFont } from './notes'
+import { t } from './i18n'
 
 // Saving web pages (see "Saving web pages" in SPEC.md): what the capture in the page
 // hands to the new tab, and how it becomes a note.
 
-export type ClipError = 'unavailable' | 'empty' // a page extensions can't run on / no main text
+// A captured page or selection.
 // text: the plain selected text Chrome gives with a right-click, used when the HTML has no
-// text (text fields, frames from other sites, the PDF viewer)
-export type PageClip = { title: string; url: string; html: string; text?: string }
-export type Clip = PageClip | { error: ClipError }
+// text (text fields, frames from other sites, the PDF viewer). excerpt: it's a selection.
+export type PageClip = { title: string; url: string; html: string; text?: string; excerpt?: boolean }
+
+// Why nothing could be captured: a page extensions can't run on / no main text
+export type ClipError = 'unavailable' | 'empty'
 
 // Elements whose content never goes into the note
 const DROPPED =
@@ -24,7 +27,8 @@ export function clipToNote(clip: PageClip, textSize = 100, font: NoteFont = 'san
   if (!hasText(content)) content = plainTextBlocks(clip.text ?? '')
   if (!hasText(content)) return null
 
-  const title = clip.title.replace(/\s+/g, ' ').trim() || domainOf(clip.url)
+  const pageTitle = clip.title.replace(/\s+/g, ' ').trim() || domainOf(clip.url)
+  const title = clip.excerpt ? t('excerptTitle', { title: pageTitle }) : pageTitle
   const doc: JSONContent = {
     type: 'doc',
     content: [

@@ -66,6 +66,7 @@ const EN = {
   // Saving web pages (toolbar icon and right-click menu)
   savePage: 'Save page to Draftab',
   saveSelection: 'Save to Draftab',
+  excerptTitle: 'Excerpt: {title}',
   clipUnavailable: "This page can't be saved: Chrome doesn't let extensions read it.",
   clipEmpty: "Couldn't find the main text of this page. Select a passage and use right-click → Save to Draftab.",
 
@@ -195,6 +196,7 @@ const PT: Record<Key, string> = {
   // Salvar páginas (ícone da barra e menu do botão direito)
   savePage: 'Salvar página no Draftab',
   saveSelection: 'Salvar no Draftab',
+  excerptTitle: 'Trecho: {title}',
   clipUnavailable: 'Não é possível salvar esta página: o Chrome não deixa extensões lerem ela.',
   clipEmpty: 'Não encontrei o texto principal desta página. Selecione um trecho e use botão direito → Salvar no Draftab.',
 

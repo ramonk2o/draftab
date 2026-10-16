@@ -431,11 +431,12 @@ async function openClip(id: string): Promise<boolean> {
   history.replaceState(null, '', location.pathname) // a reload doesn't create the note again
   const clip = await takeClip(id)
   if (!clip) return false
-  const note = 'error' in clip ? null : clipToNote(clip, newNoteTextSize, newNoteFont)
+  const note = clipToNote(clip, newNoteTextSize, newNoteFont)
   if (!note) {
+    // Rare: the service worker checks for text, but the HTML may only have text in parts
+    // Draftab drops (e.g. a form)
     open(newNote(), false)
-    const message = 'error' in clip && clip.error === 'unavailable' ? t('clipUnavailable') : t('clipEmpty')
-    setTimeout(() => alert(message), 100) // after the page shows up
+    setTimeout(() => alert(t('clipEmpty')), 100) // after the page shows up
     return true
   }
   await saveNote(note)

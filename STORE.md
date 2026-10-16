@@ -150,7 +150,7 @@ Screenshots are generated from the real extension (regenerate them when somethin
 | `alarms` | Runs the optional automatic backup at the interval the user chooses (every minute, hour, day, week or month), even when no new tab is open. |
 | `downloads` | Saves the optional automatic backup as a JSON file to the user's Downloads/draftab-backups/ folder, without opening a save dialog every time. |
 | `activeTab` | When the user clicks the toolbar icon or "Save to Draftab" in the right-click menu, reads that one tab's page (or selected text) to save it as a local note. No access to any page otherwise; no host permissions. |
-| `scripting` | Runs the capture code (bundled in the package) in that tab at that moment, to extract the page's main text or the selection. |
+| `scripting` | Runs the capture code (bundled in the package) in that tab at that moment, to extract the page's main text or the selection, or to show a short notice there when nothing could be saved. |
 | `contextMenus` | Adds "Save to Draftab" to the right-click menu when text is selected. |
 
 **Remote code:** No, I am not using remote code. (All code is bundled in the package.)

@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest'
 import type { JSONContent } from '@tiptap/core'
 import { clipToNote, htmlToBlocks } from './clip'
 import { textOf } from './notes'
+import { useLanguage } from './i18n'
 
 const BASE = 'https://example.com/blog/post'
 
@@ -81,6 +82,17 @@ describe('clipToNote', () => {
     expect(text([body])).toBe('Hello')
     expect(note.title).toBe('My page')
     expect(note.titleManual).toBe(false)
+  })
+
+  test('a selection\'s title starts with "Excerpt:", in the interface language', () => {
+    expect(clipToNote({ ...clip, excerpt: true })!.title).toBe('Excerpt: My page')
+    useLanguage('pt')
+    expect(clipToNote({ ...clip, excerpt: true })!.title).toBe('Trecho: My page')
+    useLanguage('en')
+  })
+
+  test('a selection on a page without a title: "Excerpt:" and the domain', () => {
+    expect(clipToNote({ ...clip, title: '', excerpt: true })!.title).toBe('Excerpt: example.com')
   })
 
   test('a page without a title uses the domain', () => {
