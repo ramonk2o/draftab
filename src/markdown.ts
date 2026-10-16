@@ -3,6 +3,7 @@ import { MarkdownManager } from '@tiptap/markdown'
 import { contentExtensions, contentSchema } from './extensions'
 import { displayTitle, isEmptyNote, newBlankNote, withUpdatedTitle, type Note, type NoteFont } from './notes'
 import { t } from './i18n'
+import { imageMarkdown, isWebAddress } from './images'
 
 // Markdown of a note: used by the backup, by "Export as Markdown" and by importing a file.
 // Doesn't depend on an open page (the automatic backup runs in the service worker).
@@ -33,7 +34,7 @@ export function noteFromFile(fileName: string, fileText: string, textSize = 100,
 // The document for a markdown text, or null if the editor couldn't open it
 function markdownDoc(text: string): JSONContent | null {
   try {
-    const doc = limitHeadings(converter().parse(text))
+    const doc = limitHeadings(imagesToText(converter().parse(text)))
     contentSchema().nodeFromJSON(doc).check()
     return doc
   } catch {
@@ -45,6 +46,34 @@ function markdownDoc(text: string): JSONContent | null {
 function limitHeadings(node: JSONContent): JSONContent {
   const attrs = node.type === 'heading' && node.attrs?.level > 3 ? { ...node.attrs, level: 3 } : node.attrs
   return { ...node, attrs, content: node.content?.map(limitHeadings) }
+}
+
+// An image inside a line of text (or a list item), or with an address that isn't http/https,
+// stays as its ![description](address) text; only an image on a line of its own becomes a block
+function imagesToText(node: JSONContent, inText = false): JSONContent {
+  if (node.type === 'image' && (inText || !isWebAddress(node.attrs?.src))) {
+    const text: JSONContent = { type: 'text', text: imageMarkdown(node.attrs ?? {}) }
+    return inText ? text : { type: 'paragraph', content: [text] }
+  }
+  if (!node.content) return node
+  const isTextBlock = node.type === 'paragraph' || node.type === 'heading'
+  const content = node.content.map((child) => imagesToText(child, isTextBlock))
+  return { ...node, content: isTextBlock ? mergeTexts(content) : content }
+}
+
+// Neighboring pieces of text with the same formatting become one
+function mergeTexts(content: JSONContent[]): JSONContent[] {
+  const merged: JSONContent[] = []
+  for (const piece of content) {
+    const last = merged[merged.length - 1]
+    const sameMarks = JSON.stringify(last?.marks ?? []) === JSON.stringify(piece.marks ?? [])
+    if (last?.type === 'text' && piece.type === 'text' && sameMarks) {
+      merged[merged.length - 1] = { ...last, text: (last.text ?? '') + (piece.text ?? '') }
+    } else {
+      merged.push(piece)
+    }
+  }
+  return merged
 }
 
 // One paragraph per line

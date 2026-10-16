@@ -11,6 +11,13 @@ How a feature moves:
 
 ## Editor
 
+### Images
+- **Status:** In progress
+- **Description:** image blocks in notes, from web addresses: the note stores only the address, never the file. They get in by typing `![description](url)`, pasting an image address on its own, pasting an image copied from a page ("Copy image") or HTML with images, and saving web pages (which now keep their images, minus tiny ones and `data:` ones). Rules in SPEC.md ("Editor → Images", "Saving web pages").
+- **Motivation:** see images from the web inside notes, and keep the images of saved pages instead of dropping them. Storing image files (screenshots, uploads) was left out on purpose.
+- **Deliverable:** the official `@tiptap/extension-image` (same version) as a block, with only `http`/`https` addresses; pasting an image address or a copied image becomes an image; broken images show their address; saved pages and imported `.md` keep images; export, copy, WhatsApp copy and counts handle them; tests for each.
+- **How to verify:** `npm test` passes, with new tests for markdown round trip and `.md` import, page capture (absolute addresses, tiny/`data:`/no-address images dropped, image inside a link), WhatsApp copy, image-address detection and reading the address from pasted HTML. In Chrome: type `![x](https://…png)`; paste an image address alone and inside text; "Copy image" on a page and paste; paste a screenshot (ignored); a broken address shows the box; drag an image; Export as Markdown; save a real article with images.
+
 ### Tables
 - **Status:** Idea
 - **Description:** a table block in notes.

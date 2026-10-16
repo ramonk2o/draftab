@@ -11,6 +11,11 @@ function noteWith(title: string, ...content: JSONContent[]): Note {
 }
 
 describe('noteToMarkdown', () => {
+  test('an image becomes ![description](url)', () => {
+    const note = noteWith('x', paragraph(text('a')), { type: 'image', attrs: { src: 'https://x/a.png', alt: 'cat', title: null } })
+    expect(noteToMarkdown(note)).toBe('a\n\n![cat](https://x/a.png)')
+  })
+
   test('converts every block type', () => {
     const note = noteWith(
       'Ideas',
@@ -98,9 +103,26 @@ describe('noteFromFile', () => {
     expect(noteFromFile('a.md', '#### four\n\n###### six')?.doc.content?.map((b) => b.attrs?.level)).toEqual([3, 3])
   })
 
-  test("markdown the editor can't hold is read as plain text", () => {
-    // Images aren't Draftab blocks
-    expect(noteFromFile('a.md', '![img](x.png)\n\ntext')?.doc.content).toEqual([paragraph(text('![img](x.png)')), { type: 'paragraph' }, paragraph(text('text'))])
+  test('an image on a line of its own becomes an image block', () => {
+    expect(noteFromFile('a.md', '![cat](https://x/a.png)\n\ntext')?.doc.content).toEqual([
+      { type: 'image', attrs: { src: 'https://x/a.png', alt: 'cat', title: null } },
+      paragraph(text('text')),
+    ])
+  })
+
+  test('an image inside text, in a list or with a relative address stays as text', () => {
+    expect(noteFromFile('a.md', 'before ![a](https://x/a.png) after')?.doc.content).toEqual([
+      paragraph(text('before ![a](https://x/a.png) after')),
+    ])
+    expect(noteFromFile('a.md', '![a](img.png)')?.doc.content).toEqual([paragraph(text('![a](img.png)'))])
+    const list = noteFromFile('a.md', '- ![a](https://x/a.png)')?.doc.content?.[0]
+    expect(list?.content?.[0].content).toEqual([paragraph(text('![a](https://x/a.png)'))])
+  })
+
+  test('formatting next to an inline image is kept', () => {
+    expect(noteFromFile('a.md', '**b** ![a](https://x/a.png)')?.doc.content).toEqual([
+      paragraph(text('b', [{ type: 'bold' }]), text(' ![a](https://x/a.png)')),
+    ])
   })
 
   test('.markdown works too, in any case', () => {

@@ -771,6 +771,32 @@ body.sidebar-collapsed #sidebar {
   margin: 2em 0;
 }
 
+.tiptap .image-block {
+  margin: 1em 0;
+}
+
+.tiptap .image-block img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.tiptap .image-block.ProseMirror-selectednode img,
+.tiptap .image-block.ProseMirror-selectednode .image-broken {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+.tiptap .image-broken {
+  padding: 0.5em 0.75em;
+  border: 1px dashed var(--border-field);
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 0.85em;
+  overflow-wrap: anywhere;
+}
+
 /* ---------- Links ---------- */
 
 .tiptap a {

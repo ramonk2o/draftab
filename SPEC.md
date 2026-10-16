@@ -23,7 +23,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
   - Opening or closing the sidebar (by the button or automatically) doesn't move the note's text.
   - While collapsed by the button, the sidebar button shows it (a different icon); hidden while typing, it doesn't.
 - Import a file as a note (next to New note): one `.md` or `.txt` file becomes a new note, which opens.
-  - `.md` / `.markdown` is read as markdown (headings, lists, checklists, quotes, code, dividers, marks, links); headings smaller than `###` become `###`. If something in it can't become a Draftab block, the file is read as plain text instead.
+  - `.md` / `.markdown` is read as markdown (headings, lists, checklists, quotes, code, dividers, marks, links, images); an image on a line of its own becomes an image block; an image in the middle of a line of text (or in a list item), or whose address isn't `http`/`https` (e.g. a relative `img.png`), stays as its `![description](address)` text; headings smaller than `###` become `###`. If something in it can't become a Draftab block, the file is read as plain text instead.
   - `.txt` is plain text: each line becomes a paragraph. Windows and old Mac line breaks are accepted.
   - The title is automatic and the text size is the one set for new notes. An empty file creates nothing and shows a message.
 
@@ -41,6 +41,12 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 
 ### Editor
 - Markdown shortcuts turn into blocks while typing: `#`/`##`/`###`, `-`, `1.`, `- [ ]`, `>`, ` ``` `, `---`, `**bold**`, `*italic*`, `~~strikethrough~~`, `++underline++`, `` `code` ``, links. Pasted text with `~~…~~` or `++…++` gets the same marks. Strikethrough and underline are `~~` and `++` in `.md` files too (export and import). Cmd/Ctrl+click opens a link in a new tab (an address without a protocol gets `https://`).
+- Images: an image is a block of its own (like a divider) that shows a picture from a web address. The note stores only the address (and the description, `alt`, when there is one), never the file; only `http`/`https` addresses are accepted (`data:` and other schemes are dropped).
+  - It shows at its natural size, at most the width of the note; no resizing.
+  - A click selects it; Backspace/Delete removes it; its handle drags it like any block. Images don't go into lists by dragging (like dividers).
+  - When the picture can't load (gone from the site, no internet), a discreet box shows its address in its place.
+  - How images get in: typing `![description](url)`; pasting, alone on an empty line outside lists and quotes, an `http`/`https` address ending in `.png`, `.jpg`, `.jpeg`, `.gif`, `.webp`, `.svg` or `.avif` (a `?query` or `#fragment` after it is fine): the image goes in above the line, and the cursor stays on the empty line below it (anywhere else, the address stays a normal link); pasting an image copied from a page (Chrome's "Copy image"), using the address in the copied HTML; pasting HTML that has images. A pasted image with no web address (a screenshot, a file) is ignored.
+  - Opening a note loads its images from their sites, so those sites see the request (like any page with external images).
 - Backspace at the start of a heading turns it into a paragraph, keeping its text and formatting (Cmd/Ctrl+Option/Alt+0 does the same, Tiptap's shortcut).
 - Backspace at the start of a code block turns it into normal text, one paragraph per line. At the start of a quote's first paragraph, the whole quote becomes normal paragraphs; at the start of a later one, that paragraph leaves the quote, splitting it. Backspace right after typing a shortcut undoes the shortcut (Tiptap's behavior). Each change is its own undo step.
 - Dragging blocks: each block shows a handle on hover; dragging it moves the block and the new order is saved.
@@ -51,6 +57,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
   - Headings, quotes, code, dividers and whole lists don't go into lists.
 - Double-clicking a block's handle selects the block's content and copies it exactly like Cmd/Ctrl+C (formatted, plus plain text). The whole-list bar does the same for the whole list. A block without text (a divider) is selected and copied whole. A "Copied" label confirms it.
 - Plain-text copies (including Cmd/Ctrl+C) have one line per block.
+- Plain-text copies of an image give `![description](url)`.
 - Tags: `#` followed by a letter, then letters, digits, `_` or `-` (e.g. `#idea`, `#project-x`), at the start of a line or after a space. Not in code (inline or block). Tags stay plain text in the note (nothing changes in the stored content or in exports); the editor only shows them differently, like links. Cmd/Ctrl+click on a tag puts it in the sidebar search (opening the sidebar if it's collapsed); a plain click places the cursor, so the tag can be edited. The search stays a text search: `#proj` also finds `#project`.
 - Color swatches: color codes show a small sample of the color just before them: `#` + 3, 4, 6 or 8 hex digits (`#fff`, `#3a7bd5`, `#3a7bd580`) and `rgb(…)`/`rgba(…)` with three values from 0 to 255 (or 0%–100%) separated by commas or spaces, plus an optional alpha (0–1 or a percentage, after a comma or `/`). Case doesn't matter. The code can't be glued to a letter, digit, `_` or `-` on either side (`a#fff`, `#fffx` aren't colors). They show everywhere, including inline code and code blocks. Like tags, it's only how the editor shows them: nothing changes in the stored content, exports or copies. A code that is also a tag (`#cafe`) gets the swatch and stays a tag. "Show color swatches" in Settings (on by default) turns them on or off, in every open tab.
 - Calculations: typing `=` right after a math expression writes its result after the `=` (`2*5=` → `2*5=10`).
@@ -70,6 +77,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
   - Bold `*x*`, italic `_x_`, strikethrough `~x~`, inline code `` `x` ``; underline has no equivalent and becomes plain text. Spaces at the edges of a formatted piece stay outside the marks (WhatsApp ignores marks next to a space).
   - Headings become a bold line. Bullet list `- `, numbered list `1. `, checklist `☐ ` / `☑ `; nested levels are indented 2 spaces per level. Quote: each line starts with `> `. Code block between ` ``` `. Divider `———`.
   - Link: `text (url)`, or only the url when the text is the url itself.
+  - Image: its address on a line of its own.
   - Top-level blocks are separated by one blank line; the lines inside a block (list items, quote lines, code lines, line breaks in a paragraph) stay together. Empty paragraphs don't add blank lines: there's never more than one blank line in a row.
 - Export, copy and pin are disabled while the note is empty (an empty note isn't saved).
 - Text size of the note: smaller (A−) and bigger (A+) buttons with the current size between them, also Cmd/Ctrl+Shift+, (smaller) and Cmd/Ctrl+Shift+. (bigger). Cmd/Ctrl + and − stay Chrome's zoom.
@@ -83,6 +91,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
   - Characters: the whole note as markdown, marks included — the same text as the exported file.
   - Without markdown: the plain text, with one line break between blocks — the same text as a plain-text copy.
   - Selected: only while there's a text selection, counted like "without markdown".
+  - An image counts as its `![description](url)` in "characters" and as nothing in "without markdown".
   - Spaces and line breaks count; line breaks at the end of the note (or of the selection) don't. An emoji or accented letter counts as one character. Numbers use the browser's language separators.
   - Hidden while the note is empty. The totals update ~300 ms after typing stops; the selection count right away.
 
@@ -109,7 +118,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
   - The title and address are always the tab's, even when the selection is inside a frame.
   - When the selection's formatted content can't be read or has no text (text fields, frames from other sites, the PDF viewer), the plain selected text Chrome gives with the click is saved instead, one paragraph per line.
 - The note: a `#` heading with the page title (the address's domain when the page has no title), a paragraph with the page's address as a link, then the content. For a selection the heading starts with "Excerpt:" ("Trecho:" in Portuguese, following the interface language), e.g. `# Excerpt: Page title`.
-- The content is converted into Draftab blocks: content headings move down a level so the page title is the only `#` (`h1`/`h2` → `##`, `h3`–`h6` → `###`); paragraphs, lists, quotes, code blocks, dividers, line breaks, links (made absolute; only `http`, `https` and `mailto`), bold, italic, strikethrough, underline and inline code are kept. Images, video, iframes and forms are dropped. A table becomes one paragraph per row, cells separated by ` · `; a row whose cells hold paragraphs, lists or other blocks (including a table inside a table) keeps those blocks instead, so no text is repeated. A heading inside a list item becomes a bold paragraph (list items start with a paragraph). Empty paragraphs are dropped.
+- The content is converted into Draftab blocks: content headings move down a level so the page title is the only `#` (`h1`/`h2` → `##`, `h3`–`h6` → `###`); paragraphs, lists, quotes, code blocks, dividers, line breaks, links (made absolute; only `http`, `https` and `mailto`), bold, italic, strikethrough, underline and inline code are kept. Images are kept as image blocks with absolute addresses, except those without an address, with a `data:` address, or that the page declares smaller than 50px wide or tall (`width`/`height` attributes: icons, tracking pixels); an image inside a link keeps only the image. Video, iframes and forms are dropped. Content with images but no text still counts as "no text". A table becomes one paragraph per row, cells separated by ` · `; a row whose cells hold paragraphs, lists or other blocks (including a table inside a table) keeps those blocks instead, so no text is repeated. A heading inside a list item becomes a bold paragraph (list items start with a paragraph). Empty paragraphs are dropped.
 - The title is automatic; font and text size come from the "new notes" settings, like an imported file.
 - When nothing can be saved, no tab opens and no note is created. Draftab's icon shows a red "!" for ~5 seconds, and meanwhile its tooltip has the message: on pages extensions can't run on (`chrome://`, the Chrome Web Store, the PDF viewer, Draftab itself) "This page can't be saved"; when there's no main text, or the selection has no text, a message suggesting to select a passage and use the right-click menu. On a page Draftab can run on (no main text, or Readability failed on it), the same message also shows in a small notice in the corner of the page for ~5 seconds.
 - If converting the captured page into a note fails (unexpected HTML), the Draftab tab opens a blank note with a message saying the page couldn't be converted.
@@ -135,7 +144,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 - Permissions: `storage`, `unlimitedStorage`, `alarms`, `downloads`, `activeTab`, `scripting`, `contextMenus` — nothing else (justifications in STORE.md). A new permission is recorded here first. `activeTab` gives access only to the tab where the user clicked the icon or the menu item, only then; no host permissions.
 - Saving pages: the service worker injects the capture (`clip-page.js`, with Readability, a separate bundle so the new tab doesn't load it) and passes the HTML to a new Draftab tab through a temporary `clip:` key; the new tab converts it, because the service worker has no DOM. The HTML is parsed with `DOMParser` (an inert document: nothing runs or loads) and turned into blocks with the editor's schema, so only Draftab blocks survive.
 - Vite + TypeScript: simple build, types catch errors, libraries via npm.
-- Tiptap 3 (StarterKit, TaskList/TaskItem, DragHandle, Markdown): mature, ready-made markdown shortcuts and drag handle.
+- Tiptap 3 (StarterKit, TaskList/TaskItem, Image, DragHandle, Markdown): mature, ready-made markdown shortcuts and drag handle.
 - No React or other UI framework: the interface around the editor is small; fewer layers to read.
 - `chrome.storage.local` + `unlimitedStorage` is the source of truth for notes and settings: no ~5 MB localStorage limit, not wiped when clearing cookies, and reachable from the service worker.
 - One key per note (`note:<id>`): avoids rewriting everything on every keystroke. Open tabs update their list with just the note that changed.
@@ -152,4 +161,5 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 - If Chrome's "Ask where to save each file" option is on, each automatic backup opens the save dialog (documented in the README).
 - Each automatic backup briefly shows Chrome's download icon.
 - Search runs in memory, which is fine for a few hundred notes.
+- Images live on their original sites: if a site removes one, it's gone from the note too (the note only has the address). Backups don't contain the pictures.
 - Markdown conversion can lose small details (it's only for export); restoring a backup uses the Tiptap JSON, without losses.

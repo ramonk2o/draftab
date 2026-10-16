@@ -65,4 +65,10 @@ describe('characters', () => {
     expect(characters(1)).toBe('1 character')
     expect(characters(0)).toBe('0 characters')
   })
+
+  test('an image counts as its markdown, and as nothing without markdown', () => {
+    const doc = { type: 'doc', content: [{ type: 'image', attrs: { src: 'https://x/a.png', alt: null, title: null } }] }
+    expect(markdownCharacters({ ...newBlankNote(), doc })).toBe('![](https://x/a.png)'.length)
+    expect(plainTextCharacters(contentSchema().nodeFromJSON(doc))).toBe(0)
+  })
 })

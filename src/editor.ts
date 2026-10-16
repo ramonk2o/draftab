@@ -9,6 +9,7 @@ import { Tags } from './tags'
 import { ColorSwatches } from './colors'
 import { Calculations } from './calculate'
 import { UnderlineShortcut } from './underline-shortcut'
+import { plainTextOf } from './images'
 import { t } from './i18n'
 
 // Handle icon: six dots in two columns
@@ -38,6 +39,8 @@ let handlePos: number | null = null
 function blockFirstLine(block: HTMLElement): DOMRect {
   const box = block.getBoundingClientRect()
   const text = block.matches('p, h1, h2, h3, pre') ? block : block.querySelector<HTMLElement>('p, h1, h2, h3, pre')
+  // Image: the handle sits next to its top, not the middle of a tall picture
+  if (block.matches('.image-block')) return new DOMRect(box.left, box.top, box.width, 24)
   if (!text) return box // divider: center on the line itself
 
   const style = getComputedStyle(text)
@@ -93,8 +96,9 @@ export function createEditor(element: HTMLElement, onTagClick: (tag: string) => 
     autofocus: true,
     editorProps: {
       // Plain-text copies put one line per block (by default ProseMirror separates blocks
-      // with a blank line, which turns a copied list into "item, blank, blank, item")
-      clipboardTextSerializer: (slice) => slice.content.textBetween(0, slice.content.size, '\n'),
+      // with a blank line, which turns a copied list into "item, blank, blank, item");
+      // an image becomes its ![description](url)
+      clipboardTextSerializer: (slice) => plainTextOf(slice.content),
     },
     extensions: [
       ...contentExtensions,
