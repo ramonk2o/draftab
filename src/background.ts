@@ -60,14 +60,21 @@ chrome.action.onClicked.addListener(async (tab) => {
   await openClip(clip)
 })
 
-// Right-click menu: only the selection (in the frame where it was made)
+// Right-click menu: only the selection (in the frame where it was made). The title and
+// address are the tab's; when the selection's HTML can't be read (text fields, frames from
+// other sites, the PDF viewer), the new tab uses the plain text Chrome gives with the click.
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId !== MENU_ID || tab?.id === undefined) return
-  const clip = await capture(tab.id, info.frameId, async (target) => {
+  const captured = await capture(tab.id, info.frameId, async (target) => {
     const [{ result }] = await chrome.scripting.executeScript({ target, func: captureSelection })
     return result as PageClip | null
   })
-  await openClip(clip)
+  await openClip({
+    title: tab.title ?? '',
+    url: tab.url ?? info.pageUrl ?? '',
+    html: 'error' in captured ? '' : captured.html,
+    text: info.selectionText ?? '',
+  })
 })
 
 // Runs the capture; a page extensions can't run on gives "unavailable", no text gives "empty"

@@ -7,7 +7,9 @@ import { newBlankNote, textOf, withUpdatedTitle, type Note, type NoteFont } from
 // hands to the new tab, and how it becomes a note.
 
 export type ClipError = 'unavailable' | 'empty' // a page extensions can't run on / no main text
-export type PageClip = { title: string; url: string; html: string }
+// text: the plain selected text Chrome gives with a right-click, used when the HTML has no
+// text (text fields, frames from other sites, the PDF viewer)
+export type PageClip = { title: string; url: string; html: string; text?: string }
 export type Clip = PageClip | { error: ClipError }
 
 // Elements whose content never goes into the note
@@ -18,8 +20,9 @@ const DROPPED =
 // null when the content has no text (e.g. a selection with only an image).
 // textSize and font: the "Text size of new notes" and "Font of new notes" settings
 export function clipToNote(clip: PageClip, textSize = 100, font: NoteFont = 'sans'): Note | null {
-  const content = htmlToBlocks(clip.html, clip.url)
-  if (textOf({ type: 'doc', content }).trim() === '') return null
+  let content = htmlToBlocks(clip.html, clip.url)
+  if (!hasText(content)) content = plainTextBlocks(clip.text ?? '')
+  if (!hasText(content)) return null
 
   const title = clip.title.replace(/\s+/g, ' ').trim() || domainOf(clip.url)
   const doc: JSONContent = {
@@ -69,6 +72,19 @@ export function htmlToBlocks(html: string, baseUrl: string): JSONContent[] {
   // The editor's schema keeps only Draftab blocks and marks
   const doc = SchemaParser.fromSchema(contentSchema()).parse(body).toJSON() as JSONContent
   return (doc.content ?? []).filter((block) => !(block.type === 'paragraph' && textOf(block).trim() === ''))
+}
+
+function hasText(blocks: JSONContent[]): boolean {
+  return textOf({ type: 'doc', content: blocks }).trim() !== ''
+}
+
+// One paragraph per line with text
+function plainTextBlocks(text: string): JSONContent[] {
+  return text
+    .split(/\r\n?|\n/)
+    .map((line) => line.trim())
+    .filter((line) => line !== '')
+    .map((line) => ({ type: 'paragraph', content: [{ type: 'text', text: line }] }))
 }
 
 function absoluteUrl(href: string | null, baseUrl: string): string | null {

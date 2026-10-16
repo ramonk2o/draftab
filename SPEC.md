@@ -106,6 +106,8 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 ### Saving web pages
 - Clicking Draftab's toolbar icon on a web page saves its main text (found with Mozilla Readability, which drops menus, ads, footers and comments) as a new note and opens it in a new Draftab tab.
 - Right-clicking selected text shows "Save to Draftab" (only when there's a selection); it saves just the selection, the same way.
+  - The title and address are always the tab's, even when the selection is inside a frame.
+  - When the selection's formatted content can't be read or has no text (text fields, frames from other sites, the PDF viewer), the plain selected text Chrome gives with the click is saved instead, one paragraph per line.
 - The note: a `#` heading with the page title (the address's domain when the page has no title), a paragraph with the page's address as a link, then the content.
 - The content is converted into Draftab blocks: content headings move down a level so the page title is the only `#` (`h1`/`h2` → `##`, `h3`–`h6` → `###`); paragraphs, lists, quotes, code blocks, dividers, line breaks, links (made absolute; only `http`, `https` and `mailto`), bold, italic, strikethrough, underline and inline code are kept. Images, video, iframes and forms are dropped; a table becomes one paragraph per row, cells separated by ` · `. Empty paragraphs are dropped.
 - The title is automatic; font and text size come from the "new notes" settings, like an imported file.

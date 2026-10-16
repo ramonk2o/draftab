@@ -92,8 +92,21 @@ describe('clipToNote', () => {
     expect([note.textSize, note.font]).toEqual([120, 'serif'])
   })
 
+  test('a selection whose HTML has no text uses the plain text Chrome gave, one paragraph per line', () => {
+    const note = clipToNote({ ...clip, html: '<form><textarea>typed</textarea></form>', text: 'first line\nsecond <b>line</b>' })!
+    const [, , ...body] = note.doc.content!
+    expect(body.map((b) => b.type)).toEqual(['paragraph', 'paragraph'])
+    expect(text(body)).toBe('first line\nsecond <b>line</b>')
+  })
+
+  test('the plain text is only a fallback: HTML with text wins', () => {
+    const note = clipToNote({ ...clip, html: '<p><strong>Rich</strong></p>', text: 'Rich' })!
+    expect(marksOf(note.doc.content![2]).map((m) => m.type)).toEqual(['bold'])
+  })
+
   test('null when the content has no text', () => {
     expect(clipToNote({ ...clip, html: '<p><img src="x.png"></p>' })).toBeNull()
     expect(clipToNote({ ...clip, html: '' })).toBeNull()
+    expect(clipToNote({ ...clip, html: '', text: '  ' })).toBeNull()
   })
 })
