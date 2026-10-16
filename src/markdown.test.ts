@@ -125,6 +125,12 @@ describe('noteFromFile', () => {
     ])
   })
 
+  test('an exported image with brackets, quotes and backslashes comes back the same', () => {
+    const image = { type: 'image', attrs: { src: 'https://x/a.png', alt: 'a]b [c]', title: 'say "hi" \\o/' } }
+    const markdown = noteToMarkdown(noteWith('x', image))
+    expect(noteFromFile('a.md', markdown)?.doc.content).toEqual([image])
+  })
+
   test('formatting next to an inline image is kept', () => {
     expect(noteFromFile('a.md', '**b** ![a](https://x/a.png)')?.doc.content).toEqual([
       paragraph(text('b', [{ type: 'bold' }]), text(' ![a](https://x/a.png)')),

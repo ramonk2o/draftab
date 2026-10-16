@@ -22,6 +22,13 @@ How a feature moves:
   - Markdown tables only hold formatted text in cells: lists, several paragraphs and merged cells would have to be blocked, or they'd be lost on export.
   - Check the custom drag-to-reorder and handles with tables (most likely the table moves whole), plus Copy for WhatsApp, character counts and Backspace at the start of the block.
 
+### Escape image description and title in markdown
+- **Status:** Implemented, waiting for the test in Chrome. On 2026-10-16: `npm test` 244/244 passing (2 new tests, which failed before the fix), `tsc` and build OK.
+- **Description:** an image's description (`alt`) with `[` or `]`, or a title with `"`, wrote broken markdown (`![a]b](url "say "hi"")`), which imports back as text instead of an image.
+- **Motivation:** direct request from the user.
+- **Deliverable:** `imageMarkdown` escapes `[`/`]` in the description and `"`/`\` in the title; export → import gives back the same image.
+- **How to verify:** `npm test` (new tests in `images.test.ts` and `markdown.test.ts`); in Chrome, paste HTML with `<img alt="a]b" title='say "hi"'>`, export the note and import the `.md`: the image comes back with the same description and title.
+
 ## Backup and settings
 
 ### Sync across computers

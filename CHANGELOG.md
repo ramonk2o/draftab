@@ -9,6 +9,7 @@ All notable changes to Draftab are documented here. The format is based on [Keep
 - **Save web pages**: clicking Draftab's toolbar icon saves the page's main text (without menus, ads or footers) as a new note, and "Save to Draftab" in the right-click menu saves just the selected passage (titled "Excerpt: <page title>", "Trecho:" in Portuguese). The note starts with the page title and a link to the page; headings, lists, quotes, code, links, formatting and images (minus tiny ones like icons and tracking pixels) are kept, tables' layout is not. It opens in a new Draftab tab, next to the page. When nothing can be saved (pages Chrome doesn't let extensions read, like `chrome://` pages and the Web Store, or no main text), no tab opens: the icon shows a red "!" with the reason in its tooltip, plus a notice in the corner of the page when Draftab can run there. New permissions: `activeTab`, `scripting`, `contextMenus`.
 
 ### Fixed
+- Images whose description has `[` or `]`, or whose title has `"` or `\`, are now written as valid markdown (export, backup, plain-text copies); before, the exported file imported them back as text instead of an image.
 - Plain-text copies (Cmd/Ctrl+C) keep line breaks made with Shift+Enter; they used to glue the two lines together.
 
 ## [1.2.0] — 2026-10-13

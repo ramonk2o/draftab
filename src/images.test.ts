@@ -21,6 +21,12 @@ describe('imageMarkdown', () => {
     expect(imageMarkdown({ src: 'https://x/a.png' })).toBe('![](https://x/a.png)')
     expect(imageMarkdown({ src: 'https://x/a.png', alt: 'cat', title: 'T' })).toBe('![cat](https://x/a.png "T")')
   })
+
+  test('brackets in the description and quotes and backslashes in the title are escaped', () => {
+    expect(imageMarkdown({ src: 'https://x/a.png', alt: 'a [b] c', title: 'say "hi" \\o/' })).toBe(
+      String.raw`![a \[b\] c](https://x/a.png "say \"hi\" \\o/")`,
+    )
+  })
 })
 
 describe('plainTextOf', () => {

@@ -12,10 +12,13 @@ export function isWebAddress(src: unknown): src is string {
 
 type ImageAttrs = { src?: string | null; alt?: string | null; title?: string | null }
 
-// ![description](address "title"): how an image is written in markdown and in plain-text copies
+// ![description](address "title"): how an image is written in markdown and in plain-text copies.
+// [ ] in the description and " \ in the title get a \ before them, so the markdown stays valid
+// (the importer reads them back without it)
 export function imageMarkdown(attrs: ImageAttrs): string {
-  const title = attrs.title ? ` "${attrs.title}"` : ''
-  return `![${attrs.alt ?? ''}](${attrs.src ?? ''}${title})`
+  const alt = (attrs.alt ?? '').replace(/[[\]]/g, '\\$&')
+  const title = attrs.title ? ` "${attrs.title.replace(/["\\]/g, '\\$&')}"` : ''
+  return `![${alt}](${attrs.src ?? ''}${title})`
 }
 
 // Plain text of copied content: one line per block, a line break as a new line,
