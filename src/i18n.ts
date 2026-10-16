@@ -59,8 +59,16 @@ const EN = {
 
   // Editor
   copied: 'Copied',
-  dragToMove: 'Drag to move',
-  dragList: 'Drag to move the whole list',
+  dragToMove: 'Drag to move, click for colors',
+  dragList: 'Drag to move the whole list, click for colors',
+  blockColor: 'Background color',
+  'color.none': 'No color',
+  'color.gray': 'Gray',
+  'color.red': 'Red',
+  'color.orange': 'Orange',
+  'color.yellow': 'Yellow',
+  'color.green': 'Green',
+  'color.blue': 'Blue',
   untitled: 'Untitled',
 
   // Saving web pages (toolbar icon and right-click menu)
@@ -190,8 +198,16 @@ const PT: Record<Key, string> = {
   'selected.other': '{n} selecionados',
 
   copied: 'Copiado',
-  dragToMove: 'Arraste para mover',
-  dragList: 'Arraste para mover a lista inteira',
+  dragToMove: 'Arraste para mover, clique para cores',
+  dragList: 'Arraste para mover a lista inteira, clique para cores',
+  blockColor: 'Cor de fundo',
+  'color.none': 'Sem cor',
+  'color.gray': 'Cinza',
+  'color.red': 'Vermelho',
+  'color.orange': 'Laranja',
+  'color.yellow': 'Amarelo',
+  'color.green': 'Verde',
+  'color.blue': 'Azul',
   untitled: 'Sem título',
 
   // Salvar páginas (ícone da barra e menu do botão direito)

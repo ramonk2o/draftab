@@ -32,6 +32,13 @@
   --text-on-danger: #fff;
   --dialog-shadow: rgba(0, 0, 0, 0.2);
   --backdrop: rgba(20, 20, 20, 0.35);
+  /* Block background colors (src/block-color.ts) */
+  --block-gray: #f0f0ee;
+  --block-red: #fde9ea;
+  --block-orange: #fcebdb;
+  --block-yellow: #fbf3d5;
+  --block-green: #e8f3e8;
+  --block-blue: #e4f0f9;
 
   --sidebar-width: 300px;
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -67,6 +74,12 @@
   --text-on-danger: #1b1b1d;
   --dialog-shadow: rgba(0, 0, 0, 0.6);
   --backdrop: rgba(0, 0, 0, 0.55);
+  --block-gray: #2e2e31;
+  --block-red: #3d2527;
+  --block-orange: #3b2b1e;
+  --block-yellow: #38321d;
+  --block-green: #213126;
+  --block-blue: #1e2d3b;
 }
 
 /* ---------- Layout: sidebar + editor area ---------- */
@@ -796,6 +809,74 @@ body.sidebar-collapsed #sidebar {
   font-size: 0.85em;
   overflow-wrap: anywhere;
 }
+
+/* ---------- Block background colors ---------- */
+
+.tiptap [data-color="gray"] { --block-color: var(--block-gray); }
+.tiptap [data-color="red"] { --block-color: var(--block-red); }
+.tiptap [data-color="orange"] { --block-color: var(--block-orange); }
+.tiptap [data-color="yellow"] { --block-color: var(--block-yellow); }
+.tiptap [data-color="green"] { --block-color: var(--block-green); }
+.tiptap [data-color="blue"] { --block-color: var(--block-blue); }
+
+/* The color reaches a little past the text (the shadow) without moving it */
+.tiptap [data-color] {
+  background: var(--block-color);
+  box-shadow: 0 0 0 0.25em var(--block-color);
+  border-radius: 2px;
+}
+
+/* A colored item also covers its marker (• or 1.), which sits outside the item:
+   a second shadow, moved left by the list's indentation */
+.tiptap ul:not([data-type="taskList"]) > li[data-color],
+.tiptap ol > li[data-color] {
+  box-shadow:
+    0 0 0 0.25em var(--block-color),
+    -1.375em 0 0 0.25em var(--block-color);
+}
+
+/* Color menu, opened by a click on a handle (src/color-menu.ts) */
+.color-menu {
+  position: fixed;
+  z-index: 50;
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+  background: var(--bg-dialog);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px var(--dialog-shadow);
+}
+
+.color-option {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 1px solid var(--border-field);
+  border-radius: 50%;
+  background: var(--swatch-color);
+  cursor: pointer;
+}
+
+.color-option:hover {
+  border-color: var(--text-muted);
+}
+
+/* The block's current color */
+.color-option[aria-pressed="true"] {
+  outline: 2px solid var(--link);
+  outline-offset: 1px;
+}
+
+.color-option[data-color="none"] {
+  --swatch-color: linear-gradient(to top right, transparent calc(50% - 1px), var(--text-muted) 50%, transparent calc(50% + 1px)), var(--bg);
+}
+.color-option[data-color="gray"] { --swatch-color: var(--block-gray); }
+.color-option[data-color="red"] { --swatch-color: var(--block-red); }
+.color-option[data-color="orange"] { --swatch-color: var(--block-orange); }
+.color-option[data-color="yellow"] { --swatch-color: var(--block-yellow); }
+.color-option[data-color="green"] { --swatch-color: var(--block-green); }
+.color-option[data-color="blue"] { --swatch-color: var(--block-blue); }
 
 /* ---------- Links ---------- */
 

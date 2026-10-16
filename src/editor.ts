@@ -4,6 +4,7 @@ import { Reorder, endDrag, startDrag } from './reorder'
 import { ListHandle } from './list-handle'
 import { contentExtensions } from './extensions'
 import { selectAndCopyBlock } from './copy-block'
+import { closeColorMenu, openColorMenu } from './color-menu'
 import { UnwrapBlock } from './unwrap-block'
 import { Tags } from './tags'
 import { ColorSwatches } from './colors'
@@ -147,8 +148,14 @@ export function createEditor(element: HTMLElement, onTagClick: (tag: string) => 
     ],
   })
 
+  // A click on the handle opens the block's color menu
+  handle.addEventListener('click', () => {
+    if (handlePos !== null) openColorMenu(editor.view, handlePos, handle)
+  })
+
   // Double-clicking the handle selects the block's content and copies it
   handle.addEventListener('dblclick', () => {
+    closeColorMenu()
     if (handlePos !== null) selectAndCopyBlock(editor.view, handlePos, handle)
   })
 

@@ -3,6 +3,7 @@ import { NodeSelection, Plugin } from '@tiptap/pm/state'
 import type { EditorView } from '@tiptap/pm/view'
 import { endDrag, startDrag } from './reorder'
 import { selectAndCopyBlock } from './copy-block'
+import { closeColorMenu, openColorMenu } from './color-menu'
 import { t } from './i18n'
 
 // Whole-list handle: a thin bar to the left of the list, further out than the
@@ -71,13 +72,21 @@ export const ListHandle = Extension.create({
             view.dragging = null
           }
 
+          // Click: color menu for the whole list
+          function onClick() {
+            const pos = list ? blockPosition(view, list) : null
+            if (pos !== null) openColorMenu(view, pos, handle)
+          }
+
           // Double-click: select and copy the whole list
           function onDoubleClick() {
+            closeColorMenu()
             const pos = list ? blockPosition(view, list) : null
             if (pos !== null) selectAndCopyBlock(view, pos, handle)
           }
 
           document.addEventListener('mousemove', onMouseMove)
+          handle.addEventListener('click', onClick)
           handle.addEventListener('dblclick', onDoubleClick)
           handle.addEventListener('dragstart', onDragStart)
           handle.addEventListener('dragend', onDragEnd)

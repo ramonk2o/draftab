@@ -11,6 +11,14 @@ How a feature moves:
 
 ## Editor
 
+### Block background colors
+- **Status:** Implemented, waiting for the user's test in Chrome. 2026-10-16: `npm test` passes (254 tests, 7 new in `block-color.test.ts`: color kept in the JSON, only palette names read from HTML, no color on images/dividers, markdown export unchanged, set/remove, Enter starts a block without color); `npm run build` passes; a static preview of the built CSS showed every block type colored, readable in both themes, with list markers inside the color. The menu and the handles (click, double-click, drag), syncing between tabs and undo weren't tested in Chrome yet (the browser extension wasn't connected).
+- **Description:** pick a highlight color for a block's background from a few preset colors that work in both light and dark mode. A single click on a block's handle (or on the whole-list bar) opens a small menu with "No color" and the colors.
+- **Motivation:** highlight blocks in a note (direct request).
+- **Decisions:** every block with a handle can get a color (paragraphs, headings, quotes, code, list and checklist items, whole lists), not images or dividers. The color lives only in Draftab: saved in the note and in backups, left out of the `.md`, copies and WhatsApp.
+- **Deliverable:** the color attribute on blocks, the color menu on the handles, the light/dark palette, tests and the SPEC.md rules.
+- **How to verify:** `npm test` passes; in Chrome: click a paragraph's handle → menu → yellow → the paragraph gets a yellow background; same on a heading, a list item, a whole list (bar), a quote and a code block; "No color" removes it; switching Light/Dark keeps the color readable; double-clicking the handle still copies; dragging still works; the color survives reloading the tab and shows in another open tab; Cmd+Z undoes it; Export as Markdown has no trace of the color; Enter at the end of a colored paragraph starts an uncolored one.
+
 ### Tables
 - **Status:** Idea
 - **Description:** a table block in notes.

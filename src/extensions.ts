@@ -2,6 +2,7 @@ import { getSchema } from '@tiptap/core'
 import StarterKit from '@tiptap/starter-kit'
 import { TaskList, TaskItem } from '@tiptap/extension-list'
 import { DraftabImage } from './images'
+import { BlockColors } from './block-color'
 
 // Extensions that define note content (blocks and marks).
 // Used by the editor and by the backup's markdown conversion.
@@ -22,6 +23,7 @@ export const contentExtensions = [
   TaskList,
   TaskItem.configure({ nested: true }),
   DraftabImage,
+  BlockColors,
 ]
 
 // The schema of these blocks, to check a document without an editor (created once, when first needed)
