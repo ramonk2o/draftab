@@ -6,6 +6,7 @@ import { showCopied, showLabel } from './copy-block'
 import { characters, markdownCharacters, plainTextCharacters, selectedCharacters } from './char-count'
 import { chooseFile, exportMarkdown } from './backup-ui'
 import { noteFromFile, noteToMarkdown } from './markdown'
+import { clipToNote } from './clip'
 import { noteToWhatsApp } from './whatsapp'
 import { openSettings } from './settings'
 import { setDateFormat, setupCalendar, showCalendar } from './calendar-ui'
@@ -67,6 +68,7 @@ import {
   readNote,
   readSettings,
   saveNote,
+  takeClip,
   saveSettings,
 } from './storage'
 
@@ -420,6 +422,27 @@ importButton.addEventListener('click', async () => {
 })
 
 settingsButton.addEventListener('click', () => openSettings())
+
+// ---------- Saved web pages (see "Saving web pages" in SPEC.md) ----------
+
+// The tab was opened by the toolbar icon or the right-click menu, with ?clip=<id>.
+// Returns true when it opened a note or showed a message.
+async function openClip(id: string): Promise<boolean> {
+  history.replaceState(null, '', location.pathname) // a reload doesn't create the note again
+  const clip = await takeClip(id)
+  if (!clip) return false
+  const note = 'error' in clip ? null : clipToNote(clip, newNoteTextSize, newNoteFont)
+  if (!note) {
+    open(newNote(), false)
+    const message = 'error' in clip && clip.error === 'unavailable' ? t('clipUnavailable') : t('clipEmpty')
+    setTimeout(() => alert(message), 100) // after the page shows up
+    return true
+  }
+  await saveNote(note)
+  updateNoteInList(note.id, note) // in the list right away, whether or not onNotesChanged came first
+  open(note, true)
+  return true
+}
 
 // After an import or deleting all notes (in this tab or another), reload with the
 // new data, discarding pending typing so it isn't written over the backup
@@ -808,10 +831,13 @@ async function start() {
   setupCalendar(settings.showCalendar, settings.dateFormat, insertDate)
   notes = await listNotes()
 
-  const openId = sessionStorage.getItem('openNoteId')
-  const openNote = openId ? await readNote(openId) : null
-  if (openNote) open(openNote, true)
-  else open(newNote(), false)
+  const clipId = new URLSearchParams(location.search).get('clip')
+  if (!clipId || !(await openClip(clipId))) {
+    const openId = sessionStorage.getItem('openNoteId')
+    const openNote = openId ? await readNote(openId) : null
+    if (openNote) open(openNote, true)
+    else open(newNote(), false)
+  }
 
   // Only now turn animations on, so the sidebar doesn't "slide" when the tab opens
   requestAnimationFrame(() => document.body.classList.remove('loading'))
