@@ -8,6 +8,7 @@ import {
   listNotes,
   onNewNoteTextSizeChanged,
   onNewNoteFontChanged,
+  onNewNoteHeadingChanged,
   onNoteSortChanged,
   onNotesChanged,
   onDateFormatChanged,
@@ -103,13 +104,13 @@ describe('notes', () => {
 
 describe('settings', () => {
   test('with nothing saved, uses the defaults', async () => {
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto', newNoteHeading: true })
   })
 
   test('saving one part keeps the rest', async () => {
     await saveSettings({ autoBackupMinutes: 60 })
     await saveSettings({ sidebarCollapsed: true })
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto', newNoteHeading: true })
   })
 })
 
@@ -138,7 +139,7 @@ describe('deleteAllNotes', () => {
     await saveSettings({ autoBackupMinutes: 60, sidebarCollapsed: true })
     await deleteAllNotes()
     expect(await listNotes()).toEqual([])
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto', newNoteHeading: true })
   })
 })
 
@@ -223,6 +224,23 @@ describe('text size of new notes', () => {
     await saveSettings({ noteSort: 'title' })
     await saveSettings({ newNoteTextSize: 90 })
     expect(received).toEqual([110, 90])
+  })
+})
+
+describe('new notes start with a heading', () => {
+  test('on by default; invalid values go back to on; tabs are told when it changes', async () => {
+    expect((await readSettings()).newNoteHeading).toBe(true)
+    await saveSettings({ newNoteHeading: false })
+    expect((await readSettings()).newNoteHeading).toBe(false)
+    await chrome.storage.local.set({ settings: { newNoteHeading: 'no' } })
+    expect((await readSettings()).newNoteHeading).toBe(true)
+
+    const values: boolean[] = []
+    await saveSettings({})
+    onNewNoteHeadingChanged((value) => values.push(value))
+    await saveSettings({ newNoteHeading: false })
+    await saveSettings({ theme: 'dark' })
+    expect(values).toEqual([false])
   })
 })
 

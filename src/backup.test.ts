@@ -41,9 +41,9 @@ beforeEach(() => {
 
 describe('createBackup', () => {
   test('follows the SPEC format and includes each note in markdown', () => {
-    const backup = createBackup([fullNote()], { autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: false, dateFormat: 'long', colorSwatches: true, calculations: true, decimalSeparator: 'auto' }, 999)
+    const backup = createBackup([fullNote()], { autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: false, dateFormat: 'long', colorSwatches: true, calculations: true, decimalSeparator: 'auto', newNoteHeading: true }, 999)
     expect(backup).toMatchObject({ app: 'draftab', version: 1, exportedAt: 999 })
-    expect(backup.settings).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: false, dateFormat: 'long', colorSwatches: true, calculations: true, decimalSeparator: 'auto' })
+    expect(backup.settings).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: false, dateFormat: 'long', colorSwatches: true, calculations: true, decimalSeparator: 'auto', newNoteHeading: true })
     expect(backup.notes[0].markdown).toBe('# Ideas\n\none **bold**\n\n- [x] done\n\n---')
   })
 })
@@ -51,13 +51,13 @@ describe('createBackup', () => {
 describe('round trip', () => {
   test('exporting and importing returns exactly the same notes', () => {
     const notes = [fullNote(), simpleNote('another', 50)]
-    const file = JSON.stringify(createBackup(notes, { autoBackupMinutes: 0, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto' }))
+    const file = JSON.stringify(createBackup(notes, { autoBackupMinutes: 0, sidebarCollapsed: true, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto', newNoteHeading: true }))
     expect(notesFromBackup(parseBackup(file))).toEqual(notes)
   })
 
   test("each note's text size goes into the file and comes back; old backups without it get 100%", () => {
     const big = { ...simpleNote('big', 1), textSize: 150 }
-    const backup = createBackup([big], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto' })
+    const backup = createBackup([big], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto', newNoteHeading: true })
     expect(backup.notes[0].textSize).toBe(150)
     expect(notesFromBackup(parseBackup(JSON.stringify(backup)))[0].textSize).toBe(150)
     const { textSize: _textSize, ...old } = backup.notes[0]
@@ -66,7 +66,7 @@ describe('round trip', () => {
 
   test("each note's font goes into the file and comes back; notes without one stay without", () => {
     const serif = { ...simpleNote('serif', 1), font: 'serif' as const }
-    const settings = { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'mono', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto' } as const
+    const settings = { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'mono', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto', newNoteHeading: true } as const
     const { font: _font, ...old } = simpleNote('old', 2) // from before fonts were per note
     const backup = createBackup([serif, old], settings)
     const restored = notesFromBackup(parseBackup(JSON.stringify(backup)))
@@ -78,7 +78,7 @@ describe('round trip', () => {
 
   test('pinned notes go into the file and come back; old backups without it import as not pinned', () => {
     const pinned = { ...simpleNote('pinned', 1), pinned: true }
-    const settings = { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto' } as const
+    const settings = { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto', newNoteHeading: true } as const
     const backup = createBackup([pinned], settings)
     expect(backup.notes[0].pinned).toBe(true)
     expect(notesFromBackup(parseBackup(JSON.stringify(backup)))[0].pinned).toBe(true)
@@ -106,7 +106,7 @@ describe('round trip', () => {
 describe('settings in the backup', () => {
   test('every setting goes into the file and comes back on import', async () => {
     // Non-default values in every field
-    const chosen = { autoBackupMinutes: 10080, sidebarCollapsed: true, theme: 'dark', noteSort: 'title', noteFont: 'serif', newNoteFont: 'mono', newNoteTextSize: 120, language: 'pt', showCalendar: false, dateFormat: 'short', colorSwatches: false, calculations: false, decimalSeparator: ',' } as const
+    const chosen = { autoBackupMinutes: 10080, sidebarCollapsed: true, theme: 'dark', noteSort: 'title', noteFont: 'serif', newNoteFont: 'mono', newNoteTextSize: 120, language: 'pt', showCalendar: false, dateFormat: 'short', colorSwatches: false, calculations: false, decimalSeparator: ',', newNoteHeading: false } as const
     await saveSettings(chosen)
     await saveNote(simpleNote('x', 1))
     const file = JSON.stringify(createBackup(await listNotes(), await readSettings()))
@@ -114,7 +114,7 @@ describe('settings in the backup', () => {
 
     // Reset everything to the defaults and import
     await replaceAll([], {})
-    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto' })
+    expect(await readSettings()).toEqual({ autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto', newNoteHeading: true })
     const backup = parseBackup(file)
     await replaceAll(notesFromBackup(backup), backup.settings)
     expect(await readSettings()).toEqual(chosen)
@@ -125,12 +125,12 @@ describe('settings in the backup', () => {
     const settings = await readSettings()
     const backup = createBackup([], settings)
     expect(Object.keys(backup.settings).sort()).toEqual(Object.keys(settings).sort())
-    expect(Object.keys(settings).sort()).toEqual(['autoBackupMinutes', 'calculations', 'colorSwatches', 'dateFormat', 'decimalSeparator', 'language', 'newNoteFont', 'newNoteTextSize', 'noteFont', 'noteSort', 'showCalendar', 'sidebarCollapsed', 'theme'])
+    expect(Object.keys(settings).sort()).toEqual(['autoBackupMinutes', 'calculations', 'colorSwatches', 'dateFormat', 'decimalSeparator', 'language', 'newNoteFont', 'newNoteHeading', 'newNoteTextSize', 'noteFont', 'noteSort', 'showCalendar', 'sidebarCollapsed', 'theme'])
   })
 })
 
 describe('parseBackup rejects invalid files', () => {
-  const valid = () => createBackup([simpleNote('a', 1)], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto' })
+  const valid = () => createBackup([simpleNote('a', 1)], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto', newNoteHeading: true })
   const withNote = (change: Record<string, unknown>) => {
     const b = valid()
     return JSON.stringify({ ...b, notes: [{ ...b.notes[0], ...change }] })
@@ -155,7 +155,7 @@ describe('parseBackup rejects invalid files', () => {
   })
 
   test('a backup with no notes is valid', () => {
-    const empty = createBackup([], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto' })
+    const empty = createBackup([], { autoBackupMinutes: 0, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: true, dateFormat: 'numeric', colorSwatches: true, calculations: true, decimalSeparator: 'auto', newNoteHeading: true })
     expect(parseBackup(JSON.stringify(empty)).notes).toEqual([])
   })
 })

@@ -29,6 +29,7 @@ const sortSelect = element<HTMLSelectElement>('#note-sort')
 const fontSelect = element<HTMLSelectElement>('#new-note-font')
 const textSizeSelect = element<HTMLSelectElement>('#new-note-text-size')
 const colorSwatchesBox = element<HTMLInputElement>('#color-swatches')
+const newNoteHeadingBox = element<HTMLInputElement>('#new-note-heading')
 const showCalendarBox = element<HTMLInputElement>('#show-calendar')
 const dateFormatSelect = element<HTMLSelectElement>('#date-format')
 const calculationsBox = element<HTMLInputElement>('#calculations')
@@ -41,7 +42,7 @@ closeButton.innerHTML = ICON_CLOSE
 
 export async function openSettings() {
   // Always opens with the current values and nothing left over from last time
-  const { autoBackupMinutes, language, theme, noteSort, newNoteFont, newNoteTextSize, showCalendar, dateFormat, colorSwatches, calculations, decimalSeparator } =
+  const { autoBackupMinutes, language, theme, noteSort, newNoteFont, newNoteTextSize, showCalendar, dateFormat, colorSwatches, calculations, decimalSeparator, newNoteHeading } =
     await readSettings()
   intervalSelect.value = String(autoBackupMinutes)
   languageSelect.value = language
@@ -50,6 +51,7 @@ export async function openSettings() {
   fontSelect.value = newNoteFont
   textSizeSelect.value = String(newNoteTextSize)
   colorSwatchesBox.checked = colorSwatches
+  newNoteHeadingBox.checked = newNoteHeading
   showCalendarBox.checked = showCalendar
   // Each format shown with today's date
   for (const option of dateFormatSelect.options) {
@@ -133,6 +135,11 @@ textSizeSelect.addEventListener('change', () => {
 sortSelect.addEventListener('change', () => {
   // Every tab (this one included) re-sorts its sidebar when it notices the change (onNoteSortChanged)
   saveSettings({ noteSort: sortSelect.value as NoteSort })
+})
+
+newNoteHeadingBox.addEventListener('change', () => {
+  // Every tab uses it for its next blank note (onNewNoteHeadingChanged)
+  saveSettings({ newNoteHeading: newNoteHeadingBox.checked })
 })
 
 colorSwatchesBox.addEventListener('change', () => {

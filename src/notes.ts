@@ -48,11 +48,12 @@ export function nextNoteFont(font: NoteFont): NoteFont {
 }
 
 // textSize and font: the "Text size of new notes" and "Font of new notes" settings
-export function newBlankNote(textSize = 100, font: NoteFont = 'sans'): Note {
+// heading: the first line starts as an empty level-1 heading ("New notes start with a heading")
+export function newBlankNote(textSize = 100, font: NoteFont = 'sans', heading = false): Note {
   const now = Date.now()
   return {
     id: crypto.randomUUID(),
-    doc: { type: 'doc', content: [{ type: 'paragraph' }] },
+    doc: { type: 'doc', content: [heading ? { type: 'heading', attrs: { level: 1 } } : { type: 'paragraph' }] },
     title: '',
     titleManual: false,
     textSize: validTextSize(textSize),

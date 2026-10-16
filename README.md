@@ -17,7 +17,7 @@ Everything below is described as rules in [SPEC.md](SPEC.md); this is the overvi
 
 ### Notes
 
-- **New tab = new note**, with the cursor already in the editor. An empty note (no text and no title of its own) is never saved, so opening and closing tabs leaves no clutter; a note that becomes empty leaves the list.
+- **New tab = new note**, with the cursor already in the editor, on a first line that starts as a heading (the note's title; Backspace makes it a normal line, and Settings can turn this off). An empty note (no text and no title of its own) is never saved, so opening and closing tabs leaves no clutter; a note that becomes empty leaves the list.
 - **Autosave**: the first keystroke creates the note; after that it saves ~500 ms after typing stops, and pending typing is saved when the tab is hidden or closed.
 - **Automatic title**: until you rename a note, its title is its first line (up to 80 characters). Renaming to empty goes back to automatic. The browser tab shows the open note's title.
 - **Several tabs at once**: a change in one tab shows up in the others (last write wins); a note deleted elsewhere is replaced by a blank one. Reloading a tab reopens the same note.
@@ -70,7 +70,7 @@ At the bottom right, **character counts**: the note as markdown (the same text a
 
 - **Backup**: export and import a JSON file with every note and setting (each note also in markdown, readable without Draftab). Importing validates the file, asks for confirmation and replaces everything; open tabs reload.
 - **Automatic backup** to `Downloads/draftab-backups/`: every minute, hour, day, week or month, only when something changed, even with no tab open (as long as Chrome is running). Files are named `draftab_YYYY-MM-DD-HHhMM.json`.
-- **Appearance**: light, dark or automatic theme (follows the system, live); interface in English or Portuguese (automatic follows Chrome); font and text size of new notes; sort order; color swatches on/off.
+- **Appearance**: light, dark or automatic theme (follows the system, live); interface in English or Portuguese (automatic follows Chrome); font and text size of new notes; whether new notes start with a heading; sort order; color swatches on/off.
 - **Calendar** (show it, date format) and **Calculations** (on/off, decimal separator).
 - **Delete all notes**, after typing a confirmation phrase; settings are kept.
 - Every setting applies to all open tabs immediately and goes into backups.
@@ -198,7 +198,7 @@ docs/store/              Chrome Web Store images (en and pt-BR)
 - Everything goes to `chrome.storage.local` (with the `unlimitedStorage` permission), always through `src/storage.ts`.
 - **One key per note** (`note:<id>`), so not everything is rewritten on every keystroke. The note stores the **Tiptap JSON**, which is the source of truth; markdown only exists on export.
 - Saved pages pass from the service worker to the new tab as a temporary `clip:<id>` key, deleted as soon as the tab reads it.
-- `settings` holds the settings (automatic backup interval, collapsed sidebar, theme, note sort order, font and text size of new notes, language, calendar and date format, color swatches, calculations and decimal separator) and `meta` holds timestamps: last change, last automatic backup and last import (which makes open tabs reload).
+- `settings` holds the settings (automatic backup interval, collapsed sidebar, theme, note sort order, font and text size of new notes, whether they start with a heading, language, calendar and date format, color swatches, calculations and decimal separator) and `meta` holds timestamps: last change, last automatic backup and last import (which makes open tabs reload).
 - Each note keeps its own font, text size and pinned state. Highlights are a mark in the note (the color's name only). Tags and color swatches are only editor decorations: the stored note never changes because of them.
 - The language, the theme and the font of new notes are also copied to the page's `localStorage` (and the open note's font to `sessionStorage`), so they're applied before the first paint; the note open in each tab is kept in its `sessionStorage`, so a reload reopens it.
 - Saving is automatic, after ~500 ms without typing. Other tabs get the change through `chrome.storage.onChanged`; if two tabs edit the same note, the last write wins.

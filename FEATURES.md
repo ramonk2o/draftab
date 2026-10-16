@@ -11,6 +11,13 @@ How a feature moves:
 
 ## Editor
 
+### New notes start with a heading
+- **Status:** Implemented, waiting for the user's test in Chrome. 2026-10-16: `npm test` passes (260 tests; new: blank note with and without the heading, a note with only the empty heading is empty, the setting's default/invalid value/change notice, backups carry it); in Chrome (the real extension, loaded headless): a new tab opens with an empty level-1 heading and the cursor in it (position 1, focused), nothing is stored until typing, typing writes a heading, Backspace on the empty heading makes a normal line that stays normal after typing, and with the setting off the blank note starts with a normal line. The Settings checkbox and New note were not clicked in Chrome.
+- **Description:** a blank note (new tab, New note) starts with its first line as a level-1 heading (as if `# ` had been typed), with the cursor in it. Only the first time: after that it's a normal note, and nothing puts the heading back. Imported files and saved pages don't change. A setting (on by default) turns it off.
+- **Motivation:** the first line is the note's title; starting with a heading saves typing `# ` every time (direct request).
+- **Deliverable:** blank notes with a heading, the "New notes start with a heading" setting (Settings → Appearance, in backups), tests and the SPEC.md rules.
+- **How to verify:** `npm test` passes; in Chrome: a new tab shows an empty heading line with the cursor blinking in it; typing writes a heading; Backspace on the empty heading turns it into a normal line and it stays so; closing the tab without typing leaves no note; New note does the same; importing a `.md` and saving a page don't change; turning the setting off makes the next blank note start with a normal line, in every open tab.
+
 ### Tables
 - **Status:** Idea
 - **Description:** a table block in notes.

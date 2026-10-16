@@ -59,6 +59,7 @@ import {
   onImport,
   onLanguageChanged,
   onNewNoteFontChanged,
+  onNewNoteHeadingChanged,
   onNoteSortChanged,
   onNewNoteTextSizeChanged,
   onNotesChanged,
@@ -97,11 +98,12 @@ let renaming = false // while renaming, the list isn't redrawn
 let noteSort: NoteSort = 'updated' // sidebar order, from Settings
 let newNoteTextSize = 100 // text size new notes start with, from Settings
 let newNoteFont: NoteFont = 'sans' // font new notes start with, from Settings
+let newNoteHeading = true // blank notes start with a heading, from Settings
 let oldNoteFont: NoteFont = 'sans' // font of notes without their own (settings.noteFont)
 
-// A blank note with the text size and font chosen in Settings
+// A blank note with the text size, font and first-line heading chosen in Settings
 function newNote(): Note {
-  return newBlankNote(newNoteTextSize, newNoteFont)
+  return newBlankNote(newNoteTextSize, newNoteFont, newNoteHeading)
 }
 
 // ---------- Saving ----------
@@ -631,6 +633,11 @@ onNewNoteFontChanged((font) => {
   rememberNewNoteFont(font)
 })
 
+// Also only for notes created from now on (a blank note already open stays as it is)
+onNewNoteHeadingChanged((heading) => {
+  newNoteHeading = heading
+})
+
 // ---------- Character counts (bottom right) ----------
 
 const noteStats = element<HTMLDivElement>('#note-stats')
@@ -846,6 +853,7 @@ async function start() {
   noteSort = settings.noteSort
   newNoteTextSize = settings.newNoteTextSize
   newNoteFont = settings.newNoteFont
+  newNoteHeading = settings.newNoteHeading
   oldNoteFont = settings.noteFont
   rememberNewNoteFont(newNoteFont)
   showColorSwatches(settings.colorSwatches)

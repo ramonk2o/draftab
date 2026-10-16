@@ -28,6 +28,7 @@ export type Settings = {
   colorSwatches: boolean // color codes (#3a7bd5) show a swatch of the color
   calculations: boolean // typing "=" after a calculation ("2*5=") writes the result
   decimalSeparator: DecimalSeparatorSetting // of calculations ("2*5="); auto = the interface language's
+  newNoteHeading: boolean // blank notes start with an empty level-1 heading
 }
 
 export type Meta = {
@@ -50,6 +51,7 @@ const DEFAULT_SETTINGS: Settings = {
   colorSwatches: true,
   calculations: true,
   decimalSeparator: 'auto',
+  newNoteHeading: true,
 }
 const DEFAULT_META: Meta = { lastChangeAt: 0, lastBackupAt: 0, lastImportAt: 0 }
 
@@ -193,6 +195,7 @@ export async function readSettings(): Promise<Settings> {
   if (typeof result.colorSwatches !== 'boolean') result.colorSwatches = true
   if (typeof result.calculations !== 'boolean') result.calculations = true
   if (!isDecimalSeparator(result.decimalSeparator)) result.decimalSeparator = 'auto'
+  if (typeof result.newNoteHeading !== 'boolean') result.newNoteHeading = true
   return result
 }
 
@@ -238,6 +241,10 @@ export function onNoteSortChanged(callback: (order: NoteSort) => void) {
 
 export function onNewNoteFontChanged(callback: (font: NoteFont) => void) {
   onFieldChanged('settings', 'newNoteFont', (font) => isNoteFont(font) && callback(font))
+}
+
+export function onNewNoteHeadingChanged(callback: (heading: boolean) => void) {
+  onFieldChanged('settings', 'newNoteHeading', (heading) => typeof heading === 'boolean' && callback(heading))
 }
 
 export function onNewNoteTextSizeChanged(callback: (size: number) => void) {

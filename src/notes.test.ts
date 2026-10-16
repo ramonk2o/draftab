@@ -81,6 +81,17 @@ describe('tabTitle', () => {
   })
 })
 
+describe('newBlankNote', () => {
+  test('starts with an empty paragraph, or an empty level-1 heading when asked', () => {
+    expect(newBlankNote().doc).toEqual({ type: 'doc', content: [{ type: 'paragraph' }] })
+    expect(newBlankNote(100, 'sans', true).doc).toEqual({ type: 'doc', content: [{ type: 'heading', attrs: { level: 1 } }] })
+  })
+
+  test('a note with only the empty heading is empty (not saved)', () => {
+    expect(isEmptyNote(newBlankNote(100, 'sans', true))).toBe(true)
+  })
+})
+
 describe('isEmptyNote', () => {
   test('no text and no user-given title', () => {
     expect(isEmptyNote(noteWith(doc(paragraph(), paragraph())))).toBe(true)
