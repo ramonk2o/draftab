@@ -6,11 +6,12 @@ Everything the Chrome Web Store developer dashboard asks for, ready to copy. The
 
 - **1.0.0:** live on the Chrome Web Store: https://chromewebstore.google.com/detail/draftab/oamemjkhgfcoelilpnjpemllbmladaog
 - **1.1.0:** live on the Chrome Web Store.
-- **1.2.0:** submitted as an update on 2026-10-13, in review (what's in it: CHANGELOG.md); the listing texts and screenshots below are for 1.2.0.
+- **1.2.0:** submitted as an update on 2026-10-13.
+- **1.3.0:** ready to submit as an update (what's in it: CHANGELOG.md); the listing texts and screenshots below are for 1.3.0.
 
 ## Package
 
-- **File:** `draftab-1.2.0.zip` (run `npm run zip`)
+- **File:** `draftab-1.3.0.zip` (run `npm run zip`)
 - **Default language:** English (`default_locale: en`); the listing is also localized to Portuguese (Brazil). The extension's interface is in English and Portuguese (Settings → Language; automatic by default, following Chrome).
 - The package includes a notices file with the licenses of the bundled dependencies (required by their MIT licenses).
 
@@ -18,8 +19,8 @@ Everything the Chrome Web Store developer dashboard asks for, ready to copy. The
 
 **Name:** Draftab
 
-**Summary** (from the manifest, 130/132 characters):
-> A markdown notepad in your new tab: drag blocks, tags, quick math, a calendar, auto backups. Your notes never leave your computer.
+**Summary** (from the manifest, 132/132 characters):
+> A markdown notepad in your new tab: drag blocks, highlights, images, saved web pages, backups. Your notes never leave your computer.
 
 **Description:**
 
@@ -31,6 +32,15 @@ Type # for a heading, - for a list, [ ] for a checklist, > for a quote, ``` for 
 
 ↕️ DRAG ANY BLOCK WHERE IT BELONGS
 Grab the handle next to any paragraph, heading or list item and drag it. The other blocks slide out of the way so you see exactly where it will land. Move single items or whole lists, nest items, pull them out of a list — and double-click a handle to copy that block in one go.
+
+🖍️ HIGHLIGHT WHAT MATTERS
+Select any text and pick a color from the small bar that appears above it: gray, red, orange, yellow, green or blue, each tuned to look right in the light and the dark theme. Cmd/Ctrl+Shift+H highlights with the last color you used.
+
+🖼️ IMAGES FROM THE WEB
+Paste an image address, or an image copied from any page, and it shows right in your note. Drag it like any other block. Draftab keeps only the address, never the file, so your notes stay light.
+
+🌐 SAVE WEB PAGES AS NOTES
+Click the Draftab icon on an article to save its main text as a new note — without menus, ads or footers — with the page title and a link back to it. Or select a passage, right-click and choose "Save to Draftab".
 
 🧮 QUICK MATH, RIGHT IN YOUR NOTES
 Type 2*5= and Draftab writes 10 for you. Add, subtract, multiply and divide, with parentheses and decimals — perfect for splitting a bill, adding up a budget or checking a number without opening a calculator. Choose a dot or a comma for decimals.
@@ -57,7 +67,7 @@ Export a complete backup of your notes and settings whenever you want — each n
 Light, dark, or automatic theme that follows your system. Give each note its own font — sans-serif, serif or monospace — and its own text size, with clean, comfortable typography. Work in several tabs at once: what you write in one shows up in the others. The interface speaks English and Portuguese.
 
 🔒 PRIVATE BY DESIGN
-Your notes live only in your browser, on your computer. No account, no server, no analytics, no tracking. Draftab never sends your data anywhere.
+Your notes live only in your browser, on your computer. No account, no server, no analytics, no tracking. Draftab never sends your data anywhere. (Images in your notes load from the sites that host them, like on any web page.)
 
 💚 FREE AND OPEN SOURCE
 Draftab is free forever and open source under the MIT license: https://github.com/ramonk2o/draftab
@@ -69,8 +79,8 @@ Tip: uninstalling the extension deletes its notes, so export a backup first.
 
 **Name:** Draftab
 
-**Summary** (from the manifest, 131/132 characters):
-> Bloco de notas em markdown na nova aba: blocos arrastáveis, tags, cálculos, calendário e backup. Suas notas não saem do computador.
+**Summary** (from the manifest, 129/132 characters):
+> Bloco de notas em markdown na nova aba: blocos arrastáveis, grifos, imagens, páginas salvas e backup. Nada sai do seu computador.
 
 **Description:**
 
@@ -82,6 +92,15 @@ Digite # para um título, - para uma lista, [ ] para um checklist, > para uma ci
 
 ↕️ ARRASTE CADA BLOCO PARA O LUGAR CERTO
 Pegue a alça ao lado de qualquer parágrafo, título ou item de lista e arraste. Os outros blocos abrem espaço para você ver exatamente onde ele vai cair. Mova itens soltos ou listas inteiras, coloque itens dentro de listas ou tire de lá — e dê dois cliques na alça para copiar aquele bloco de uma vez.
+
+🖍️ GRIFE O QUE IMPORTA
+Selecione qualquer texto e escolha uma cor na barrinha que aparece logo acima: cinza, vermelho, laranja, amarelo, verde ou azul, cada uma ajustada para ficar bem no tema claro e no escuro. Cmd/Ctrl+Shift+H grifa com a última cor usada.
+
+🖼️ IMAGENS DA WEB
+Cole o endereço de uma imagem, ou uma imagem copiada de qualquer página, e ela aparece na nota. Arraste como qualquer outro bloco. O Draftab guarda só o endereço, nunca o arquivo, então as notas continuam leves.
+
+🌐 SALVE PÁGINAS DA WEB COMO NOTAS
+Clique no ícone do Draftab num artigo para salvar o texto principal como uma nota nova — sem menus, anúncios ou rodapés — com o título da página e um link para ela. Ou selecione um trecho, clique com o botão direito e escolha "Salvar no Draftab".
 
 🧮 CÁLCULOS RÁPIDOS, DENTRO DA NOTA
 Digite 2*5= e o Draftab escreve 10 para você. Some, subtraia, multiplique e divida, com parênteses e decimais — ótimo para dividir uma conta, fechar um orçamento ou conferir um número sem abrir a calculadora. Escolha vírgula ou ponto para os decimais.
@@ -108,7 +127,7 @@ Exporte um backup completo das notas e configurações quando quiser — cada no
 Tema claro, escuro ou automático, que segue o sistema. Dê a cada nota a sua fonte — sem serifa, serifada ou monoespaçada — e o seu tamanho de texto, numa tipografia limpa e confortável. Use várias abas ao mesmo tempo: o que você escreve numa aparece nas outras. A interface fala português e inglês.
 
 🔒 PRIVADO DE VERDADE
-Suas notas ficam só no seu navegador, no seu computador. Sem conta, sem servidor, sem estatísticas de uso, sem rastreamento. O Draftab nunca envia seus dados para lugar nenhum.
+Suas notas ficam só no seu navegador, no seu computador. Sem conta, sem servidor, sem estatísticas de uso, sem rastreamento. O Draftab nunca envia seus dados para lugar nenhum. (As imagens das notas carregam dos sites onde estão, como em qualquer página da web.)
 
 💚 GRATUITO E DE CÓDIGO ABERTO
 O Draftab é gratuito para sempre e open source, com licença MIT: https://github.com/ramonk2o/draftab
@@ -134,7 +153,7 @@ Dica: desinstalar a extensão apaga as notas, então exporte um backup antes.
 | Screenshots (1 to 5) | 1280×800 | `docs/store/en/screenshot-*.png` and `docs/store/pt-BR/screenshot-*.png` |
 | Small promo tile | 440×280 | `docs/store/en/promo-small.png` and `docs/store/pt-BR/promo-small.png` |
 
-Screenshots are generated from the real extension (regenerate them when something visible changes); the promo tile is the user's artwork.
+Screenshots are generated from the real extension with `node scripts/screenshots.mjs` after `npm run build` (it needs Chrome for Testing; see the top of the script). Regenerate them when something visible changes. The promo tile is the user's artwork.
 
 ## Privacy practices
 
@@ -171,7 +190,7 @@ Screenshots are generated from the real extension (regenerate them when somethin
 
 1. **Before submitting:** push the repository to GitHub (the privacy policy URL must be public) and run `npm run zip`.
 2. **Developer account:** go to <https://chrome.google.com/webstore/devconsole>, sign in with your Google account, accept the agreement and pay the one-time US$ 5 registration fee. Verify the contact email the dashboard asks for.
-3. **New item:** click **New item** and upload `draftab-1.2.0.zip`.
+3. **New item:** click **New item** and upload `draftab-1.3.0.zip`.
 4. **Store listing tab:**
    - Description: paste the English description above.
    - Category and language: as in "Other listing fields".

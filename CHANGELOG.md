@@ -2,14 +2,21 @@
 
 All notable changes to Draftab are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [1.3.0] — 2026-10-16
+
+Ready to submit to the Chrome Web Store as an update.
 
 ### Added
 - **Highlight**: selecting text shows a small bar above it with "No color" and six colors (gray, red, orange, yellow, green, blue), each with its own shade in the light and dark themes; Cmd/Ctrl+Shift+H highlights with the last color used (or removes it). Works in any text except code, together with bold, links and the other marks. The highlight is saved in the note and in backups, but not in the exported `.md`, copies or Copy for WhatsApp.
 - **Images** in notes, from web addresses: the note keeps only the address, never the file. Type `![description](url)`, paste an image address on an empty line, or paste an image copied from a page ("Copy image") or HTML with images. Images show at their natural size (at most the note's width), move with the block handle and, when they can't load, show their address in a box. Export as Markdown and plain-text copies write `![description](url)`, Copy for WhatsApp writes the address, and importing a `.md` file reads images on a line of their own. A pasted screenshot or file is ignored. A note with only images is saved like any other.
 - **Save web pages**: clicking Draftab's toolbar icon saves the page's main text (without menus, ads or footers) as a new note, and "Save to Draftab" in the right-click menu saves just the selected passage (titled "Excerpt: <page title>", "Trecho:" in Portuguese). The note starts with the page title and a link to the page; headings, lists, quotes, code, links, formatting and images (minus tiny ones like icons and tracking pixels) are kept, tables' layout is not. It opens in a new Draftab tab, next to the page. When nothing can be saved (pages Chrome doesn't let extensions read, like `chrome://` pages and the Web Store, or no main text), no tab opens: the icon shows a red "!" with the reason in its tooltip, plus a notice in the corner of the page when Draftab can run there. New permissions: `activeTab`, `scripting`, `contextMenus`.
 
+### Changed
+- The extension's description (Chrome and the store summary) now mentions highlights, images and saving web pages.
+
 ### Fixed
+- The store package no longer includes a macOS `.DS_Store` file.
+- The block handle no longer shows in the top corner of the note when a tab opens with the mouse outside the note (e.g. over the sidebar).
 - Images whose description has `[` or `]`, or whose title has `"` or `\`, are now written as valid markdown (export, backup, plain-text copies); before, the exported file imported them back as text instead of an image.
 - Opening a note that ends in an image no longer selects the image (typing replaced it): the cursor goes on a line after it. With a note open in two tabs, changes arriving from the other tab no longer leave the cursor outside the text.
 - Plain-text copies (Cmd/Ctrl+C) keep line breaks made with Shift+Enter; they used to glue the two lines together.

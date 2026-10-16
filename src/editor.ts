@@ -29,6 +29,9 @@ function createHandle(): HTMLElement {
   handle.className = 'drag-handle'
   handle.title = t('dragToMove')
   handle.innerHTML = HANDLE_ICON
+  // Hidden until the mouse is over a block (DragHandle shows it); otherwise it sits in
+  // the editor's corner when the page opens with the mouse elsewhere
+  handle.style.visibility = 'hidden'
   return handle
 }
 

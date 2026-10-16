@@ -26,6 +26,8 @@ Everything below is described as rules in [SPEC.md](SPEC.md); this is the overvi
 
 - **Markdown as you type**: headings, lists, checklists, quotes, code, dividers, bold, italic, strikethrough, underline, inline code and links ([table below](#markdown-shortcuts)). Pasted `~~text~~` and `++text++` get the same marks.
 - **Backspace undoes blocks**: at the start of a heading it becomes a paragraph; at the start of a code block, normal text (one paragraph per line); at the start of a quote, normal paragraphs. Backspace right after a shortcut undoes the shortcut. Cmd/Ctrl+Z brings the block back.
+- **Highlight**: select text and a small bar above it offers six colors (gray, red, orange, yellow, green, blue), each with its own shade in the light and dark themes; "No color" removes it. Cmd/Ctrl+Shift+H highlights with the last color used. Works in any text except code. The highlight is saved in the note and in backups, but left out of the exported `.md`, copies and Copy for WhatsApp.
+- **Images** from web addresses (the note keeps only the address, never the file): type `![description](url)`, paste an image address on an empty line, or paste an image copied from a page. They show at their natural size (at most the note's width) and move with the block handle; one that can't load shows its address. Export and plain-text copies write `![description](url)`; importing a `.md` reads images on a line of their own.
 - **Links**: Cmd/Ctrl+click opens a link in a new tab (an address without a protocol gets `https://`); a plain click edits it.
 - **Tags**: `#` followed by a letter, then letters, digits, `_` or `-` (`#idea`, `#project-x`), at the start of a line or after a space, outside code. They're shown like links; Cmd/Ctrl+click puts the tag in the sidebar search. Tags are plain text: nothing changes in the stored note or exports.
 - **Calculations**: typing `=` right after a calculation without spaces writes the result (`2*5=` → `2*5=10`). `+ - * /`, parentheses, signs and decimals, with the usual precedence; results are rounded to 12 significant digits (`0.1+0.2=` → `0.3`). Invalid calculations (`1/0=`, `5=`), pasted text and code are left alone; Backspace right after removes the result. The decimal separator follows the interface language or is chosen in Settings, where calculations can also be turned off.
@@ -160,6 +162,10 @@ src/
   underline-shortcut.ts  ++text++ becomes underlined (typing and pasting)
   tags.ts                #tags: finding, highlighting, Cmd/Ctrl+click, search suggestions
   colors.ts              color swatches next to #hex and rgb() codes
+  highlight.ts           highlight mark (selected text with a color) and Cmd/Ctrl+Shift+H
+  highlight-bar.ts       bar of highlight colors above the selected text
+  images.ts              image blocks: web addresses only, markdown, plain-text copies, cursor off images
+  image-paste.ts         pasting image addresses and images copied from pages
   calculate.ts           calculations after "=" and the decimal separator
   calendar.ts            month grid and date formats (pure)
   calendar-ui.ts         the calendar at the bottom of the sidebar
@@ -182,6 +188,7 @@ src/
   newtab.css             styles (colors are variables at the top, once per theme)
   *.test.ts              tests; fake-chrome.ts simulates the chrome APIs in tests
 scripts/zip.mjs          builds the store package (npm run zip)
+scripts/screenshots.mjs  generates the store and README screenshots from dist/
 docs/screenshots/        images for this README
 docs/store/              Chrome Web Store images (en and pt-BR)
 ```
@@ -192,7 +199,7 @@ docs/store/              Chrome Web Store images (en and pt-BR)
 - **One key per note** (`note:<id>`), so not everything is rewritten on every keystroke. The note stores the **Tiptap JSON**, which is the source of truth; markdown only exists on export.
 - Saved pages pass from the service worker to the new tab as a temporary `clip:<id>` key, deleted as soon as the tab reads it.
 - `settings` holds the settings (automatic backup interval, collapsed sidebar, theme, note sort order, font and text size of new notes, language, calendar and date format, color swatches, calculations and decimal separator) and `meta` holds timestamps: last change, last automatic backup and last import (which makes open tabs reload).
-- Each note keeps its own font, text size and pinned state. Tags, color swatches and other highlights are only editor decorations: the stored note never changes because of them.
+- Each note keeps its own font, text size and pinned state. Highlights are a mark in the note (the color's name only). Tags and color swatches are only editor decorations: the stored note never changes because of them.
 - The language, the theme and the font of new notes are also copied to the page's `localStorage` (and the open note's font to `sessionStorage`), so they're applied before the first paint; the note open in each tab is kept in its `sessionStorage`, so a reload reopens it.
 - Saving is automatic, after ~500 ms without typing. Other tabs get the change through `chrome.storage.onChanged`; if two tabs edit the same note, the last write wins.
 - The full format (note, settings, backup file) is described in [SPEC.md](SPEC.md).

@@ -35,7 +35,8 @@ fs.copyFileSync(path.join(root, 'LICENSE'), path.join(dist, 'LICENSE'))
 
 const zipName = `draftab-${manifest.version}.zip`
 fs.rmSync(path.join(root, zipName), { force: true })
-execFileSync('zip', ['-r', '-X', '-q', path.join(root, zipName), '.'], { cwd: dist })
+// Leaves out the folder files macOS creates (.DS_Store), which may be copied from public/
+execFileSync('zip', ['-r', '-X', '-q', path.join(root, zipName), '.', '-x', '*.DS_Store'], { cwd: dist })
 
 const size = (fs.statSync(path.join(root, zipName)).size / 1024).toFixed(0)
 console.log(`${zipName} created (${size} KB, ${folders.length} bundled packages listed in THIRD_PARTY_NOTICES.txt)`)
