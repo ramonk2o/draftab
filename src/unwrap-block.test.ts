@@ -16,9 +16,6 @@ function stateAt(content: JSONContent[], pos: number, to = pos): EditorState {
   return EditorState.create({ doc, selection: TextSelection.create(doc, pos, to) })
 }
 
-// The expected blocks as the schema writes them (with every attribute, e.g. color: null)
-const normal = (content: JSONContent[]) => schema.nodeFromJSON({ type: 'doc', content }).toJSON().content
-
 function result(state: EditorState) {
   const tr = unwrapBlockAtStart(state)
   return tr && { content: tr.doc.toJSON().content, cursor: tr.selection.from }
@@ -28,7 +25,7 @@ describe('code block', () => {
   // "before" takes positions 0–7; the code block opens at 8, its text starts at 9
   test('becomes one paragraph per line, keeping empty lines', () => {
     const r = result(stateAt([paragraph('before'), code('let a = 1\n\nlet b = 2')], 9))
-    expect(r?.content).toEqual(normal([paragraph('before'), paragraph('let a = 1'), paragraph(), paragraph('let b = 2')]))
+    expect(r?.content).toEqual([paragraph('before'), paragraph('let a = 1'), paragraph(), paragraph('let b = 2')])
     expect(r?.cursor).toBe(9) // start of the first new paragraph
   })
 
@@ -49,7 +46,7 @@ describe('quote', () => {
   // "before" takes 0–7; the quote opens at 8, its first paragraph at 9, text at 10
   test('at the start of the first paragraph, the whole quote is undone', () => {
     const r = result(stateAt([paragraph('before'), quote(paragraph('one'), paragraph('two')), paragraph('after')], 10))
-    expect(r?.content).toEqual(normal([paragraph('before'), paragraph('one'), paragraph('two'), paragraph('after')]))
+    expect(r?.content).toEqual([paragraph('before'), paragraph('one'), paragraph('two'), paragraph('after')])
     expect(r?.cursor).toBe(9) // still at the start of "one"
   })
 
@@ -60,7 +57,7 @@ describe('quote', () => {
 
   test('quote at the very start of the note', () => {
     const r = result(stateAt([quote(paragraph('one'))], 2))
-    expect(r?.content).toEqual(normal([paragraph('one')]))
+    expect(r?.content).toEqual([paragraph('one')])
   })
 
   test('cursor in the middle of the text: not applied', () => {
@@ -79,13 +76,13 @@ describe('heading', () => {
   test('becomes a paragraph with the same text and marks, cursor where it was', () => {
     const bold = { type: 'text', text: 'big', marks: [{ type: 'bold' }] }
     const r = result(stateAt([paragraph('before'), heading(2, text('A '), bold)], 9))
-    expect(r?.content).toEqual(normal([paragraph('before'), { type: 'paragraph', content: [text('A '), bold] }]))
+    expect(r?.content).toEqual([paragraph('before'), { type: 'paragraph', content: [text('A '), bold] }])
     expect(r?.cursor).toBe(9)
   })
 
   test('also an empty heading, and inside a quote', () => {
-    expect(result(stateAt([heading(1)], 1))?.content).toEqual(normal([{ type: 'paragraph' }]))
-    expect(result(stateAt([quote(heading(3, text('q')))], 2))?.content).toEqual(normal([quote(paragraph('q'))]))
+    expect(result(stateAt([heading(1)], 1))?.content).toEqual([{ type: 'paragraph' }])
+    expect(result(stateAt([quote(heading(3, text('q')))], 2))?.content).toEqual([quote(paragraph('q'))])
   })
 
   test('only at the start of the heading', () => {

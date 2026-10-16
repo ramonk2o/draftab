@@ -59,9 +59,9 @@ const EN = {
 
   // Editor
   copied: 'Copied',
-  dragToMove: 'Drag to move, click for colors',
-  dragList: 'Drag to move the whole list, click for colors',
-  blockColor: 'Background color',
+  dragToMove: 'Drag to move',
+  dragList: 'Drag to move the whole list',
+  highlight: 'Highlight',
   'color.none': 'No color',
   'color.gray': 'Gray',
   'color.red': 'Red',
@@ -198,9 +198,9 @@ const PT: Record<Key, string> = {
   'selected.other': '{n} selecionados',
 
   copied: 'Copiado',
-  dragToMove: 'Arraste para mover, clique para cores',
-  dragList: 'Arraste para mover a lista inteira, clique para cores',
-  blockColor: 'Cor de fundo',
+  dragToMove: 'Arraste para mover',
+  dragList: 'Arraste para mover a lista inteira',
+  highlight: 'Grifo',
   'color.none': 'Sem cor',
   'color.gray': 'Cinza',
   'color.red': 'Vermelho',

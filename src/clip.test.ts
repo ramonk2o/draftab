@@ -85,21 +85,18 @@ describe('htmlToBlocks', () => {
 
   test('an image in a list item goes after the item\'s text, keeping the list whole', () => {
     const blocks = htmlToBlocks('<ul><li><img src="/a.png">caption</li><li>b</li></ul>', BASE)
-    const noColor = { color: null }
     expect(blocks).toEqual([
       {
         type: 'bulletList',
-        attrs: noColor,
         content: [
           {
             type: 'listItem',
-            attrs: noColor,
             content: [
-              { type: 'paragraph', attrs: noColor, content: [{ type: 'text', text: 'caption' }] },
+              { type: 'paragraph', content: [{ type: 'text', text: 'caption' }] },
               { type: 'image', attrs: { src: 'https://example.com/a.png', alt: null, title: null } },
             ],
           },
-          { type: 'listItem', attrs: noColor, content: [{ type: 'paragraph', attrs: noColor, content: [{ type: 'text', text: 'b' }] }] },
+          { type: 'listItem', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'b' }] }] },
         ],
       },
     ])
