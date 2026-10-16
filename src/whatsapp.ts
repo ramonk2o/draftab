@@ -33,6 +33,8 @@ function blockLines(node: JSONContent, depth: number): string[] {
       return ['```', ...plainText(node).split('\n'), '```']
     case 'horizontalRule':
       return ['———']
+    case 'image':
+      return [node.attrs?.src ?? '']
     default:
       // Paragraph (a line break inside it splits it into lines)
       return inlineText(node.content ?? []).split('\n')

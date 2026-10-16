@@ -24,6 +24,11 @@ describe('noteToWhatsApp', () => {
     expect(noteToWhatsApp({ type: 'doc', content: [title] })).toBe('')
   })
 
+  test('an image is its address on a line of its own', () => {
+    const image = { type: 'image', attrs: { src: 'https://x/a.png', alt: 'cat', title: null } }
+    expect(whatsApp(paragraph(text('a')), image, paragraph(text('b')))).toBe('a\n\nhttps://x/a.png\n\nb')
+  })
+
   test('one blank line between blocks, never more', () => {
     expect(whatsApp(paragraph(text('a')), paragraph(text('b')))).toBe('a\n\nb')
     expect(whatsApp(paragraph(text('a')), empty, empty, paragraph(text('b')))).toBe('a\n\nb')
