@@ -22,6 +22,15 @@ How a feature moves:
   - Markdown tables only hold formatted text in cells: lists, several paragraphs and merged cells would have to be blocked, or they'd be lost on export.
   - Check the custom drag-to-reorder and handles with tables (most likely the table moves whole), plus Copy for WhatsApp, character counts and Backspace at the start of the block.
 
+## Capture
+
+### Save a page or selection to Draftab
+- **Status:** In progress
+- **Description:** clicking Draftab's toolbar icon saves the page's main text as a new note (found with Mozilla Readability); selecting a passage and choosing "Save to Draftab" in the right-click menu saves just the selection. The note is the page title, a link to the page and the content converted to Draftab blocks; it opens in a new Draftab tab.
+- **Motivation:** keep things read on the web as notes, already formatted, without copying and pasting.
+- **Deliverable:** the icon action and the context menu item; the conversion HTML → Draftab blocks; error messages for pages that can't be saved or have no main text; SPEC, STORE, PRIVACY and README updated.
+- **How to verify:** `npm test` (conversion and temporary storage of captures) and `npm run build`; in Chrome: save a blog article and a news page with the icon, save a selection with a list and a link, try a `chrome://` page and the Draftab tab itself (message), reload the opened note (no duplicate).
+
 ## Backup and settings
 
 ### Sync across computers

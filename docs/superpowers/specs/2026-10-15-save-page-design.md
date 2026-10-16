@@ -12,7 +12,7 @@ The HTML is converted into Draftab blocks (the Tiptap JSON stays the source of t
 ## Decisions (from the conversation)
 - After saving, **a new Draftab tab opens with the note**.
 - The note is **page title + link to the source + content**.
-- Main text is found with **Mozilla Readability** (`@mozilla/readability`, Apache 2.0). It's an exception to "every dependency is MIT", recorded in SPEC.md; its license file ships in the package.
+- Main text is found with **Mozilla Readability** (`@mozilla/readability`, Apache 2.0). It's an exception to "every dependency is MIT", recorded in SPEC.md; its license goes into `THIRD_PARTY_NOTICES.txt`, which `npm run zip` already builds from every shipped dependency.
 
 ## Behavior (goes to SPEC.md)
 - Clicking the toolbar icon on a web page saves its main text as a new note and opens it in a new Draftab tab.
@@ -48,7 +48,7 @@ newtab.ts on load with ?clip=<uuid>
   └─ removes `?clip=` from the address (a reload doesn't create the note again)
 ```
 - The conversion runs in the new tab because the service worker has no DOM. No offscreen document and no extra permission.
-- Leftover `clip:*` keys (the tab was closed before it loaded) are deleted when the service worker starts and before each new capture.
+- Leftover `clip:*` keys older than 10 minutes (the tab was closed before it loaded) are deleted — only old ones, so two quick captures don't delete each other — when the service worker starts and before each new capture.
 - `clip:*` keys never go into backups (backups only read `note:*`) and don't count as notes.
 - Manifest: `"action": {}` (no popup; the tooltip is set by the service worker), plus the permissions `activeTab`, `scripting` and `contextMenus`. Readability is bundled into a separate entry (`clip-page.js`), injected only on click, so the new tab doesn't load it.
 

@@ -103,6 +103,16 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 - Calendar (show it, date format): see "Calendar".
 - Language: Automatic (default: Portuguese when Chrome's language is Portuguese, English otherwise), English or Português. It covers every text of the interface (buttons, hints, messages, confirmations, the "Untitled" name, the delete confirmation phrase) and the format of dates and numbers; the notes' content never changes. Changing it saves pending typing and reloads every open tab, in the new language.
 
+### Saving web pages
+- Clicking Draftab's toolbar icon on a web page saves its main text (found with Mozilla Readability, which drops menus, ads, footers and comments) as a new note and opens it in a new Draftab tab.
+- Right-clicking selected text shows "Save to Draftab" (only when there's a selection); it saves just the selection, the same way.
+- The note: a `#` heading with the page title (the address's domain when the page has no title), a paragraph with the page's address as a link, then the content.
+- The content is converted into Draftab blocks: content headings move down a level so the page title is the only `#` (`h1`/`h2` → `##`, `h3`–`h6` → `###`); paragraphs, lists, quotes, code blocks, dividers, line breaks, links (made absolute; only `http`, `https` and `mailto`), bold, italic, strikethrough, underline and inline code are kept. Images, video, iframes and forms are dropped; a table becomes one paragraph per row, cells separated by ` · `. Empty paragraphs are dropped.
+- The title is automatic; font and text size come from the "new notes" settings, like an imported file.
+- When nothing can be saved, the Draftab tab opens with a message and no note is created: on pages extensions can't run on (`chrome://`, the Chrome Web Store, the PDF viewer, Draftab itself) "This page can't be saved"; when there's no main text, or the selection has no text, a message suggesting to select a passage and use the right-click menu.
+- The page is read only at the moment of the click, only in that tab; nothing is sent anywhere.
+- The menu item and the icon's tooltip follow the interface language.
+
 ## Data model
 - `Note { id: string (uuid), doc: TiptapJSON, title: string, titleManual: boolean, textSize?: number, font?: 'sans' | 'serif' | 'mono', pinned?: boolean, createdAt: number, updatedAt: number }`
   `titleManual` = the user renamed the note; while it's `false`, `title` follows the first line.
@@ -112,13 +122,15 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
   The Tiptap JSON is the source of truth (no conversion losses).
 - `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark', noteSort: 'updated' | 'title' | 'created', noteFont: 'sans' | 'serif' | 'mono', newNoteFont: 'sans' | 'serif' | 'mono', newNoteTextSize: number, language: 'auto' | 'en' | 'pt', showCalendar: boolean, dateFormat: 'numeric' | 'iso' | 'short' | 'long', colorSwatches: boolean, calculations: boolean, decimalSeparator: 'auto' | '.' | ',' }` (0 = off; `newNoteTextSize` = text size of new notes, in percent, default 100; `newNoteFont` = font of new notes, missing = `noteFont`; `noteFont` = the font of notes without their own, no longer changed from Settings; `language` = the interface language, default `auto`; `showCalendar` = the calendar shows in the sidebar, default `true`; `dateFormat` = the format of dates inserted from the calendar, default `numeric`; `colorSwatches` = color codes show a swatch, default `true`; `calculations` = typing `=` after a calculation writes the result, default `true`; `decimalSeparator` = the decimal separator of calculations, default `auto`). Invalid stored values fall back to the defaults (an unknown interval moves to the closest one).
 - `meta { lastChangeAt: number, lastBackupAt: number, lastImportAt: number }` (`lastImportAt` marks an import or the deletion of all notes, and tells open tabs to reload)
+- `clip:<uuid>` = a captured page waiting for the new tab that turns it into a note: `{ title, url, html, createdAt }` or `{ error: 'unavailable' | 'empty', createdAt }`. The new tab deletes it when it reads it; leftovers older than 10 minutes are deleted when the service worker starts and before each capture. Never in backups.
 - Backup file:
   `{ app: "draftab", version: 1, exportedAt, settings, notes: [{ id, title, titleManual, textSize, font, pinned, markdown, doc, createdAt, updatedAt }] }`
   `markdown` is for humans to read; importing restores from `doc`. Backups without `textSize` import as 100%; without `pinned`, as not pinned; notes without `font` use the backup's `noteFont`.
 
 ## Technical decisions
 - Manifest V3 with `chrome_url_overrides.newtab`: the current standard for extensions.
-- Permissions: `storage`, `unlimitedStorage`, `alarms`, `downloads` — nothing else (justifications in STORE.md). A new permission is recorded here first.
+- Permissions: `storage`, `unlimitedStorage`, `alarms`, `downloads`, `activeTab`, `scripting`, `contextMenus` — nothing else (justifications in STORE.md). A new permission is recorded here first. `activeTab` gives access only to the tab where the user clicked the icon or the menu item, only then; no host permissions.
+- Saving pages: the service worker injects the capture (`clip-page.js`, with Readability, a separate bundle so the new tab doesn't load it) and passes the HTML to a new Draftab tab through a temporary `clip:` key; the new tab converts it, because the service worker has no DOM. The HTML is parsed with `DOMParser` (an inert document: nothing runs or loads) and turned into blocks with the editor's schema, so only Draftab blocks survive.
 - Vite + TypeScript: simple build, types catch errors, libraries via npm.
 - Tiptap 3 (StarterKit, TaskList/TaskItem, DragHandle, Markdown): mature, ready-made markdown shortcuts and drag handle.
 - No React or other UI framework: the interface around the editor is small; fewer layers to read.
@@ -130,7 +142,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 - Markdown is only an export format (backup, exported file, copy, counts); notes are stored as Tiptap JSON.
 - Vitest for the data, markdown and backup layers; the editor and the UI are checked in Chrome (by hand, plus automated browser scripts during development).
 - Note typography modeled on Tailwind Typography ("prose", MIT), adapted for notes: paragraphs stay close together, because every Enter creates a paragraph.
-- MIT license; every dependency shipped in the extension is MIT too.
+- MIT license; every dependency shipped in the extension is MIT too, except Mozilla Readability (Apache 2.0, compatible; its license goes into `THIRD_PARTY_NOTICES.txt` in the package like the others).
 - Language: English everywhere in the project (code, comments, UI, docs). The store listing also has a Brazilian Portuguese version.
 
 ## Known limitations
