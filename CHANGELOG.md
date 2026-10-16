@@ -5,7 +5,11 @@ All notable changes to Draftab are documented here. The format is based on [Keep
 ## [Unreleased]
 
 ### Added
-- **Save web pages**: clicking Draftab's toolbar icon saves the page's main text (without menus, ads or footers) as a new note, and "Save to Draftab" in the right-click menu saves just the selected passage (titled "Excerpt: <page title>", "Trecho:" in Portuguese). The note starts with the page title and a link to the page; headings, lists, quotes, code, links and formatting are kept, images and tables' layout are not. It opens in a new Draftab tab, next to the page. When nothing can be saved (pages Chrome doesn't let extensions read, like `chrome://` pages and the Web Store, or no main text), no tab opens: the icon shows a red "!" with the reason in its tooltip, plus a notice in the corner of the page when Draftab can run there. New permissions: `activeTab`, `scripting`, `contextMenus`.
+- **Images** in notes, from web addresses: the note keeps only the address, never the file. Type `![description](url)`, paste an image address on an empty line, or paste an image copied from a page ("Copy image") or HTML with images. Images show at their natural size (at most the note's width), move with the block handle and, when they can't load, show their address in a box. Export as Markdown and plain-text copies write `![description](url)`, Copy for WhatsApp writes the address, and importing a `.md` file reads images on a line of their own. A pasted screenshot or file is ignored. A note with only images is saved like any other.
+- **Save web pages**: clicking Draftab's toolbar icon saves the page's main text (without menus, ads or footers) as a new note, and "Save to Draftab" in the right-click menu saves just the selected passage (titled "Excerpt: <page title>", "Trecho:" in Portuguese). The note starts with the page title and a link to the page; headings, lists, quotes, code, links, formatting and images (minus tiny ones like icons and tracking pixels) are kept, tables' layout is not. It opens in a new Draftab tab, next to the page. When nothing can be saved (pages Chrome doesn't let extensions read, like `chrome://` pages and the Web Store, or no main text), no tab opens: the icon shows a red "!" with the reason in its tooltip, plus a notice in the corner of the page when Draftab can run there. New permissions: `activeTab`, `scripting`, `contextMenus`.
+
+### Fixed
+- Plain-text copies (Cmd/Ctrl+C) keep line breaks made with Shift+Enter; they used to glue the two lines together.
 
 ## [1.2.0] — 2026-10-13
 
