@@ -2,6 +2,11 @@
 
 All notable changes to Draftab are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- **Save web pages**: clicking Draftab's toolbar icon saves the page's main text (without menus, ads or footers) as a new note, and "Save to Draftab" in the right-click menu saves just the selected passage. The note starts with the page title and a link to the page; headings, lists, quotes, code, links and formatting are kept, images and tables' layout are not. It opens in a new Draftab tab. Pages Chrome doesn't let extensions read (like `chrome://` pages and the Web Store) show a message. New permissions: `activeTab`, `scripting`, `contextMenus`.
+
 ## [1.2.0] — 2026-10-13
 
 Submitted to the Chrome Web Store as an update.

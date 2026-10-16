@@ -139,7 +139,7 @@ Screenshots are generated from the real extension (regenerate them when somethin
 ## Privacy practices
 
 **Single purpose:**
-> Replace the new tab page with a local note-taking editor, where notes are written, organized and backed up on the user's own computer.
+> Replace the new tab page with a local note-taking editor, where notes are written, organized and backed up on the user's own computer, and where web pages or passages the user chooses can be saved as notes.
 
 **Permission justifications:**
 
@@ -149,6 +149,9 @@ Screenshots are generated from the real extension (regenerate them when somethin
 | `unlimitedStorage` | Notes are kept indefinitely and can grow beyond the default storage quota; without it, saving could fail and the user could lose notes. |
 | `alarms` | Runs the optional automatic backup at the interval the user chooses (every minute, hour, day, week or month), even when no new tab is open. |
 | `downloads` | Saves the optional automatic backup as a JSON file to the user's Downloads/draftab-backups/ folder, without opening a save dialog every time. |
+| `activeTab` | When the user clicks the toolbar icon or "Save to Draftab" in the right-click menu, reads that one tab's page (or selected text) to save it as a local note. No access to any page otherwise; no host permissions. |
+| `scripting` | Runs the capture code (bundled in the package) in that tab at that moment, to extract the page's main text or the selection. |
+| `contextMenus` | Adds "Save to Draftab" to the right-click menu when text is selected. |
 
 **Remote code:** No, I am not using remote code. (All code is bundled in the package.)
 
@@ -175,7 +178,7 @@ Screenshots are generated from the real extension (regenerate them when somethin
    - Graphic assets: upload the store icon, the 5 screenshots and the small promo tile from `docs/store/en/`.
    - Homepage and support URLs: as in "Other listing fields".
    - Add the Portuguese (Brazil) localization: paste the pt-BR description and upload the screenshots and promo tile from `docs/store/pt-BR/`.
-5. **Privacy tab:** paste the single purpose, the four permission justifications, answer "No" to remote code, leave every data category unchecked, check the three certifications and paste the privacy policy URL.
+5. **Privacy tab:** paste the single purpose, the seven permission justifications, answer "No" to remote code, leave every data category unchecked, check the three certifications and paste the privacy policy URL.
 6. **Distribution tab:** Public, all regions.
 7. **Submit for review.** Reviews usually take from a few days to a few weeks; the dashboard emails you when it's done.
 

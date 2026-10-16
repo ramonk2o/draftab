@@ -57,6 +57,13 @@ Buttons at the top right of the note (disabled while it's empty):
 
 At the bottom right, **character counts**: the note as markdown (the same text as the exported file), without markdown, and how many are selected.
 
+### Saving web pages
+
+- **Toolbar icon**: click Draftab's icon on any page to save its main text (without menus, ads or footers, found with Mozilla Readability) as a new note.
+- **Right-click → Save to Draftab** on selected text saves just that passage.
+- The note starts with the page title and a link to the page, then the content as Draftab blocks: headings, lists, quotes, code, links and formatting are kept; images and table layouts are not. It opens in a new Draftab tab.
+- The page is read only when you click, only that tab, and nothing is sent anywhere. Pages Chrome doesn't let extensions read (`chrome://` pages, the Web Store) show a message instead.
+
 ### Settings, backup and privacy
 
 - **Backup**: export and import a JSON file with every note and setting (each note also in markdown, readable without Draftab). Importing validates the file, asks for confirmation and replaces everything; open tabs reload.
@@ -166,7 +173,9 @@ src/
   backup.ts              backup file format: create, validate, restore
   backup-ui.ts           downloads and file picking from a page (backup, note export)
   auto-backup.ts         decides on and makes the automatic backup (runs in the service worker)
-  background.ts          service worker: automatic backup alarms
+  background.ts          service worker: automatic backup alarms, toolbar icon and right-click menu (saving pages)
+  clip-page.ts           injected into a page on the icon click: finds the main text with Readability
+  clip.ts                captured HTML → note (title, link, Draftab blocks)
   settings.ts            Settings lightbox
   theme.ts               light/dark/automatic theme and note font
   icons.ts               SVG icons
@@ -181,6 +190,7 @@ docs/store/              Chrome Web Store images (en and pt-BR)
 
 - Everything goes to `chrome.storage.local` (with the `unlimitedStorage` permission), always through `src/storage.ts`.
 - **One key per note** (`note:<id>`), so not everything is rewritten on every keystroke. The note stores the **Tiptap JSON**, which is the source of truth; markdown only exists on export.
+- Saved pages pass from the service worker to the new tab as a temporary `clip:<id>` key, deleted as soon as the tab reads it.
 - `settings` holds the settings (automatic backup interval, collapsed sidebar, theme, note sort order, font and text size of new notes, language, calendar and date format, color swatches, calculations and decimal separator) and `meta` holds timestamps: last change, last automatic backup and last import (which makes open tabs reload).
 - Each note keeps its own font, text size and pinned state. Tags, color swatches and other highlights are only editor decorations: the stored note never changes because of them.
 - The language, the theme and the font of new notes are also copied to the page's `localStorage` (and the open note's font to `sessionStorage`), so they're applied before the first paint; the note open in each tab is kept in its `sessionStorage`, so a reload reopens it.
@@ -195,6 +205,9 @@ docs/store/              Chrome Web Store images (en and pt-BR)
 | `unlimitedStorage` | Not be limited to the ~10 MB of `chrome.storage.local` |
 | `alarms` | Wake the service worker at the automatic backup time |
 | `downloads` | Save the automatic backup file to `Downloads/draftab-backups/` |
+| `activeTab` | Read the current tab, only when you click the icon or "Save to Draftab" |
+| `scripting` | Run the capture code in that tab at that moment |
+| `contextMenus` | The "Save to Draftab" item for selected text |
 
 New permissions are only added with a reason recorded in SPEC.md.
 
