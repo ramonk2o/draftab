@@ -11,14 +11,6 @@ How a feature moves:
 
 ## Editor
 
-### Text highlight
-- **Status:** Implemented, waiting for the user's test in Chrome. 2026-10-16: `npm test` passes (257 tests, 10 new in `highlight.test.ts`: mark kept in the JSON, only `span[data-highlight]` with a palette color read from HTML (`<mark>` from pages is plain text), no trace in markdown or WhatsApp, apply/replace/remove only on the selection, other marks kept, current color of the selection, not in code, typing after a highlight isn't highlighted); `npm run build` passes; a static preview of the built CSS showed the six colors readable in both themes, with bold, links, a heading, a list, a quote and a highlight across two lines. The bar (showing, positioning, Esc, dragging), Cmd/Ctrl+Shift+H (Chrome on Mac may keep it for the home page), syncing between tabs and undo weren't tested in Chrome yet.
-- **Description:** highlight selected text with a background color, from a few preset colors that work in both light and dark mode. Selecting text shows a small bar above it with "No color" and the colors; Cmd/Ctrl+Shift+H highlights with the last color used.
-- **Motivation:** highlight parts of a note (direct request). Replaces a first version that colored whole blocks from the handle (tried on 2026-10-16, reverted: highlighting by selection was preferred).
-- **Decisions:** works in any text except code; the highlight lives only in Draftab: saved in the note and in backups, left out of the `.md`, copies and WhatsApp.
-- **Deliverable:** the `highlight` mark, the floating color bar, the shortcut, the light/dark palette, tests and the SPEC.md rules.
-- **How to verify:** `npm test` passes; in Chrome: select part of a paragraph → the bar shows above it → yellow → only that part is highlighted; same inside a heading, a list item and a quote, and together with bold/link; "No color" removes it; selecting a highlighted part marks its color in the bar; Cmd/Ctrl+Shift+H highlights with the last color and removes it when repeated; typing right after a highlight isn't highlighted; switching Light/Dark keeps it readable; the bar hides when the selection goes away, with Esc and while dragging a block; reloading the tab and another open tab keep the highlight; Cmd+Z undoes it; Export as Markdown has no trace of it.
-
 ### Tables
 - **Status:** Idea
 - **Description:** a table block in notes.
