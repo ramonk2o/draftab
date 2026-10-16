@@ -69,6 +69,7 @@ const EN = {
   excerptTitle: 'Excerpt: {title}',
   clipUnavailable: "This page can't be saved: Chrome doesn't let extensions read it.",
   clipEmpty: "Couldn't find the main text of this page. Select a passage and use right-click → Save to Draftab.",
+  clipFailed: "Couldn't turn this page into a note. Try selecting a passage and using right-click → Save to Draftab.",
 
   // Calendar (sidebar)
   calendar: 'Calendar',
@@ -199,6 +200,7 @@ const PT: Record<Key, string> = {
   excerptTitle: 'Trecho: {title}',
   clipUnavailable: 'Não é possível salvar esta página: o Chrome não deixa extensões lerem ela.',
   clipEmpty: 'Não encontrei o texto principal desta página. Selecione um trecho e use botão direito → Salvar no Draftab.',
+  clipFailed: 'Não consegui transformar esta página em nota. Tente selecionar um trecho e usar botão direito → Salvar no Draftab.',
 
   // Calendário (barra lateral)
   calendar: 'Calendário',

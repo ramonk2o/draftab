@@ -431,7 +431,16 @@ async function openClip(id: string): Promise<boolean> {
   history.replaceState(null, '', location.pathname) // a reload doesn't create the note again
   const clip = await takeClip(id)
   if (!clip) return false
-  const note = clipToNote(clip, newNoteTextSize, newNoteFont)
+  let note: Note | null
+  try {
+    note = clipToNote(clip, newNoteTextSize, newNoteFont)
+  } catch (error) {
+    // Unexpected HTML: a blank note and a message, instead of a tab stuck loading
+    console.error('Draftab: could not convert the saved page', error)
+    open(newNote(), false)
+    setTimeout(() => alert(t('clipFailed')), 100) // after the page shows up
+    return true
+  }
   if (!note) {
     // Rare: the service worker checks for text, but the HTML may only have text in parts
     // Draftab drops (e.g. a form)

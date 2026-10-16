@@ -13,7 +13,12 @@ chrome.runtime.onInstalled.addListener(async () => {
   chrome.alarms.clear('backup-automatico') // alarm name used by versions before the English rename
   scheduleBackup()
   await chrome.contextMenus.removeAll()
-  chrome.contextMenus.create({ id: MENU_ID, title: 'Save to Draftab', contexts: ['selection'] })
+  chrome.contextMenus.create({
+    id: MENU_ID,
+    title: 'Save to Draftab',
+    contexts: ['selection'],
+    documentUrlPatterns: ['http://*/*', 'https://*/*', 'file:///*'], // not in Draftab's own tab
+  })
   await updateTexts()
 })
 
@@ -66,7 +71,7 @@ chrome.action.onClicked.addListener(async (tab) => {
     return result as PageClip | null
   })
   if ('error' in clip) await showError(tab.id, clip.error)
-  else await openClip(clip)
+  else await openClip(clip, tab)
 })
 
 // Right-click menu: only the selection (in the frame where it was made). The title and
@@ -83,13 +88,16 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     await showError(tab.id, captured.error)
     return
   }
-  await openClip({
-    title: tab.title ?? '',
-    url: tab.url ?? info.pageUrl ?? '',
-    html: 'error' in captured ? '' : captured.html,
-    text,
-    excerpt: true,
-  })
+  await openClip(
+    {
+      title: tab.title ?? '',
+      url: tab.url ?? info.pageUrl ?? '',
+      html: 'error' in captured ? '' : captured.html,
+      text,
+      excerpt: true,
+    },
+    tab,
+  )
 })
 
 // Runs the capture; a page extensions can't run on gives "unavailable", no text gives "empty"
@@ -107,11 +115,12 @@ async function capture(
   }
 }
 
-// Hands the capture to a new Draftab tab, which turns it into a note
-async function openClip(clip: PageClip) {
+// Hands the capture to a new Draftab tab, which turns it into a note. It opens right
+// after the page's tab.
+async function openClip(clip: PageClip, pageTab: chrome.tabs.Tab) {
   await deleteOldClips()
   const id = await saveClip(clip)
-  await chrome.tabs.create({ url: `newtab.html?clip=${id}` })
+  await chrome.tabs.create({ url: `newtab.html?clip=${id}`, index: pageTab.index + 1, openerTabId: pageTab.id })
 }
 
 // Nothing could be saved: a red "!" on the icon for a few seconds, with the message in its

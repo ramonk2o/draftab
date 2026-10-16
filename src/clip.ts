@@ -19,6 +19,9 @@ export type ClipError = 'unavailable' | 'empty'
 const DROPPED =
   'script, style, noscript, template, img, picture, video, audio, iframe, object, embed, svg, canvas, math, form, button, input, select, textarea'
 
+// Elements that are blocks in a note
+const BLOCKS = 'p, ul, ol, blockquote, pre, hr, h2, h3'
+
 // A new note: the page title, a link to the page, then the content.
 // null when the content has no text (e.g. a selection with only an image).
 // textSize and font: the "Text size of new notes" and "Font of new notes" settings
@@ -48,20 +51,33 @@ export function htmlToBlocks(html: string, baseUrl: string): JSONContent[] {
 
   for (const el of body.querySelectorAll(DROPPED)) el.remove()
 
-  // The page title is the note's only level 1: h1/h2 → level 2, h3-h6 → level 3
+  // The page title is the note's only level 1: h1/h2 → level 2, h3-h6 → level 3.
+  // In a list item a heading becomes a bold paragraph (an item must start with a paragraph).
   for (const old of body.querySelectorAll('h1, h2, h3, h4, h5, h6')) {
-    const heading = page.createElement(Number(old.tagName[1]) <= 2 ? 'h2' : 'h3')
-    heading.append(...old.childNodes)
+    let heading: HTMLElement
+    if (old.closest('li')) {
+      const bold = page.createElement('strong')
+      bold.append(...old.childNodes)
+      heading = page.createElement('p')
+      heading.append(bold)
+    } else {
+      heading = page.createElement(Number(old.tagName[1]) <= 2 ? 'h2' : 'h3')
+      heading.append(...old.childNodes)
+    }
     old.replaceWith(heading)
   }
 
-  // A table becomes one paragraph per row, cells separated by " · "
-  for (const table of body.querySelectorAll('table')) {
-    const rows = [...table.querySelectorAll('tr')].map((row) => {
+  // Tables, innermost first (the list is in document order, so inner tables come after
+  // the ones around them). A row of plain cells becomes one paragraph, cells separated by
+  // " · "; a row whose cells hold blocks (paragraphs, lists… or a table already turned into
+  // paragraphs) keeps those blocks, so no text is repeated.
+  for (const table of [...body.querySelectorAll('table')].reverse()) {
+    const rows = [...table.querySelectorAll('tr')].flatMap((row) => {
       const cells = [...row.children].filter((cell) => cell.tagName === 'TD' || cell.tagName === 'TH')
+      if (cells.some((cell) => cell.querySelector(BLOCKS))) return cells.flatMap((cell) => [...cell.childNodes])
       const paragraph = page.createElement('p')
       paragraph.textContent = cells.map((cell) => cell.textContent?.trim()).filter(Boolean).join(' · ')
-      return paragraph
+      return [paragraph]
     })
     table.replaceWith(...rows)
   }

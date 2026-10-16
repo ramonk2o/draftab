@@ -65,6 +65,25 @@ describe('htmlToBlocks', () => {
     expect(text(blocks)).toBe('Name · Age\nAna · 30')
   })
 
+  test('a table inside a table keeps its text once, with separators', () => {
+    const html = '<table><tr><td>outer<table><tr><td>inner1</td><td>inner2</td></tr></table></td></tr></table>'
+    expect(text(htmlToBlocks(html, BASE))).toBe('outer\ninner1 · inner2')
+  })
+
+  test('a table row whose cells hold paragraphs keeps the paragraphs', () => {
+    const blocks = htmlToBlocks('<table><tr><td><p>a</p><p>b</p></td><td>c</td></tr></table>', BASE)
+    expect(blocks.map((b) => b.type)).toEqual(['paragraph', 'paragraph', 'paragraph'])
+    expect(text(blocks)).toBe('a\nb\nc')
+  })
+
+  test('a heading inside a list item becomes a bold paragraph, with no empty item line', () => {
+    const [list] = htmlToBlocks('<ul><li><h5>Question</h5>Answer</li></ul>', BASE)
+    const item = list.content![0]
+    expect(item.content!.map((c) => c.type)).toEqual(['paragraph', 'paragraph'])
+    expect(text([list])).toBe('Question\nAnswer')
+    expect(marksOf(item.content![0]).map((m) => m.type)).toEqual(['bold'])
+  })
+
   test('drops empty paragraphs', () => {
     expect(htmlToBlocks('<p>a</p><p></p><p> </p><div></div><p>b</p>', BASE).map((b) => b.type)).toEqual(['paragraph', 'paragraph'])
   })
