@@ -1,5 +1,5 @@
 import type { Fragment, Node as PMNode } from '@tiptap/pm/model'
-import type { EditorState, Transaction } from '@tiptap/pm/state'
+import { Selection, type EditorState, type Transaction } from '@tiptap/pm/state'
 import { InputRule } from '@tiptap/core'
 import { Image } from '@tiptap/extension-image'
 
@@ -46,6 +46,13 @@ export function pasteImageAddress(state: EditorState, text: string): Transaction
   const onEmptyLine = empty && $from.depth === 1 && $from.parent.type.name === 'paragraph' && $from.parent.content.size === 0
   if (!src || !onEmptyLine) return null
   return state.tr.insert($from.before(), state.schema.nodes.image.create({ src })).scrollIntoView()
+}
+
+// The cursor in the line of text nearest to pos (before it, else after it), so it never lands on
+// an image or between blocks. Selects a block only when the note has no line of text
+export function cursorNear(doc: PMNode, pos: number): Selection {
+  const $pos = doc.resolve(Math.min(Math.max(pos, 0), doc.content.size))
+  return Selection.findFrom($pos, -1, true) ?? Selection.findFrom($pos, 1, true) ?? Selection.near($pos)
 }
 
 export const DraftabImage = Image.extend({

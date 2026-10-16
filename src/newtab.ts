@@ -7,6 +7,7 @@ import { characters, markdownCharacters, plainTextCharacters, selectedCharacters
 import { chooseFile, exportMarkdown } from './backup-ui'
 import { noteFromFile, noteToMarkdown } from './markdown'
 import { clipToNote } from './clip'
+import { cursorNear } from './images'
 import { noteToWhatsApp } from './whatsapp'
 import { openSettings } from './settings'
 import { setDateFormat, setupCalendar, showCalendar } from './calendar-ui'
@@ -190,13 +191,24 @@ function replaceDocument(doc: JSONContent) {
     console.error('Note with invalid content; opening blank', error)
     content = schema.nodeFromJSON(newBlankNote().doc)
   }
-  editor.view.updateState(EditorState.create({ schema, doc: content, plugins }))
+  const state = EditorState.create({ schema, doc: content, plugins })
+  // An empty transaction lets the plugins finish the document (an empty line after a final
+  // image), so focus('end') puts the cursor there and not on the image
+  editor.view.updateState(state.apply(state.tr.setMeta('addToHistory', false)))
 }
 
 // Content that arrived from another tab: swap it in without touching undo, keeping the cursor
 function receiveContent(doc: JSONContent) {
   const { from } = editor.state.selection
-  editor.chain().setMeta('addToHistory', false).setContent(doc, { emitUpdate: false }).setTextSelection(from).run()
+  editor
+    .chain()
+    .setMeta('addToHistory', false)
+    .setContent(doc, { emitUpdate: false })
+    .command(({ tr }) => {
+      tr.setSelection(cursorNear(tr.doc, from)) // the old position may now be on an image or past the end
+      return true
+    })
+    .run()
 }
 
 newNoteButton.addEventListener('click', () => open(newNote(), false))

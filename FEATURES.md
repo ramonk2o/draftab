@@ -23,11 +23,12 @@ How a feature moves:
   - Check the custom drag-to-reorder and handles with tables (most likely the table moves whole), plus Copy for WhatsApp, character counts and Backspace at the start of the block.
 
 ### Escape image description and title in markdown
-- **Status:** Implemented, waiting for the test in Chrome. On 2026-10-16: `npm test` 244/244 passing (2 new tests, which failed before the fix), `tsc` and build OK.
+- **Status:** Implemented, waiting for the test in Chrome. On 2026-10-16: `npm test` 247/247 passing (5 new tests, which failed before the fixes), `tsc` and build OK; the console warning was reproduced in a test before the fix and doesn't happen after it.
 - **Description:** an image's description (`alt`) with `[` or `]`, or a title with `"`, wrote broken markdown (`![a]b](url "say "hi"")`), which imports back as text instead of an image.
 - **Motivation:** direct request from the user.
+- **Found while testing:** with the note open in two tabs, content arriving from the other tab put the cursor outside any line of text (console warning "TextSelection endpoint not pointing into a node with inline content"); and opening a note that ends in an image selected the image, so typing replaced it.
 - **Deliverable:** `imageMarkdown` escapes `[`/`]` in the description and `"`/`\` in the title; export → import gives back the same image.
-- **How to verify:** `npm test` (new tests in `images.test.ts` and `markdown.test.ts`); in Chrome, paste HTML with `<img alt="a]b" title='say "hi"'>`, export the note and import the `.md`: the image comes back with the same description and title.
+- **How to verify:** `npm test` (new tests in `images.test.ts` and `markdown.test.ts`); in Chrome, paste HTML with `<img alt="a]b" title='say "hi"'>`, export the note and import the `.md`: the image comes back with the same description and title. Open a note that ends in an image and type: the text goes on a line after the image. With the note open in two tabs, adding an image in one doesn't log a warning in the other.
 
 ## Backup and settings
 

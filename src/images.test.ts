@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { EditorState, TextSelection } from '@tiptap/pm/state'
 import { contentSchema } from './extensions'
-import { imageAddress, imageMarkdown, isWebAddress, pasteImageAddress, plainTextOf } from './images'
+import { cursorNear, imageAddress, imageMarkdown, isWebAddress, pasteImageAddress, plainTextOf } from './images'
 
 const schema = contentSchema()
 
@@ -91,5 +91,31 @@ describe('pasteImageAddress', () => {
     expect(pasteImageAddress(stateAt([list], 3), 'https://x/a.png')).toBeNull()
     const quote = { type: 'blockquote', content: [p()] }
     expect(pasteImageAddress(stateAt([quote], 2), 'https://x/a.png')).toBeNull()
+  })
+})
+
+describe('cursorNear', () => {
+  const p = (t?: string) => ({ type: 'paragraph', content: t ? [{ type: 'text', text: t }] : undefined })
+  const image = { type: 'image', attrs: { src: 'https://x/a.png' } }
+  const docOf = (...content: object[]) => schema.nodeFromJSON({ type: 'doc', content })
+
+  test('a position inside text stays where it is', () => {
+    const selection = cursorNear(docOf(p('abc'), image), 2)
+    expect(selection).toBeInstanceOf(TextSelection)
+    expect(selection.from).toBe(2)
+  })
+
+  test('a position next to an image or past the end goes to the nearest line of text', () => {
+    const doc = docOf(p('teste'), image)
+    for (const pos of [7, 8, 20]) {
+      const selection = cursorNear(doc, pos)
+      expect(selection).toBeInstanceOf(TextSelection)
+      expect(selection.$from.parent.inlineContent).toBe(true)
+    }
+    expect(cursorNear(docOf(image, p('a')), 0).from).toBe(2)
+  })
+
+  test('a note with only images: the image is selected', () => {
+    expect(cursorNear(docOf(image), 1)).not.toBeInstanceOf(TextSelection)
   })
 })

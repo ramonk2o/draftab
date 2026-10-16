@@ -10,6 +10,7 @@ All notable changes to Draftab are documented here. The format is based on [Keep
 
 ### Fixed
 - Images whose description has `[` or `]`, or whose title has `"` or `\`, are now written as valid markdown (export, backup, plain-text copies); before, the exported file imported them back as text instead of an image.
+- Opening a note that ends in an image no longer selects the image (typing replaced it): the cursor goes on a line after it. With a note open in two tabs, changes arriving from the other tab no longer leave the cursor outside the text.
 - Plain-text copies (Cmd/Ctrl+C) keep line breaks made with Shift+Enter; they used to glue the two lines together.
 
 ## [1.2.0] — 2026-10-13
