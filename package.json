@@ -11,6 +11,7 @@
     "zip": "npm run build && node scripts/zip.mjs"
   },
   "dependencies": {
+    "@mozilla/readability": "0.6.0",
     "@tiptap/core": "3.31.4",
     "@tiptap/extension-drag-handle": "3.31.4",
     "@tiptap/extension-list": "3.31.4",

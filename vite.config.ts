@@ -14,11 +14,12 @@ export default defineConfig({
       input: {
         newtab: 'newtab.html',
         background: 'src/background.ts',
+        'clip-page': 'src/clip-page.ts',
       },
       output: {
-        // The service worker needs a fixed name (the manifest points to it)
+        // The service worker and the injected capture need fixed names (the manifest and background.ts point to them)
         entryFileNames: (entry) =>
-          entry.name === 'background' ? 'background.js' : 'assets/[name]-[hash].js',
+          entry.name === 'background' || entry.name === 'clip-page' ? `${entry.name}.js` : 'assets/[name]-[hash].js',
       },
     },
   },

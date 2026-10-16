@@ -2,7 +2,7 @@
 // Run with `npm run zip` (which builds first). Adds to dist/:
 //   - LICENSE (Draftab's own license)
 //   - THIRD_PARTY_NOTICES.txt (licenses of the dependencies bundled in the extension,
-//     which their MIT licenses require to go along with copies)
+//     which their licenses (MIT, Apache 2.0) require to go along with copies)
 import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'

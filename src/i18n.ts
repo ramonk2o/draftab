@@ -63,6 +63,12 @@ const EN = {
   dragList: 'Drag to move the whole list',
   untitled: 'Untitled',
 
+  // Saving web pages (toolbar icon and right-click menu)
+  savePage: 'Save page to Draftab',
+  saveSelection: 'Save to Draftab',
+  clipUnavailable: "This page can't be saved: Chrome doesn't let extensions read it.",
+  clipEmpty: "Couldn't find the main text of this page. Select a passage and use right-click → Save to Draftab.",
+
   // Calendar (sidebar)
   calendar: 'Calendar',
   previousMonth: 'Previous month',
@@ -186,6 +192,12 @@ const PT: Record<Key, string> = {
   dragList: 'Arraste para mover a lista inteira',
   untitled: 'Sem título',
 
+  // Salvar páginas (ícone da barra e menu do botão direito)
+  savePage: 'Salvar página no Draftab',
+  saveSelection: 'Salvar no Draftab',
+  clipUnavailable: 'Não é possível salvar esta página: o Chrome não deixa extensões lerem ela.',
+  clipEmpty: 'Não encontrei o texto principal desta página. Selecione um trecho e use botão direito → Salvar no Draftab.',
+
   // Calendário (barra lateral)
   calendar: 'Calendário',
   previousMonth: 'Mês anterior',
@@ -300,7 +312,7 @@ export function rememberLanguage(setting: LanguageSetting): boolean {
   return setting !== state().setting
 }
 
-// Only for tests
+// Tests and the service worker (which has no page to remember the language in)
 export function useLanguage(setting: LanguageSetting, browserLanguage = 'en') {
   current = { setting, language: resolveLanguage(setting, browserLanguage) }
 }
