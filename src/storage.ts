@@ -3,9 +3,10 @@ import type { Theme } from './theme'
 import { isLanguageSetting, type LanguageSetting } from './i18n'
 import { isDateFormat, type DateFormat } from './calendar'
 import { isDecimalSeparator, type DecimalSeparatorSetting } from './calculate'
+import type { Clip } from './clip'
 
 // All chrome.storage access goes through here.
-// Keys: "note:<id>" (one per note), "settings" and "meta".
+// Keys: "note:<id>" (one per note), "clip:<id>" (captured pages waiting to become notes), "settings" and "meta".
 
 const NOTE_PREFIX = 'note:'
 
@@ -135,6 +136,40 @@ function onFieldChanged(storageKey: 'settings' | 'meta', field: string, callback
     const after = (change.newValue as Record<string, unknown> | undefined)?.[field] ?? empty
     if (after !== before) callback(after)
   })
+}
+
+// ---------- Captured pages ----------
+
+// A page captured by the service worker waits here for the new tab that turns it into
+// a note (see "Saving web pages" in SPEC.md). Not a note: never listed or backed up.
+const CLIP_PREFIX = 'clip:'
+const CLIP_MAX_AGE = 10 * 60 * 1000 // 10 minutes
+
+export async function saveClip(clip: Clip): Promise<string> {
+  const id = crypto.randomUUID()
+  await chrome.storage.local.set({ [CLIP_PREFIX + id]: { ...clip, createdAt: Date.now() } })
+  return id
+}
+
+// Reads the clip and deletes it, so reloading the tab doesn't create the note again
+export async function takeClip(id: string): Promise<Clip | null> {
+  const key = CLIP_PREFIX + id
+  const result = await chrome.storage.local.get(key)
+  const stored = result[key] as (Clip & { createdAt: number }) | undefined
+  if (!stored) return null
+  await chrome.storage.local.remove(key)
+  const { createdAt, ...clip } = stored
+  return clip as Clip
+}
+
+// Clips whose tab never opened them (closed too soon). Only old ones, so two quick
+// captures don't delete each other.
+export async function deleteOldClips(now = Date.now()): Promise<void> {
+  const everything = await chrome.storage.local.get(null)
+  const old = Object.entries(everything)
+    .filter(([key, value]) => key.startsWith(CLIP_PREFIX) && ((value as { createdAt?: number }).createdAt ?? 0) < now - CLIP_MAX_AGE)
+    .map(([key]) => key)
+  if (old.length > 0) await chrome.storage.local.remove(old)
 }
 
 // ---------- Settings and meta ----------

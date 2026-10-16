@@ -3,6 +3,7 @@ import { createFakeChrome } from './fake-chrome'
 import { newBlankNote, type Note } from './notes'
 import {
   deleteAllNotes,
+  deleteOldClips,
   deleteNote,
   listNotes,
   onNewNoteTextSizeChanged,
@@ -18,8 +19,10 @@ import {
   readMeta,
   readNote,
   readSettings,
+  saveClip,
   saveNote,
   saveSettings,
+  takeClip,
   validInterval,
 } from './storage'
 
@@ -304,5 +307,36 @@ describe('calculations', () => {
     await saveSettings({ showCalendar: false })
     await saveSettings({ calculations: true })
     expect(states).toEqual([false, true])
+  })
+})
+
+describe('clips (pages waiting to become notes)', () => {
+  const clip = { title: 'Page', url: 'https://example.com', html: '<p>hi</p>' }
+
+  test('takeClip returns the clip once, then null (a reload creates no second note)', async () => {
+    const id = await saveClip(clip)
+    expect(await takeClip(id)).toEqual(clip)
+    expect(await takeClip(id)).toBeNull()
+  })
+
+  test('errors are stored too', async () => {
+    const id = await saveClip({ error: 'unavailable' })
+    expect(await takeClip(id)).toEqual({ error: 'unavailable' })
+  })
+
+  test("clips aren't notes and don't count as a change", async () => {
+    await saveClip(clip)
+    expect(await listNotes()).toEqual([])
+    expect((await readMeta()).lastChangeAt).toBe(0)
+  })
+
+  test('deleteOldClips removes clips older than 10 minutes and keeps recent ones', async () => {
+    const id = await saveClip(clip)
+    await deleteOldClips(Date.now() + 60_000) // a second capture a minute later
+    expect(await takeClip(id)).toEqual(clip)
+
+    const old = await saveClip(clip)
+    await deleteOldClips(Date.now() + 11 * 60_000)
+    expect(await takeClip(old)).toBeNull()
   })
 })
