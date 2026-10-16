@@ -22,18 +22,6 @@ How a feature moves:
   - Markdown tables only hold formatted text in cells: lists, several paragraphs and merged cells would have to be blocked, or they'd be lost on export.
   - Check the custom drag-to-reorder and handles with tables (most likely the table moves whole), plus Copy for WhatsApp, character counts and Backspace at the start of the block.
 
-## Capture
-
-### Save a page or selection to Draftab
-- **Status:** Implemented, waiting for the user's test in Chrome
-- **Changed after the first review (2026-10-15):** a selection's note is titled "Excerpt: <page title>" ("Trecho:" in Portuguese); errors no longer open a tab: red "!" on the icon with the message in its tooltip, plus a notice in the corner of the page when Draftab can run there.
-- **Fixed after the user's review of the pending issues (2026-10-15):** a conversion failure opens a blank note with a message; the menu item only shows on web pages and local files; Readability failing counts as "no main text"; the new tab opens next to the page; tables inside tables don't repeat text; a heading inside a list item becomes a bold paragraph; the build fails if `clip-page.js` ever imports another file (checked by adding an import: the build stopped with the error).
-- **Verification (2026-10-15):** `npm test` 219/219 passing (20 conversion tests, 4 capture-storage tests); `npm run build` OK, `clip-page.js` is a standalone script (no imports), the manifest has the seven permissions. Real pages run through Readability + conversion (Wikipedia "Markdown", paulgraham.com "How to Do Great Work", overreacted.io "A Complete Guide to useEffect"): one `#` each (the page title) followed by the link, content headings as `##`/`###`, 62 code blocks kept, absolute links. Not yet checked in Chrome (the browser automation wasn't connected): the icon click, the right-click item and its "Excerpt:" title, the red "!" and tooltip on `chrome://` and Draftab's own tab, the notice on a page without main text, no duplicate on reload, the texts in Portuguese.
-- **Description:** clicking Draftab's toolbar icon saves the page's main text as a new note (found with Mozilla Readability); selecting a passage and choosing "Save to Draftab" in the right-click menu saves just the selection. The note is the page title, a link to the page and the content converted to Draftab blocks; it opens in a new Draftab tab.
-- **Motivation:** keep things read on the web as notes, already formatted, without copying and pasting.
-- **Deliverable:** the icon action and the context menu item; the conversion HTML → Draftab blocks; error messages for pages that can't be saved or have no main text; SPEC, STORE, PRIVACY and README updated.
-- **How to verify:** `npm test` (conversion and temporary storage of captures) and `npm run build`; in Chrome: save a blog article and a news page with the icon, save a selection with a list and a link, try a `chrome://` page and the Draftab tab itself (message), reload the opened note (no duplicate).
-
 ## Backup and settings
 
 ### Sync across computers
