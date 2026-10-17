@@ -7,6 +7,9 @@ All notable changes to Draftab are documented here. The format is based on [Keep
 ### Added
 - **Power and remainder in calculations**: `2^10=` (or `2**10=`) → `1024` and `7%3=` → `1`. Power comes before the sign and groups from the right, as in math (`-2^2=` → `-4`, `2^3^2=` → `512`); the exponent may have a sign (`2^-1=` → `0.5`). The remainder has the sign of the first number and works with decimals. Remainder by zero, roots of negative numbers and results too big write nothing. The Settings hint shows the new operations.
 
+### Changed
+- **Feature backlog** (project docs only, the extension doesn't change): `FEATURES.md` is now `BACKLOG.md`, managed with the `backlog` skill; entries start from the motivation, and a feature waiting for approval in use is **In review**.
+
 ## [1.3.0] — 2026-10-16
 
 Submitted to the Chrome Web Store as an update.
