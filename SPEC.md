@@ -4,7 +4,7 @@
 Chrome extension that replaces the new tab with a local notepad: a markdown-friendly block editor with drag-to-reorder blocks. Open source, published on the Chrome Web Store.
 
 ## About this document
-How Draftab behaves today, as rules (not visual details), plus the data model and the technical decisions. A change of behavior or decision is written here before the code. Ideas live in BACKLOG.md; what changed and when lives in CHANGELOG.md and the git history.
+How Draftab behaves today, as rules (not visual details), plus the data model and the technical decisions. It is updated when a feature is finished, describing what was built. Ideas live in BACKLOG.md; what changed and when lives in CHANGELOG.md and the git history.
 
 ## Behavior
 
@@ -154,7 +154,7 @@ How Draftab behaves today, as rules (not visual details), plus the data model an
 
 ## Technical decisions
 - Manifest V3 with `chrome_url_overrides.newtab`: the current standard for extensions.
-- Permissions: `storage`, `unlimitedStorage`, `alarms`, `downloads`, `activeTab`, `scripting`, `contextMenus` — nothing else (justifications in STORE.md). A new permission is recorded here first. `activeTab` gives access only to the tab where the user clicked the icon or the menu item, only then; no host permissions.
+- Permissions: `storage`, `unlimitedStorage`, `alarms`, `downloads`, `activeTab`, `scripting`, `contextMenus` — nothing else (justifications in STORE.md). A new permission is decided with its feature and recorded here with its reason. `activeTab` gives access only to the tab where the user clicked the icon or the menu item, only then; no host permissions.
 - Saving pages: the service worker injects the capture (`clip-page.js`, with Readability, a separate bundle so the new tab doesn't load it) and passes the HTML to a new Draftab tab through a temporary `clip:` key; the new tab converts it, because the service worker has no DOM. The HTML is parsed with `DOMParser` (an inert document: nothing runs or loads) and turned into blocks with the editor's schema, so only Draftab blocks survive.
 - Vite + TypeScript: simple build, types catch errors, libraries via npm.
 - Tiptap 3 (StarterKit, TaskList/TaskItem, Image, DragHandle, Markdown): mature, ready-made markdown shortcuts and drag handle.

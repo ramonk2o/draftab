@@ -16,15 +16,17 @@ Chrome extension (Manifest V3) that replaces the new tab with a notepad with a m
 - Strict TypeScript; no React or other UI framework.
 - All `chrome.storage` access goes through `src/storage.ts`.
 - The Tiptap JSON is the source of truth for notes; markdown only on export.
-- Minimal manifest permissions: `storage`, `unlimitedStorage`, `alarms`, `downloads`. Don't add others without recording it in SPEC.md.
+- Manifest permissions: only those in SPEC.md → Technical decisions; a new one needs a reason in the feature's Decisions.
 - Everything in the project is in English: code, identifiers, comments, UI text and docs.
 - The user reads basic JS: prefer direct, readable code over abstractions.
 
 ## Working rules
 - Always reply to the user in Brazilian Portuguese, including intermediate messages.
-- Use the `backlog` skill for everything about features: recording ideas, starting, finishing and approving them. Ideas go to BACKLOG.md, not SPEC.md.
-- To implement a feature, use the `build` skill.
-- Any change of behavior or decision goes to SPEC.md before the code. SPEC.md describes rules, not visual details.
 - A feature's How to verify is `npm test` plus what to check in Chrome.
-- CHANGELOG.md entries go under the version in progress, in Added / Changed / Fixed.
-- Commit when a feature is finished (code, SPEC.md, BACKLOG.md and CHANGELOG.md together).
+- SPEC.md is updated when a feature goes to In review, describing what was built, in the same commit. SPEC.md describes rules, not visual details.
+- CHANGELOG.md entries say what changed for the user in one or two sentences; the detailed rules live only in SPEC.md.
+
+## Development cycle
+1. **Idea:** when I describe a feature idea, start a `grilling` interview right away. If I say "just note it" or similar ("anota aí", "guarda essa ideia", "depois a gente vê"), skip it and record the idea with the `backlog` skill, with the doubts as Open questions.
+2. **Record:** the interview's final summary is the draft of the backlog entry (Motivation, Description, Decisions…). One OK from me and the `backlog` skill writes and commits it: Idea, or Approved if I said I want it built. When the feature changes an existing behavior, its Decisions say which SPEC.md rule changes and how.
+3. **Build:** when I decide to implement a feature, use the `build` skill.
