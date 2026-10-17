@@ -7,7 +7,7 @@ Everything the Chrome Web Store developer dashboard asks for, ready to copy. The
 - **1.0.0:** live on the Chrome Web Store: https://chromewebstore.google.com/detail/draftab/oamemjkhgfcoelilpnjpemllbmladaog
 - **1.1.0:** live on the Chrome Web Store.
 - **1.2.0:** submitted as an update on 2026-10-13.
-- **1.3.0:** ready to submit as an update (what's in it: CHANGELOG.md); the listing texts and screenshots below are for 1.3.0.
+- **1.3.0:** submitted as an update on 2026-10-16 (what's in it: CHANGELOG.md); the listing texts and screenshots below are for 1.3.0.
 
 ## Package
 

@@ -4,7 +4,7 @@ All notable changes to Draftab are documented here. The format is based on [Keep
 
 ## [1.3.0] — 2026-10-16
 
-Ready to submit to the Chrome Web Store as an update.
+Submitted to the Chrome Web Store as an update.
 
 ### Added
 - **New notes start with a heading**: a blank note (new tab, New note) opens with its first line as an empty level-1 heading, cursor in it, as if `# ` had been typed. Only how it starts: Backspace turns it into a normal line, and nothing puts it back. Imported files and saved pages don't change. "New notes start with a heading" in Settings → Appearance (on by default) turns it off; it applies to every open tab and goes into backups.
