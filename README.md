@@ -197,11 +197,7 @@ docs/store/              Chrome Web Store images (en and pt-BR)
 
 - Everything goes to `chrome.storage.local` (with the `unlimitedStorage` permission), always through `src/storage.ts`.
 - **One key per note** (`note:<id>`), so not everything is rewritten on every keystroke. The note stores the **Tiptap JSON**, which is the source of truth; markdown only exists on export.
-- Saved pages pass from the service worker to the new tab as a temporary `clip:<id>` key, deleted as soon as the tab reads it.
-- `settings` holds the settings (automatic backup interval, collapsed sidebar, theme, note sort order, font and text size of new notes, whether they start with a heading, language, calendar and date format, color swatches, calculations and decimal separator) and `meta` holds timestamps: last change, last automatic backup and last import (which makes open tabs reload).
-- Each note keeps its own font, text size and pinned state. Highlights are a mark in the note (the color's name only). Tags and color swatches are only editor decorations: the stored note never changes because of them.
-- The language, the theme and the font of new notes are also copied to the page's `localStorage` (and the open note's font to `sessionStorage`), so they're applied before the first paint; the note open in each tab is kept in its `sessionStorage`, so a reload reopens it.
-- Saving is automatic, after ~500 ms without typing. Other tabs get the change through `chrome.storage.onChanged`; if two tabs edit the same note, the last write wins.
+- Saving is automatic, a moment after typing stops; other open tabs get the change, and the last write wins.
 - The full format (note, settings, backup file) is described in [SPEC.md](SPEC.md).
 
 ### Permissions
@@ -220,9 +216,7 @@ New permissions are only added with a reason recorded in SPEC.md.
 
 ### Tests
 
-`npm test` covers everything that doesn't need a browser: saving/reading/listing/deleting notes and settings, title, search and sort rules, lossless backup export → import, rejection of invalid backup files, the automatic backup decisions, markdown export and `.md`/`.txt` import, Copy for WhatsApp, character counts, tags and suggestions, color codes, calculations, calendar dates and the translations. `chrome.storage`, alarms and downloads are simulated in `src/fake-chrome.ts`.
-
-The editor and the interface (shortcuts, dragging, appearance) are checked in Chrome, following the "How to verify" of the feature in progress in [BACKLOG.md](BACKLOG.md) (finished ones keep theirs in the git history).
+`npm test` (Vitest) covers everything that doesn't need a browser, with `chrome.storage`, alarms and downloads simulated in `src/fake-chrome.ts`. The editor and the interface are checked in Chrome, following the "How to verify" of the feature in progress in [BACKLOG.md](BACKLOG.md).
 
 ### Project documents
 
@@ -239,7 +233,7 @@ The editor and the interface (shortcuts, dragging, appearance) are checked in Ch
 
 - Direct, readable code over abstractions; everything (code, comments, UI text, docs) in **English**.
 - All `chrome.storage` access goes through `src/storage.ts`.
-- Changes of behavior or decision go to SPEC.md first; new ideas go to BACKLOG.md.
+- New ideas go to BACKLOG.md; SPEC.md is updated when a feature is finished.
 
 ## Contributing
 
