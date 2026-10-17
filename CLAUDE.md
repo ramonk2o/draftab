@@ -23,6 +23,7 @@ Chrome extension (Manifest V3) that replaces the new tab with a notepad with a m
 ## Working rules
 - Always reply to the user in Brazilian Portuguese, including intermediate messages.
 - Use the `backlog` skill for everything about features: recording ideas, starting, finishing and approving them. Ideas go to BACKLOG.md, not SPEC.md.
+- To implement a feature, use the `build` skill.
 - Any change of behavior or decision goes to SPEC.md before the code. SPEC.md describes rules, not visual details.
 - A feature's How to verify is `npm test` plus what to check in Chrome.
 - CHANGELOG.md entries go under the version in progress, in Added / Changed / Fixed.
