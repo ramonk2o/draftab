@@ -1,10 +1,9 @@
 # Draftab
 
+How Draftab works today, as rules (not visual details), plus its data and technical decisions. Managed with the `product` skill: it's updated when a feature is finished, describing what was built. Ideas live in BACKLOG.md; what changed and when lives in CHANGELOG.md.
+
 ## Goal
 Chrome extension that replaces the new tab with a local notepad: a markdown-friendly block editor with drag-to-reorder blocks. Open source, published on the Chrome Web Store.
-
-## About this document
-How Draftab behaves today, as rules (not visual details), plus the data model and the technical decisions. It is updated when a feature is finished, describing what was built. Ideas live in BACKLOG.md; what changed and when lives in CHANGELOG.md and the git history.
 
 ## Behavior
 

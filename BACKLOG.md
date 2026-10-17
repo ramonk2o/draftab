@@ -1,6 +1,6 @@
 # Backlog
 
-Feature ideas and the feature being built, managed with the `backlog` skill. Implemented features leave this file and go to CHANGELOG.md.
+Feature ideas and the feature being built, managed with the `product` skill. Implemented features leave this file: what changed goes to CHANGELOG.md and the rules to SPEC.md.
 
 Status: **Idea** → **Approved** (decided, not started) → **In progress** (one at a time) → **In review** (implemented and verified, waiting for the user's approval in use) → done (leaves the file). Discarded ideas go to the last section.
 

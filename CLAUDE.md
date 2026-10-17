@@ -1,8 +1,7 @@
 # Draftab
 
 Chrome extension (Manifest V3) that replaces the new tab with a notepad with a markdown block editor (Tiptap 3) and drag-to-reorder.
-- How it behaves today (rules, not visuals), data model and technical decisions: `SPEC.md`
-- Ideas and the feature in progress: `BACKLOG.md`, managed with the `backlog` skill
+- How it works today: `SPEC.md`. Ideas and the feature in progress: `BACKLOG.md`. What changed in each version: `CHANGELOG.md`.
 
 ## Commands
 - Install: `npm install`
@@ -22,11 +21,13 @@ Chrome extension (Manifest V3) that replaces the new tab with a notepad with a m
 
 ## Working rules
 - Always reply to the user in Brazilian Portuguese, including intermediate messages.
+- Every task goes through the skill that owns it, always, not only inside the cycle below:
+  - `product` for any change to BACKLOG.md, SPEC.md or CHANGELOG.md, even a one-word fix (reading them needs no skill);
+  - `grilling` to interview me about an idea or plan;
+  - `build` to implement a feature.
 - A feature's How to verify is `npm test` plus what to check in Chrome.
-- SPEC.md is updated when a feature goes to In review, describing what was built, in the same commit. SPEC.md describes rules, not visual details.
-- CHANGELOG.md entries say what changed for the user in one or two sentences; the detailed rules live only in SPEC.md.
 
 ## Development cycle
-1. **Idea:** when I describe a feature idea, start a `grilling` interview right away. If I say "just note it" or similar ("anota aí", "guarda essa ideia", "depois a gente vê"), skip it and record the idea with the `backlog` skill, with the doubts as Open questions.
-2. **Record:** the interview's final summary is the draft of the backlog entry (Motivation, Description, Decisions…). One OK from me and the `backlog` skill writes and commits it: Idea, or Approved if I said I want it built. When the feature changes an existing behavior, its Decisions say which SPEC.md rule changes and how.
-3. **Build:** when I decide to implement a feature, use the `build` skill.
+1. **Idea:** when I describe a feature idea, start a `grilling` interview right away. If I say "just note it" or similar ("anota aí", "guarda essa ideia", "depois a gente vê"), skip it and record the idea with `product`.
+2. **Record:** with what was decided, `product` records it in the backlog.
+3. **Build:** when I decide to implement a feature, use `build`.
