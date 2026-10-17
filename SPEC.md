@@ -4,7 +4,7 @@
 Chrome extension that replaces the new tab with a local notepad: a markdown-friendly block editor with drag-to-reorder blocks. Open source, published on the Chrome Web Store.
 
 ## About this document
-How Draftab behaves today, as rules (not visual details), plus the data model and the technical decisions. A change of behavior or decision is written here before the code. Ideas live in FEATURES.md; what changed and when lives in CHANGELOG.md and the git history.
+How Draftab behaves today, as rules (not visual details), plus the data model and the technical decisions. A change of behavior or decision is written here before the code. Ideas live in BACKLOG.md; what changed and when lives in CHANGELOG.md and the git history.
 
 ## Behavior
 

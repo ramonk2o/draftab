@@ -222,14 +222,14 @@ New permissions are only added with a reason recorded in SPEC.md.
 
 `npm test` covers everything that doesn't need a browser: saving/reading/listing/deleting notes and settings, title, search and sort rules, lossless backup export → import, rejection of invalid backup files, the automatic backup decisions, markdown export and `.md`/`.txt` import, Copy for WhatsApp, character counts, tags and suggestions, color codes, calculations, calendar dates and the translations. `chrome.storage`, alarms and downloads are simulated in `src/fake-chrome.ts`.
 
-The editor and the interface (shortcuts, dragging, appearance) are checked in Chrome, following the "How to verify" of the feature in progress in [FEATURES.md](FEATURES.md) (finished ones keep theirs in the git history).
+The editor and the interface (shortcuts, dragging, appearance) are checked in Chrome, following the "How to verify" of the feature in progress in [BACKLOG.md](BACKLOG.md) (finished ones keep theirs in the git history).
 
 ### Project documents
 
 | File | Contents |
 |---|---|
 | [SPEC.md](SPEC.md) | How Draftab behaves today (rules by area), data model and technical decisions |
-| [FEATURES.md](FEATURES.md) | Ideas, by area, and the feature in progress with how to verify it; done features move to CHANGELOG.md |
+| [BACKLOG.md](BACKLOG.md) | Ideas, by area, and the feature in progress with how to verify it; done features move to CHANGELOG.md |
 | [CHANGELOG.md](CHANGELOG.md) | What changed in each version |
 | [STORE.md](STORE.md) | Chrome Web Store listing texts (en-US and pt-BR), privacy answers and how to submit or update |
 | [PRIVACY.md](PRIVACY.md) | Privacy policy (English and Portuguese) |
@@ -239,13 +239,13 @@ The editor and the interface (shortcuts, dragging, appearance) are checked in Ch
 
 - Direct, readable code over abstractions; everything (code, comments, UI text, docs) in **English**.
 - All `chrome.storage` access goes through `src/storage.ts`.
-- Changes of behavior or decision go to SPEC.md first; new ideas go to FEATURES.md.
+- Changes of behavior or decision go to SPEC.md first; new ideas go to BACKLOG.md.
 
 ## Contributing
 
 Contributions are welcome. To propose a change:
 
-1. Open an *issue* describing the problem or the idea (ideas can also go into [FEATURES.md](FEATURES.md)).
+1. Open an *issue* describing the problem or the idea (ideas can also go into [BACKLOG.md](BACKLOG.md)).
 2. *Fork* the repo, create a branch and follow the conventions above.
 3. Make sure `npm run build` and `npm test` pass, and test what changed in Chrome.
 4. Open a *pull request* explaining what changed and how to verify it.
