@@ -21,13 +21,13 @@ Chrome extension (Manifest V3) that replaces the new tab with a notepad with a m
 
 ## Working rules
 - Always reply to the user in Brazilian Portuguese, including intermediate messages.
-- Every task goes through the skill that owns it, always, not only inside the cycle below:
-  - `product` for any change to BACKLOG.md, SPEC.md or CHANGELOG.md, even a one-word fix (reading them needs no skill);
-  - `grilling` to interview me about an idea or plan;
-  - `build` to implement a feature.
 - A feature's How to verify is `npm test` plus what to check in Chrome.
 
 ## Development cycle
-1. **Idea:** when I describe a feature idea, start a `grilling` interview right away. If I say "just note it" or similar ("anota aí", "guarda essa ideia", "depois a gente vê"), skip it and record the idea with `product`.
-2. **Record:** with what was decided, `product` records it in the backlog.
+1. **Idea:** when I describe a feature idea, start a `grilling` interview right away. Before its final summary, load `product` and write the summary as the backlog entry, so my OK approves the text that will be recorded. If I say "just note it" or similar ("anota aí", "guarda essa ideia", "depois a gente vê"), skip the interview and record the idea with `product`.
+2. **Record:** `product` records what was decided in the backlog.
 3. **Build:** when I decide to implement a feature, use `build`.
+4. **Bugs:** write a test that reproduces the bug and show it fails, fix it, record it with `product` (CHANGELOG under Fixed; SPEC.md if a rule changed) and commit. No backlog entry or tester. If the fix needs a decision about behavior, it's a feature: go to step 1.
+5. **Release:** bump the version in `package.json` and `public/manifest.json`, release with `product` (changelog and tag), `npm run zip`, then submit following STORE.md.
+
+Outside the cycle too, any change to BACKLOG.md, SPEC.md or CHANGELOG.md, even a one-word fix, goes through `product`. Reading them needs no skill.
