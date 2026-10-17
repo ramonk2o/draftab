@@ -2,6 +2,11 @@
 
 All notable changes to Draftab are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- **Power and remainder in calculations**: `2^10=` (or `2**10=`) → `1024` and `7%3=` → `1`. Power comes before the sign and groups from the right, as in math (`-2^2=` → `-4`, `2^3^2=` → `512`); the exponent may have a sign (`2^-1=` → `0.5`). The remainder has the sign of the first number and works with decimals. Remainder by zero, roots of negative numbers and results too big write nothing. The Settings hint shows the new operations.
+
 ## [1.3.0] — 2026-10-16
 
 Submitted to the Chrome Web Store as an update.

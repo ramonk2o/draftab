@@ -22,13 +22,13 @@ export function resolveSeparator(setting: DecimalSeparatorSetting, locale: strin
 // The result of an expression, written with the separator, or null when it isn't a
 // valid calculation (no operation between two numbers, division by zero, wrong separator…)
 export function calculate(expression: string, separator: DecimalSeparator): string | null {
-  // The pieces: numbers and single characters (operators and parentheses)
+  // The pieces: numbers, "**" and single characters (operators and parentheses)
   const number = separator === '.' ? /^\d+(?:\.\d+)?/ : /^\d+(?:,\d+)?/
   const tokens: string[] = []
   let rest = expression
   while (rest) {
-    const found = rest.match(number)?.[0] ?? rest[0]
-    if (!/^[\d+\-*/()]/.test(found)) return null // a letter, a space, the other separator…
+    const found = rest.match(number)?.[0] ?? (rest.startsWith('**') ? '**' : rest[0])
+    if (!/^[\d+\-*/()^%]/.test(found)) return null // a letter, a space, the other separator…
     tokens.push(found)
     rest = rest.slice(found.length)
   }
@@ -48,23 +48,48 @@ export function calculate(expression: string, separator: DecimalSeparator): stri
     return value
   }
 
-  // product := factor (("*" | "/") factor)*
+  // product := factor (("*" | "/" | "%") factor)*
   function product(): number {
     let value = factor()
-    while (tokens[position] === '*' || tokens[position] === '/') {
+    while (tokens[position] === '*' || tokens[position] === '/' || tokens[position] === '%') {
       const operator = tokens[position++]
       const right = factor()
-      value = operator === '*' ? value * right : value / right
+      if (operator === '*') value = value * right
+      else if (operator === '/') value = value / right
+      else value = value % right // the sign of the first number: -7%3 = -1
       operations++
     }
     return value
   }
 
-  // factor := ("+" | "-") factor | number | "(" sum ")"
+  // factor := ("+" | "-") factor | power
+  // The sign comes after the power: -2^2 = -(2^2) = -4
   function factor(): number {
+    if (tokens[position] === '-') {
+      position++
+      return -factor()
+    }
+    if (tokens[position] === '+') {
+      position++
+      return factor()
+    }
+    return power()
+  }
+
+  // power := primary (("^" | "**") factor)?
+  // The exponent is a factor, so it may have a sign (2^-1) and powers group from the right (2^3^2 = 2^9)
+  function power(): number {
+    const base = primary()
+    if (tokens[position] !== '^' && tokens[position] !== '**') return base
+    position++
+    const exponent = factor()
+    operations++
+    return base ** exponent
+  }
+
+  // primary := number | "(" sum ")"
+  function primary(): number {
     const token = tokens[position++]
-    if (token === '-') return -factor()
-    if (token === '+') return factor()
     if (token === '(') {
       const value = sum()
       if (tokens[position++] !== ')') return NaN
@@ -83,7 +108,7 @@ export function calculate(expression: string, separator: DecimalSeparator): stri
 
 // An expression without spaces right before the "=" just typed, at the start of the
 // line or after a space
-export const calculationRegex = /(?<!\S)([\d.,+\-*/()]+)=$/
+export const calculationRegex = /(?<!\S)([\d.,+\-*/()^%]+)=$/
 
 let enabled = true
 let separator: DecimalSeparator = '.'

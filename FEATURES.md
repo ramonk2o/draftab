@@ -11,6 +11,14 @@ How a feature moves:
 
 ## Editor
 
+### Power and remainder in calculations
+- **Status:** Implemented, waiting for the user's test in Chrome. `npm test`: 17 files, 262 tests passed (new tests for power, remainder, invalid cases and the trigger regex). `npm run build`: ok.
+- **Description:** calculations after `=` also do powers (`^` or `**`) and the remainder of a division (`%`).
+- **Motivation:** direct request from the user (2026-10-16).
+- **Decisions:** power is right-associative and comes before the sign (`2^3^2` = 512, `-2^2` = -4); the exponent may have a sign (`2^-1` = 0.5). `%` is at the level of `*` and `/`, has the sign of the first number (`-7%3` = -1) and accepts decimals. Remainder by zero, root of a negative and infinite results write nothing; `0^0` = 1; huge results come out with `e+`. The Settings hint shows the new operations.
+- **Deliverable:** `calculate.ts` (parser and trigger regex) with `^`, `**` and `%`; tests; SPEC.md; Settings hint in English and Portuguese.
+- **How to verify:** `npm test` and `npm run build` pass. In Chrome, typing `2^10=` → `1024`, `2**3=` → `8`, `7%3=` → `1`, `-2^2=` → `-4`, `2^3^2=` → `512`, `7%0=` → nothing; Settings → Calculations shows the new example.
+
 ### Tables
 - **Status:** Idea
 - **Description:** a table block in notes.
