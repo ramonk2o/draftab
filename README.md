@@ -195,24 +195,11 @@ docs/store/              Chrome Web Store images (en and pt-BR)
 
 ### How data is stored
 
-- Everything goes to `chrome.storage.local` (with the `unlimitedStorage` permission), always through `src/storage.ts`.
-- **One key per note** (`note:<id>`), so not everything is rewritten on every keystroke. The note stores the **Tiptap JSON**, which is the source of truth; markdown only exists on export.
-- Saving is automatic, a moment after typing stops; other open tabs get the change, and the last write wins.
-- The full format (note, settings, backup file) is described in [SPEC.md](SPEC.md).
+Notes and settings stay in this browser (`chrome.storage.local`). The data model, the backup file format and the reasons behind them are in [SPEC.md](SPEC.md) (Data model, Technical decisions).
 
 ### Permissions
 
-| Permission | What for |
-|---|---|
-| `storage` | Store notes and settings in the browser |
-| `unlimitedStorage` | Not be limited to the ~10 MB of `chrome.storage.local` |
-| `alarms` | Wake the service worker at the automatic backup time |
-| `downloads` | Save the automatic backup file to `Downloads/draftab-backups/` |
-| `activeTab` | Read the current tab, only when you click the icon or "Save to Draftab" |
-| `scripting` | Run the capture code in that tab at that moment |
-| `contextMenus` | The "Save to Draftab" item for selected text |
-
-New permissions are only added with a reason recorded in SPEC.md.
+The permissions are listed in [SPEC.md](SPEC.md) (Technical decisions), and what each one is for in [STORE.md](STORE.md) (Privacy practices).
 
 ### Tests
 
@@ -231,16 +218,14 @@ New permissions are only added with a reason recorded in SPEC.md.
 
 ### Conventions
 
-- Direct, readable code over abstractions; everything (code, comments, UI text, docs) in **English**.
-- All `chrome.storage` access goes through `src/storage.ts`.
-- New ideas go to BACKLOG.md; SPEC.md is updated when a feature is finished.
+The code conventions, test conventions and development cycle are in [CLAUDE.md](CLAUDE.md).
 
 ## Contributing
 
 Contributions are welcome. To propose a change:
 
 1. Open an *issue* describing the problem or the idea (ideas can also go into [BACKLOG.md](BACKLOG.md)).
-2. *Fork* the repo, create a branch and follow the conventions above.
+2. *Fork* the repo, create a branch and follow the conventions in [CLAUDE.md](CLAUDE.md).
 3. Make sure `npm run build` and `npm test` pass, and test what changed in Chrome.
 4. Open a *pull request* explaining what changed and how to verify it.
 
