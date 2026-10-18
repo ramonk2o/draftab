@@ -29,7 +29,7 @@ Chrome extension (Manifest V3) that replaces the new tab with a notepad with a m
 - The user checks things in Chrome; use the browser only when they ask.
 
 ## Development cycle
-Uses the `grilling`, `document` and `build` skills and the `feature-tester` agent, installed globally in `~/.claude/`. When a step needs one that isn't available, tell the user and stop; don't imitate it from memory.
+Uses the `grilling`, `document` and `build` skills and the `tester` agent, installed globally in `~/.claude/`. When a step needs one that isn't available, tell the user and stop; don't imitate it from memory.
 
 1. **Idea:** if the idea is clear, record it with `document`. If it leaves behavior open (decisions that would change what gets built), start a `grilling` interview; before its final summary, load `document` and write the summary as the backlog entry, so my OK approves the text that will be recorded. "Just note it" ("anota aí", "depois a gente vê") always skips the interview.
 2. **Build:** `build`.
