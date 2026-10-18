@@ -6,12 +6,6 @@
       "sourceType": "github",
       "skillPath": "skills/chrome-extensions/SKILL.md",
       "computedHash": "1e8525bb49647008dcd3a6b7e5d3c3207345f086e7a64d7e6d5bcc67dbba7a71"
-    },
-    "modern-web-guidance": {
-      "source": "GoogleChrome/modern-web-guidance",
-      "sourceType": "github",
-      "skillPath": "skills/modern-web-guidance/SKILL.md",
-      "computedHash": "dbd30d9c331c8957e065270150ffe44b4ba11ad5259cc9144240f63c45b05f1c"
     }
   }
 }
