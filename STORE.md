@@ -11,7 +11,7 @@ Everything the Chrome Web Store developer dashboard asks for, ready to copy. The
 
 ## Package
 
-- **File:** `draftab-1.3.0.zip` (run `npm run zip`)
+- **File:** `draftab-<version>.zip` (run `npm run zip`)
 - **Default language:** English (`default_locale: en`); the listing is also localized to Portuguese (Brazil). The extension's interface is in English and Portuguese (Settings → Language; automatic by default, following Chrome).
 - The package includes a notices file with the licenses of the bundled dependencies (required by their MIT licenses).
 
@@ -190,7 +190,7 @@ Screenshots are generated from the real extension with `node scripts/screenshots
 
 1. **Before submitting:** push the repository to GitHub (the privacy policy URL must be public) and run `npm run zip`.
 2. **Developer account:** go to <https://chrome.google.com/webstore/devconsole>, sign in with your Google account, accept the agreement and pay the one-time US$ 5 registration fee. Verify the contact email the dashboard asks for.
-3. **New item:** click **New item** and upload `draftab-1.3.0.zip`.
+3. **New item:** click **New item** and upload `draftab-<version>.zip`.
 4. **Store listing tab:**
    - Description: paste the English description above.
    - Category and language: as in "Other listing fields".
@@ -204,5 +204,7 @@ Screenshots are generated from the real extension with `node scripts/screenshots
 ## Publishing an update
 
 1. Bump `version` in both `package.json` and `public/manifest.json` (the zip script refuses mismatched versions).
-2. Run `npm run zip`.
-3. In the dashboard, open Draftab → **Package** → **Upload new package**, choose the new zip, update the listing texts or screenshots if something visible changed, and **Submit for review**.
+2. Release with the `product` skill: the `[Unreleased]` entries in CHANGELOG.md become the new version, with a git tag.
+3. Run `npm run zip`.
+4. In the dashboard, open Draftab → **Package** → **Upload new package**, choose the new zip, update the listing texts or screenshots if something visible changed, and **Submit for review**.
+5. Update this file: add the version to **Status** with the submission date, and update the listing texts and screenshots here if they changed.
