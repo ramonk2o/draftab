@@ -4,7 +4,7 @@ Chrome extension (Manifest V3) that replaces the new tab with a notepad with a m
 - How it works today: `SPEC.md`. Ideas and the feature in progress: `BACKLOG.md`. What changed in each version: `CHANGELOG.md`.
 
 ## Commands
-- Install: `npm install`
+- Install: `npm install` (also turns on the pre-commit hook in `.githooks/`: tests and type check before every commit that touches code)
 - Develop (build in watch mode): `npm run dev`
 - Build: `npm run build` (type-checks, output in `dist/`)
 - Store package: `npm run zip` (builds `draftab-<version>.zip`; release steps in STORE.md → Publishing an update)
@@ -26,16 +26,12 @@ Chrome extension (Manifest V3) that replaces the new tab with a notepad with a m
 
 ## Working rules
 - Always reply to the user in Brazilian Portuguese, including intermediate messages.
-- A feature's How to verify is `npm test` plus what to check in Chrome. The user checks in Chrome; use the browser only when they ask.
-
-## Skills
-The cycle below uses the `build`, `product` and `grilling` skills and the `feature-tester` agent. They are installed globally in `~/.claude/` (not in this repo). When a step needs one that isn't available, tell the user and stop; don't imitate it from memory. Reading the docs needs no skill.
+- The user checks things in Chrome; use the browser only when they ask.
 
 ## Development cycle
-1. **Idea:** when I describe a feature idea, start a `grilling` interview right away. Before its final summary, load `product` and write the summary as the backlog entry, so my OK approves the text that will be recorded. If I say "just note it" or similar ("anota aí", "guarda essa ideia", "depois a gente vê"), skip the interview and record the idea with `product`.
-2. **Record:** `product` records what was decided in the backlog.
-3. **Build:** when I decide to implement a feature, use `build`.
-4. **Bugs:** write a test that reproduces the bug and show it fails, fix it, record it with `product` (CHANGELOG under Fixed; SPEC.md if a rule changed) and commit. No backlog entry or tester. If the fix needs a decision about behavior, it's a feature: go to step 1.
-5. **Release:** follow STORE.md → Publishing an update (version bump, `product` release, zip, submit).
+Uses the `grilling`, `product` and `build` skills and the `feature-tester` agent, installed globally in `~/.claude/`. When a step needs one that isn't available, tell the user and stop; don't imitate it from memory.
 
-Outside the cycle too, any change to BACKLOG.md, SPEC.md or CHANGELOG.md, even a one-word fix, goes through `product`. Reading them needs no skill.
+1. **Idea:** if the idea is clear, record it with `product`. If it leaves behavior open (decisions that would change what gets built), start a `grilling` interview; before its final summary, load `product` and write the summary as the backlog entry, so my OK approves the text that will be recorded. "Just note it" ("anota aí", "depois a gente vê") always skips the interview.
+2. **Build:** `build`.
+3. **Bugs:** no backlog entry or tester. If the bug can be tested (logic outside the editor and UI), write a test that reproduces it and show it fails, then fix it. If it only shows in Chrome, write the steps to reproduce it and give them back as "To check by hand". Record it with `product` (CHANGELOG under Fixed; SPEC.md if a rule changed) and commit. If the fix needs a decision about behavior, it's a feature: go to step 1.
+4. **Release:** follow STORE.md → Publishing an update.

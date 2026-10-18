@@ -203,14 +203,14 @@ The permissions are listed in [SPEC.md](SPEC.md) (Technical decisions), and what
 
 ### Tests
 
-`npm test` (Vitest) covers everything that doesn't need a browser, with `chrome.storage`, alarms and downloads simulated in `src/fake-chrome.ts`. The editor and the interface are checked in Chrome, following the "How to verify" of the feature in progress in [BACKLOG.md](BACKLOG.md).
+`npm test` (Vitest) covers everything that doesn't need a browser, with `chrome.storage`, alarms and downloads simulated in `src/fake-chrome.ts`. The editor and the interface are checked in Chrome, following the "To check by hand" list of the feature in progress in [BACKLOG.md](BACKLOG.md). A pre-commit hook (turned on by `npm install`) runs the tests and the type check before every commit that touches code.
 
 ### Project documents
 
 | File | Contents |
 |---|---|
 | [SPEC.md](SPEC.md) | How Draftab behaves today (rules by area), data model and technical decisions |
-| [BACKLOG.md](BACKLOG.md) | Ideas, by area, and the feature in progress with how to verify it; done features move to CHANGELOG.md |
+| [BACKLOG.md](BACKLOG.md) | Ideas, by area, and the feature in progress with what to check by hand; done features move to CHANGELOG.md |
 | [CHANGELOG.md](CHANGELOG.md) | What changed in each version |
 | [STORE.md](STORE.md) | Chrome Web Store listing texts (en-US and pt-BR), privacy answers and how to submit or update |
 | [PRIVACY.md](PRIVACY.md) | Privacy policy (English and Portuguese) |

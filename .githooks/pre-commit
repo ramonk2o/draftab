@@ -1,0 +1,10 @@
+#!/bin/sh
+# Runs the tests and the type check before each commit that touches code.
+# Commits with only .md files skip it.
+
+if git diff --cached --name-only | grep -qv '\.md$'; then
+  npm test --silent && npx tsc --noEmit || {
+    echo "pre-commit: tests or type check failed; commit aborted." >&2
+    exit 1
+  }
+fi
