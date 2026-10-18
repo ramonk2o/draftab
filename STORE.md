@@ -205,7 +205,7 @@ Screenshots are generated from the real extension with `node scripts/screenshots
 
 1. List what was left to check by hand since the last release, and have the user confirm each item in Chrome before going on: `git log $(git describe --tags --abbrev=0)..HEAD --grep='To check by hand:' --format='%h %s%n%b'`.
 2. Bump `version` in both `package.json` and `public/manifest.json` (the zip script refuses mismatched versions).
-3. Release with the `product` skill: the `[Unreleased]` entries in CHANGELOG.md become the new version, with a git tag.
+3. Release with the `document` skill: the `[Unreleased]` entries in CHANGELOG.md become the new version, with a git tag.
 4. Run `npm run zip`.
 5. In the dashboard, open Draftab → **Package** → **Upload new package**, choose the new zip, update the listing texts or screenshots if something visible changed, and **Submit for review**.
 6. Update this file: add the version to **Status** with the submission date, and update the listing texts and screenshots here if they changed.
