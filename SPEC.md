@@ -144,7 +144,21 @@ Chrome extension that replaces the new tab with a local notepad: a markdown-frie
   `pinned` = the note is pinned in the sidebar; missing = not pinned.
   The Tiptap JSON is the source of truth (no conversion losses).
   Highlighted text has a `highlight` mark with `color: 'gray' | 'red' | 'orange' | 'yellow' | 'green' | 'blue'`.
-- `settings { autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200, sidebarCollapsed: boolean, theme: 'auto' | 'light' | 'dark', noteSort: 'updated' | 'title' | 'created', noteFont: 'sans' | 'serif' | 'mono', newNoteFont: 'sans' | 'serif' | 'mono', newNoteTextSize: number, language: 'auto' | 'en' | 'pt', showCalendar: boolean, dateFormat: 'numeric' | 'iso' | 'short' | 'long', colorSwatches: boolean, calculations: boolean, decimalSeparator: 'auto' | '.' | ',' , newNoteHeading: boolean }` (0 = off; `newNoteTextSize` = text size of new notes, in percent, default 100; `newNoteFont` = font of new notes, missing = `noteFont`; `noteFont` = the font of notes without their own, no longer changed from Settings; `language` = the interface language, default `auto`; `showCalendar` = the calendar shows in the sidebar, default `true`; `dateFormat` = the format of dates inserted from the calendar, default `numeric`; `colorSwatches` = color codes show a swatch, default `true`; `calculations` = typing `=` after a calculation writes the result, default `true`; `decimalSeparator` = the decimal separator of calculations, default `auto`). `newNoteHeading` = blank notes start with an empty level-1 heading, default `true`. Invalid stored values fall back to the defaults (an unknown interval moves to the closest one).
+- `settings` (invalid stored values fall back to the defaults; an unknown interval moves to the closest one):
+  - `autoBackupMinutes: 0 | 1 | 60 | 1440 | 10080 | 43200`: automatic backup interval; 0 = off, default 0.
+  - `sidebarCollapsed: boolean`: the sidebar was collapsed with the button; default `false`.
+  - `theme: 'auto' | 'light' | 'dark'`: default `auto`.
+  - `noteSort: 'updated' | 'title' | 'created'`: sidebar order; default `updated`.
+  - `noteFont: 'sans' | 'serif' | 'mono'`: the font of notes without their own, no longer changed from Settings; default `sans`.
+  - `newNoteFont: 'sans' | 'serif' | 'mono'`: font of new notes; missing = `noteFont`.
+  - `newNoteTextSize: number`: text size of new notes, in percent; default 100.
+  - `language: 'auto' | 'en' | 'pt'`: the interface language; default `auto`.
+  - `showCalendar: boolean`: the calendar shows in the sidebar; default `true`.
+  - `dateFormat: 'numeric' | 'iso' | 'short' | 'long'`: the format of dates inserted from the calendar; default `numeric`.
+  - `colorSwatches: boolean`: color codes show a swatch; default `true`.
+  - `calculations: boolean`: typing `=` after a calculation writes the result; default `true`.
+  - `decimalSeparator: 'auto' | '.' | ','`: the decimal separator of calculations; default `auto`.
+  - `newNoteHeading: boolean`: blank notes start with an empty level-1 heading; default `true`.
 - `meta { lastChangeAt: number, lastBackupAt: number, lastImportAt: number }` (`lastImportAt` marks an import or the deletion of all notes, and tells open tabs to reload)
 - `clip:<uuid>` = a captured page waiting for the new tab that turns it into a note: `{ title, url, html, text?, excerpt?, createdAt }` (`text` = the plain selected text Chrome gives, the fallback for selections; `excerpt` = it's a selection). The new tab deletes it when it reads it; leftovers older than 10 minutes are deleted when the service worker starts and before each capture. Never in backups.
 - Backup file:
