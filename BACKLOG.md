@@ -22,6 +22,16 @@ Status: **Idea** → **In progress** (one at a time) → done (leaves the file i
 
 ## Backup and settings
 
+### Export all notes as a zip of .md files
+- **Status:** Idea
+- **Motivation:** not recorded.
+- **Description:** one action downloads a `.zip` with each note as its own `.md` file, with the same markdown as Export as Markdown.
+- **Open questions:**
+  - Where the action goes (Settings next to Backup export, the note list, or both).
+  - All notes, or also only some (e.g. pinned notes, or the ones the sidebar search finds).
+  - File names when two notes have the same title (e.g. `Title (2).md`), and the zip's name (e.g. `draftab-notes-<date>.zip`).
+  - Whether the files' dates match the notes' last-modified dates.
+
 ### Sync across computers
 - **Status:** Idea
 - **Motivation:** moving notes between computers is manual today, through the JSON backup.
