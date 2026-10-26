@@ -36,6 +36,13 @@ const EN = {
   newTitle: 'New title',
   confirmDeleteNote: 'Delete the note "{title}"? This can\'t be undone.',
   fileEmpty: 'Couldn\'t import: "{name}" is empty.',
+  dropToImport: 'Drop to import',
+  dropOnlyMdTxt: 'Only .md and .txt files can be imported.',
+  dropNoneImported: 'No notes imported',
+  'dropImported.one': '{n} note imported',
+  'dropImported.other': '{n} notes imported',
+  'dropSkipped.one': '{n} file skipped',
+  'dropSkipped.other': '{n} files skipped',
 
   // Note page
   pinNote: 'Pin note',
@@ -178,6 +185,13 @@ const PT: Record<Key, string> = {
   newTitle: 'Novo título',
   confirmDeleteNote: 'Apagar a nota "{title}"? Isso não pode ser desfeito.',
   fileEmpty: 'Não foi possível importar: "{name}" está vazio.',
+  dropToImport: 'Solte para importar',
+  dropOnlyMdTxt: 'Só arquivos .md e .txt podem ser importados.',
+  dropNoneImported: 'Nenhuma nota importada',
+  'dropImported.one': '{n} nota importada',
+  'dropImported.other': '{n} notas importadas',
+  'dropSkipped.one': '{n} arquivo ignorado',
+  'dropSkipped.other': '{n} arquivos ignorados',
 
   pinNote: 'Fixar nota',
   unpinNote: 'Desafixar nota',

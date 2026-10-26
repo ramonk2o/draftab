@@ -26,6 +26,12 @@ Chrome extension that replaces the new tab with a local notepad: a markdown-frie
   - `.md` / `.markdown` is read as markdown (headings, lists, checklists, quotes, code, dividers, marks, links, images); an image on a line of its own becomes an image block; an image in the middle of a line of text (or in a list item), or whose address isn't `http`/`https` (e.g. a relative `img.png`), stays as its `![description](address)` text; headings smaller than `###` become `###`. If something in it can't become a Draftab block, the file is read as plain text instead.
   - `.txt` is plain text: each line becomes a paragraph. Windows and old Mac line breaks are accepted.
   - The title is automatic and the text size is the one set for new notes. An empty file creates nothing and shows a message.
+  - Dragging files onto the page does the same, for one or several files at once, dropped anywhere (note, sidebar, empty areas, also with Settings open). The type comes from the name's extension (`.md`, `.markdown`, `.txt`, any case), not from the type the system reports.
+    - Each valid file becomes a note, in the order they were dropped, and the first one opens; importing at least one note closes Settings.
+    - Files of other types and empty files are skipped. Messages: only one empty file → the same message as the Import button; only files of other types → only `.md` and `.txt` files can be imported; any other case with skipped files → the counts, e.g. "2 notes imported, 1 file skipped" ("No notes imported, …" when none was). Nothing skipped → no message.
+    - Chrome never opens a dropped file in place of Draftab, and the file never goes into the note's text.
+    - While files are dragged over the page, a layer over everything (Settings included) says "Drop to import"; it hides on drop or when the files leave the window.
+    - Drags that start on the page (blocks, selected text, an image in the note) and drags of text or links from elsewhere work as before: no layer, no import.
 
 ### Calendar
 - A month calendar at the bottom of the sidebar, below the note list (the list scrolls above it). It hides with the sidebar.

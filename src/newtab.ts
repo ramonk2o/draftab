@@ -9,7 +9,8 @@ import { noteFromFile, noteToMarkdown } from './markdown'
 import { clipToNote } from './clip'
 import { cursorNear } from './images'
 import { noteToWhatsApp } from './whatsapp'
-import { openSettings } from './settings'
+import { closeSettings, openSettings } from './settings'
+import { draggingFiles, notesFromDroppedFiles } from './file-drop'
 import { setDateFormat, setupCalendar, showCalendar } from './calendar-ui'
 import { setCalculationsEnabled, setDecimalSeparator } from './calculate'
 import { applyNoteFont, applyTheme, rememberNewNoteFont } from './theme'
@@ -437,6 +438,69 @@ importButton.addEventListener('click', async () => {
 })
 
 settingsButton.addEventListener('click', () => openSettings())
+
+// ---------- Import files dragged onto the page ----------
+
+// A layer over the whole page while files are dragged over it. It's a popover so it
+// also shows above Settings (both are in the browser's top layer, the latest on top).
+const dropLayer = element<HTMLDivElement>('#drop-layer')
+
+function showDropLayer(visible: boolean) {
+  if (visible !== dropLayer.matches(':popover-open')) dropLayer.togglePopover(visible)
+}
+
+// A drag that started on this page (a block, selected text, an image in the note) is
+// never an import, even when Chrome offers it as a file (it does for images)
+let dragFromPage = false
+document.addEventListener('dragstart', () => (dragFromPage = true), true)
+document.addEventListener('dragend', () => (dragFromPage = false), true)
+
+// Only drags of files from outside the page; text, links and blocks are left alone
+function isFileImport(event: DragEvent): boolean {
+  return !dragFromPage && !!event.dataTransfer && draggingFiles(event.dataTransfer.types)
+}
+
+document.addEventListener('dragenter', (event) => {
+  if (isFileImport(event)) showDropLayer(true)
+})
+
+// The layer covers everything, so leaving it means the file left the window
+dropLayer.addEventListener('dragleave', () => showDropLayer(false))
+
+// Captured on the window, before the editor: the file is never inserted into the note
+// and Chrome never opens it in place of Draftab
+window.addEventListener(
+  'dragover',
+  (event) => {
+    if (!isFileImport(event)) return
+    event.preventDefault()
+    event.dataTransfer!.dropEffect = 'copy'
+  },
+  true,
+)
+
+window.addEventListener(
+  'drop',
+  async (event) => {
+    const isImport = isFileImport(event)
+    dragFromPage = false // also when the dragged element left the page and dragend never comes
+    if (!isImport) return
+    event.preventDefault()
+    event.stopPropagation()
+    showDropLayer(false)
+    const { notes, message } = await notesFromDroppedFiles([...event.dataTransfer!.files], newNoteTextSize, newNoteFont)
+    for (const note of notes) {
+      await saveNote(note)
+      updateNoteInList(note.id, note) // in the list right away, whether or not onNotesChanged came first
+    }
+    if (notes.length > 0) {
+      closeSettings()
+      open(notes[0], true)
+    }
+    if (message) alert(message)
+  },
+  true,
+)
 
 // ---------- Saved web pages (see "Saving web pages" in SPEC.md) ----------
 

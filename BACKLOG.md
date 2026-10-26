@@ -34,23 +34,6 @@ Status: **Idea** → **In progress** (one at a time) → done (leaves the file i
   - Own server (Firebase, Supabase): accounts, monthly cost, maintenance and a new privacy policy; too heavy for Draftab.
   - The hard part in any option is conflicts: merge note by note (each note has an id and a last-modified date, so the most recent version of each note wins), and deleted notes leave a dated "deleted" mark so they don't come back when the other computer syncs.
 
-## Notes and the sidebar
-
-### Import by dragging files
-- **Status:** Idea
-- **Motivation:** importing a `.md` takes the Import button and a file picker, one file at a time; dragging files from the desktop or Finder would be faster, especially to bring several notes from another app. Today, dropping a file on the tab makes Chrome open it, leaving Draftab.
-- **Description:** dragging `.md`, `.markdown` or `.txt` files onto the Draftab page imports each one as a new note, the same as the Import button.
-- **Decisions:**
-  - Same file types and the same conversion as the Import button; each file becomes a new note (nothing is inserted into the open note).
-  - The drop works anywhere on the page: the note, the sidebar, empty areas, also with Settings open.
-  - Several files at once: each valid file becomes a note and the first file's note opens. Invalid files are skipped and a message gives the count (e.g. "2 notes imported, 1 file skipped").
-  - Other file types (PDF, images…): Chrome is kept from opening the file, nothing is imported and a message says only `.md` and `.txt` files can be imported.
-  - An empty file creates no note and shows the same message as the Import button; among several files it counts as skipped.
-  - While a file is dragged over the page, a layer covering it says "Drop to import"; it hides on drop or when the file leaves the window. It doesn't show when dragging blocks or text.
-  - Dragging text or links (no files) works as today: the text goes into the note.
-  - No new permission.
-  - SPEC.md: the "Import a file as a note" rule gains dropping files as a second way in, with the rules above.
-
 ## Discarded
 
 ### Color picker

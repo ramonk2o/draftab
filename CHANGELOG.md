@@ -5,6 +5,7 @@ All notable changes to Draftab are documented here. The format is based on [Keep
 ## [Unreleased]
 
 ### Added
+- **Import by dragging files**: dropping `.md` or `.txt` files anywhere on the page imports each one as a new note, several at once.
 - **Power and remainder in calculations**: `2^10=` (or `2**10=`) and `7%3=` now work, following the usual math rules.
 
 ## [1.3.0] — 2026-10-16

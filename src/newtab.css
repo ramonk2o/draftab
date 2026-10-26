@@ -1023,6 +1023,35 @@ body.reordering .drop-cursor {
   cursor: grabbing;
 }
 
+/* ---------- Drop files to import ---------- */
+
+#drop-layer {
+  position: fixed;
+  inset: 0;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: 2px dashed var(--link);
+  background: var(--backdrop);
+  color: var(--text);
+}
+
+#drop-layer:popover-open {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#drop-layer span {
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: var(--bg-dialog);
+  box-shadow: 0 20px 60px var(--dialog-shadow);
+  font-size: 17px;
+  pointer-events: none; /* the layer itself is the only drag target, so leaving it means leaving the window */
+}
+
 /* ---------- Settings (lightbox) ---------- */
 
 #settings {

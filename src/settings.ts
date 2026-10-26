@@ -69,6 +69,10 @@ export async function openSettings() {
 
 // ---------- Close ----------
 
+export function closeSettings() {
+  dialog.close()
+}
+
 closeButton.addEventListener('click', () => dialog.close())
 
 // A click outside the box (on the dimmed background) closes it; the browser already handles Esc
