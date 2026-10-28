@@ -13,5 +13,16 @@
       "Bash(git switch:*)",
       "Bash(git merge:*)"
     ]
+  },
+  "extraKnownMarketplaces": {
+    "mini-devkit": {
+      "source": {
+        "source": "github",
+        "repo": "ramonk2o/mini-devkit"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "mini-devkit@mini-devkit": true
   }
 }
