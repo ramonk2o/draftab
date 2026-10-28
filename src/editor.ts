@@ -11,6 +11,7 @@ import { Calculations } from './calculate'
 import { UnderlineShortcut } from './underline-shortcut'
 import { plainTextOf } from './images'
 import { ImagePaste } from './image-paste'
+import { MarkdownPaste } from './markdown-paste'
 import { HighlightBar } from './highlight-bar'
 import { t } from './i18n'
 
@@ -110,6 +111,7 @@ export function createEditor(element: HTMLElement, onTagClick: (tag: string) => 
       ChecklistInsideList,
       UnderlineShortcut,
       ImagePaste,
+      MarkdownPaste,
       HighlightBar,
       UnwrapBlock,
       Tags.configure({ onTagClick }),

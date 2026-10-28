@@ -5,8 +5,15 @@ All notable changes to Draftab are documented here. The format is based on [Keep
 ## [Unreleased]
 
 ### Added
+- **Pasting markdown makes blocks**: markdown pasted as plain text (from a code editor, the terminal, a `.md` file or a chat's copy button) turns into headings, lists, checklists, quotes and code, one block per line; Cmd/Ctrl+Shift+V pastes the raw text.
 - **Import by dragging files**: dropping `.md` or `.txt` files anywhere on the page imports each one as a new note, several at once.
 - **Power and remainder in calculations**: `2^10=` (or `2**10=`) and `7%3=` now work, following the usual math rules.
+
+### Changed
+- Importing a `.md` file keeps one block per line, like pasting markdown.
+
+### Fixed
+- Tables in an imported `.md` file are no longer silently dropped: they stay as text.
 
 ## [1.3.0] — 2026-10-16
 

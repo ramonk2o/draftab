@@ -31,15 +31,103 @@ export function noteFromFile(fileName: string, fileText: string, textSize = 100,
   return isEmptyNote(note) ? null : note
 }
 
-// The document for a markdown text, or null if the editor couldn't open it
-function markdownDoc(text: string): JSONContent | null {
+// The document for a markdown text (one block per line), or null if the editor couldn't open it.
+// Used by importing a file and by pasting markdown
+export function markdownDoc(text: string): JSONContent | null {
   try {
-    const doc = limitHeadings(imagesToText(converter().parse(text)))
+    const doc = splitLines(limitHeadings(imagesToText(converter().parse(oneBlockPerLine(text)))))
     contentSchema().nodeFromJSON(doc).check()
     return doc
   } catch {
     return null
   }
+}
+
+// Markdown joins consecutive lines into one paragraph, and a plain line after a list or a quote
+// into its last item. Draftab keeps one block per line: a blank line goes between two lines,
+// except inside code and where markdown keeps them apart anyway (see keepTogether)
+function oneBlockPerLine(text: string): string {
+  const result: string[] = []
+  let fence = '' // the ``` or ~~~ that opened the code block we're in
+  for (const line of text.split('\n')) {
+    // A ``` that closes on the same line is inline code, not a code block
+    const marker = line.replace(/^[\s>]*/, '').match(/^(`{3,}(?=[^`]*$)|~{3,})/)?.[1]
+    if (fence) {
+      result.push(line)
+      if (marker?.startsWith(fence) && line.trim().endsWith(marker)) fence = ''
+      continue
+    }
+    // Blank lines between items of the same list vanish (they would split a checklist in two)
+    if (listItem.test(line)) {
+      let last = result.length
+      while (last > 0 && !result[last - 1].trim()) last--
+      if (last < result.length && last > 0 && inList(result[last - 1])) result.length = last
+    }
+    const previous = result[result.length - 1]
+    if (previous?.trim() && line.trim()) {
+      if (quoted.test(previous) && quoted.test(line)) {
+        // Lines of the same quote: the same rules inside it, with an empty quote line between them
+        const inside = (quoteLine: string) => quoteLine.replace(quoted, '')
+        if (inside(previous).trim() && inside(line).trim() && !keepTogether(inside(previous), inside(line))) result.push('>')
+      } else if (!keepTogether(previous, line)) {
+        result.push('')
+      }
+    }
+    // A link reference definition ("[x]: https://…") would vanish: escaped, it stays as text
+    result.push(line.replace(/^(\s{0,3})\[(?=[^\]]+\]:)/, '$1\\['))
+    if (marker) fence = marker
+  }
+  return result.join('\n')
+}
+
+const listItem = /^\s*([-*+]|\d+[.)])(\s|$)/
+const quoted = /^\s{0,3}>\s?/
+
+// A list item, or an indented line (inside a list item)
+function inList(line: string): boolean {
+  return listItem.test(line) || /^\s/.test(line)
+}
+
+// Lines that stay next to each other: a line break (two spaces or \ at the end), items of the
+// same list (a blank line would split a checklist in two), lines of the same quote, and indented code
+function keepTogether(previous: string, line: string): boolean {
+  // A line break, but not over a --- or === line (that would make the line above it a heading)
+  if (/( {2}|\\)$/.test(previous) && !/^\s*(-+|=+)\s*$/.test(line)) return true
+  if (listItem.test(line)) return inList(previous)
+  if (quoted.test(line)) return quoted.test(previous)
+  return /^( {4}|\t)/.test(previous) && /^( {4}|\t)/.test(line)
+}
+
+// Lines kept together inside a paragraph (in a quote or a list item) become paragraphs of their own
+function splitLines(node: JSONContent): JSONContent {
+  if (!node.content) return node
+  const content: JSONContent[] = []
+  for (const child of node.content) {
+    if (child.type === 'paragraph' && child.content?.some((piece) => piece.text?.includes('\n'))) {
+      content.push(...paragraphPerLine(child.content))
+    } else {
+      content.push(splitLines(child))
+    }
+  }
+  return { ...node, content }
+}
+
+function paragraphPerLine(pieces: JSONContent[]): JSONContent[] {
+  const lines: JSONContent[][] = [[]]
+  for (const piece of pieces) {
+    const parts = piece.type === 'text' ? (piece.text ?? '').split('\n') : [null]
+    parts.forEach((part, i) => {
+      if (i > 0) lines.push([])
+      if (part === null) {
+        lines[lines.length - 1].push(piece)
+        return
+      }
+      // A new line starts without the indentation it had inside the list item
+      const lineText = i > 0 ? part.trimStart() : part
+      if (lineText) lines[lines.length - 1].push({ ...piece, text: lineText })
+    })
+  }
+  return lines.filter((line) => line.length).map((line) => ({ type: 'paragraph', content: line }))
 }
 
 // Draftab has headings 1 to 3: #### and smaller become level 3

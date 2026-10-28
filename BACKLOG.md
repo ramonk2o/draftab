@@ -17,26 +17,8 @@ Status: **Idea** → **In progress** (one at a time) → done (leaves the file i
 - **Notes (from a trial on 2026-10-12, not committed):**
   - Tiptap's official `@tiptap/extension-table` (same version as the rest) gives visual editing; the note stores it as a block like the others, export writes a markdown table (formatting inside cells kept, columns aligned) and importing a `.md` table reads it back.
   - Weight: JS goes from 621 KB to 668 KB (+47 KB, +7.5%; +15 KB gzipped). Not noticeable on a new tab.
+  - Pasting markdown and importing `.md` files keep tables as text today (SPEC.md → Pasting markdown); with this feature they would become table blocks instead.
   - To check: the custom drag-to-reorder and handles with tables (most likely the table moves whole), plus Copy for WhatsApp, character counts and Backspace at the start of the block.
-
-### Paste markdown as blocks
-- **Status:** Idea
-- **Motivation:** pasted markdown "sometimes" keeps its symbols (`#`, `-`, `>`…). It's formatted only when the copy brings HTML along (a rendered page, a chat's answer on screen); copies from code editors, the terminal, `.md` files or a chat's copy button arrive as plain text, and then only inline marks are formatted.
-- **Description:** pasting markdown text turns it into Draftab blocks (headings, lists, checklists, quotes, code, dividers, images, marks, links), as if it had been typed with the shortcuts.
-- **Decisions:**
-  - Any paste that arrives as plain text only (no HTML) is read as markdown, with no guessing whether it "looks like" markdown. Pastes with HTML work as today.
-  - Copies from VS Code (marked with its own clipboard type) ignore their colored HTML and are read as plain text.
-  - One line = one block (a paragraph, or a new item inside a list), unlike standard markdown, which joins consecutive lines; a plain line right after a list becomes a paragraph, not part of the last item. Blank lines vanish, as today.
-  - Same rules as the `.md` import: headings smaller than `###` become `###`; an image alone on a line becomes an image block, one inside text stays as its `![…](…)` text. If the text can't become Draftab blocks, it's pasted as plain text, as today.
-  - Markdown tables (Draftab has no table block) stay as text, one line per block (`| a | b |`, `|---|---|`, …); nothing is lost.
-  - Inside a code block, the text is pasted as-is.
-  - Cmd/Ctrl+Shift+V pastes the raw text, with its symbols, anywhere.
-  - Pasting in the middle of a line or a list follows the editor's normal behavior: the first block joins the cursor's line, the rest follows, and what was after the cursor ends up at the end of the last block. A single line like `**x**` only gets its marks.
-  - Cmd/Ctrl+Z undoes the whole paste in one step.
-  - The `.md` file import (button and dragging files) follows the same rules: one line per block and tables as text. Changes the SPEC.md rule "`.md` / `.markdown` is read as markdown…": today it joins consecutive lines into one paragraph (with a hidden line break inside the text) and silently drops tables.
-- **Notes (found on 2026-10-28):**
-  - The markdown reader used by the import drops tables without warning, and joins `linha um⏎linha dois` into a single paragraph containing a `\n`.
-  - If the Tables idea is built, tables pasted or imported would become table blocks instead of text.
 
 ## Backup and settings
 

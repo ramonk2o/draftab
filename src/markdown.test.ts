@@ -137,6 +137,24 @@ describe('noteFromFile', () => {
     ])
   })
 
+  test('a .md file has one block per line, like pasting markdown', () => {
+    expect(noteFromFile('a.md', 'one\ntwo\n- a\nafter')?.doc.content).toEqual([
+      paragraph(text('one')),
+      paragraph(text('two')),
+      { type: 'bulletList', content: [{ type: 'listItem', content: [paragraph(text('a'))] }] },
+      paragraph(text('after')),
+    ])
+  })
+
+  test('a table in a .md file stays as text', () => {
+    expect(noteFromFile('a.md', 'before\n\n| a | b |\n|---|---|\n| 1 | 2 |')?.doc.content).toEqual([
+      paragraph(text('before')),
+      paragraph(text('| a | b |')),
+      paragraph(text('|---|---|')),
+      paragraph(text('| 1 | 2 |')),
+    ])
+  })
+
   test('.markdown works too, in any case', () => {
     expect(types(noteFromFile('NOTES.MARKDOWN', '# Hi'))).toEqual(['heading'])
   })
