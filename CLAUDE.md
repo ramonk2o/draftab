@@ -29,9 +29,9 @@ Chrome extension (Manifest V3) that replaces the new tab with a notepad with a m
 - The user checks things in Chrome; use the browser only when they ask.
 
 ## Development cycle
-Uses the `grilling`, `document` and `build` skills and the `tester` agent, installed globally in `~/.claude/`. When a step needs one that isn't available, tell the user and stop; don't imitate it from memory.
+Uses the `grilling`, `document` and `build` skills and the `tester` agent from the `mini-devkit` plugin. When a step needs one that isn't available, tell the user and stop; don't imitate it from memory.
 
 1. **Idea:** if the idea is clear, record it with `document`. If it leaves behavior open (decisions that would change what gets built), start a `grilling` interview; before its final summary, load `document` and write the summary as the backlog entry, so my OK approves the text that will be recorded. "Just note it" ("anota aí", "depois a gente vê") always skips the interview.
 2. **Build:** `build`.
-3. **Bugs:** no backlog entry or tester. If the bug can be reproduced in a test (editor rules included, see Tests), write the test and show it fails, then fix it. If it needs a real browser, put the steps to reproduce it in the commit message's `To check by hand:` block. Record it with `document` (CHANGELOG under Fixed; SPEC.md if a rule changed) and commit. If the fix needs a decision about behavior, it's a feature: go to step 1.
+3. **Bugs:** no backlog entry or tester. Work on a `fix/<short-name>` branch created from the up-to-date main branch. If the bug can be reproduced in a test (editor rules included, see Tests), write the test and show it fails, then fix it. If it needs a real browser, put the steps to reproduce it in the commit message's `To check by hand:` block. Record it with `document` (CHANGELOG under Fixed; SPEC.md if a rule changed) and commit on the branch. Once it's confirmed fixed, merge it into the main branch, delete the branch and push. If the fix needs a decision about behavior, it's a feature: go to step 1.
 4. **Release:** follow STORE.md → Publishing an update.
