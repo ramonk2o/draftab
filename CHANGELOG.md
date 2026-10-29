@@ -4,6 +4,10 @@ All notable changes to Draftab are documented here. The format is based on [Keep
 
 ## [Unreleased]
 
+## [1.4.0] — 2026-10-29
+
+Submitted to the Chrome Web Store as an update.
+
 ### Added
 - **Pasting markdown makes blocks**: markdown pasted as plain text (from a code editor, the terminal, a `.md` file or a chat's copy button) turns into headings, lists, checklists, quotes and code, one block per line; Cmd/Ctrl+Shift+V pastes the raw text.
 - **Import by dragging files**: dropping `.md` or `.txt` files anywhere on the page imports each one as a new note, several at once.
@@ -123,7 +127,8 @@ Draftab was built in stages (commits named "Stage N: …"), all on 2026-10-11. E
 | — | Whole project translated to English | `65a6879` |
 | 7. Ready to publish | Version 1.0.0, icons, localized description, privacy policy, store texts and images, `npm run zip` | `18f6994` … `fc81b6b` |
 
-[Unreleased]: https://github.com/ramonk2o/draftab/compare/1.3.0...HEAD
+[Unreleased]: https://github.com/ramonk2o/draftab/compare/1.4.0...HEAD
+[1.4.0]: https://github.com/ramonk2o/draftab/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/ramonk2o/draftab/compare/1.2.0...1.3.0
 [1.2.0]: https://github.com/ramonk2o/draftab/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/ramonk2o/draftab/compare/1.0.0...1.1.0
