@@ -152,8 +152,9 @@ Dica: desinstalar a extensão apaga as notas, então exporte um backup antes.
 | Store icon | 128×128 | `public/icons/icon-128.png` |
 | Screenshots (1 to 5) | 1280×800 | `docs/store/en/screenshot-*.png` and `docs/store/pt-BR/screenshot-*.png` |
 | Small promo tile | 440×280 | `docs/store/en/promo-small.png` and `docs/store/pt-BR/promo-small.png` |
+| Marquee promo tile | 1400×560 | `docs/store/marquee.png` |
 
-Screenshots are generated from the real extension with `node scripts/screenshots.mjs` after `npm run build` (it needs Chrome for Testing; see the top of the script). Regenerate them when something visible changes. The promo tile is the user's artwork.
+Screenshots are generated from the real extension with `node scripts/screenshots.mjs` after `npm run build` (it needs Chrome for Testing; see the top of the script). Regenerate them when something visible changes. The promo tiles use the supplied Draftab logo kit; the small tile is the same in both languages. Extension icons and the new-tab favicon use the kit's PNGs. The README uses the horizontal SVG logo, with the reversed version for a dark background. The editor screenshots do not contain the old logo and do not need refreshing for this branding update.
 
 ## Privacy practices
 
