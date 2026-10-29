@@ -1,4 +1,9 @@
-# Draftab
+<h1>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/draftab-horizontal-reversed.svg" />
+    <img src="docs/brand/draftab-horizontal.svg" alt="Draftab" width="340" />
+  </picture>
+</h1>
 
 A Chrome extension ([Chrome Web Store](https://chromewebstore.google.com/detail/draftab/oamemjkhgfcoelilpnjpemllbmladaog)) that turns the **new tab** into a local notepad. The editor is made of blocks: you type markdown and it becomes formatting right away, and you can **drag any block** to reorder it. Everything is stored in your browser, with JSON backups (manual and automatic).
 

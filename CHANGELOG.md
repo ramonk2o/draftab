@@ -10,6 +10,7 @@ All notable changes to Draftab are documented here. The format is based on [Keep
 - **Power and remainder in calculations**: `2^10=` (or `2**10=`) and `7%3=` now work, following the usual math rules.
 
 ### Changed
+- **New Draftab branding**: updated the extension icons and new-tab favicon, plus the README logo and store promotional artwork.
 - Importing a `.md` file keeps one block per line, like pasting markdown.
 
 ### Fixed
