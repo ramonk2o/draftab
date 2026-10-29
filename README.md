@@ -1,7 +1,7 @@
 <h1>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/draftab-horizontal-reversed.svg" />
-    <img src="docs/brand/draftab-horizontal.svg" alt="Draftab" width="340" />
+    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/svg/draftab-horizontal-reversed.svg" />
+    <img src="docs/brand/svg/draftab-horizontal.svg" alt="Draftab" width="340" />
   </picture>
 </h1>
 
