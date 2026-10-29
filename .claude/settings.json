@@ -15,14 +15,14 @@
     ]
   },
   "extraKnownMarketplaces": {
-    "mini-devkit": {
+    "minidev": {
       "source": {
         "source": "github",
-        "repo": "ramonk2o/mini-devkit"
+        "repo": "ramonk2o/minidev"
       }
     }
   },
   "enabledPlugins": {
-    "mini-devkit@mini-devkit": true
+    "minidev@minidev": true
   }
 }
