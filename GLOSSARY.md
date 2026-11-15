@@ -25,6 +25,14 @@ _Avoid_: draft
 **Empty note** (`isEmptyNote`):
 A note with no text, no images and no title set by the user. It is never saved.
 
+**Open note**:
+The note shown in a tab's editor. Each tab has one; two tabs can have the same note open.
+_Avoid_: current note, active note
+
+**Pending changes** (`hasPendingChanges`):
+What was typed in the open note and isn't saved yet. When two tabs save the same note, the last save wins, even over pending changes made in the other tab.
+_Avoid_: pending typing, unsaved changes, draft
+
 **Pinned note** (`pinned`):
 A note kept at the top of the sidebar list, whatever the sort order.
 _Avoid_: favorite, starred
