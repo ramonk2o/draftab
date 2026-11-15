@@ -3,26 +3,23 @@
     "allow": [
       "Bash(npm test:*)",
       "Bash(npm run build:*)",
+      "Bash(npm run typecheck:*)",
       "Bash(npx vitest:*)",
       "Bash(npx tsc:*)",
       "Bash(git status:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
+      "Bash(git merge-base:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git switch:*)",
-      "Bash(git merge:*)"
+      "Bash(gh issue view:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh label list:*)",
+      "Bash(gh repo view:*)"
     ]
-  },
-  "extraKnownMarketplaces": {
-    "minidev": {
-      "source": {
-        "source": "github",
-        "repo": "ramonk2o/minidev"
-      }
-    }
-  },
-  "enabledPlugins": {
-    "minidev@minidev": true
   }
 }

@@ -2,7 +2,7 @@ import { noteFromFile } from './markdown'
 import { t, tn } from './i18n'
 import type { Note, NoteFont } from './notes'
 
-// Importing files dragged onto the page (see "Import a file as a note" in SPEC.md).
+// Importing files dragged onto the page.
 // The same files as the Import button, decided by the name's extension: the system
 // often reports no type for .md files.
 const IMPORTABLE = /\.(md|markdown|txt)$/i

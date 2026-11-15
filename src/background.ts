@@ -40,7 +40,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
   }
 })
 
-// ---------- Saving web pages (see "Saving web pages" in SPEC.md) ----------
+// ---------- Saving web pages ----------
 
 // The menu item, the icon's tooltip and the error messages follow the interface language.
 // The service worker restarts often (Chrome stops it when idle): the language is read again

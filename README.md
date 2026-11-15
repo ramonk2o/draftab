@@ -18,7 +18,7 @@ A Chrome extension ([Chrome Web Store](https://chromewebstore.google.com/detail/
 
 ## Features
 
-An overview; every rule is in [SPEC.md](SPEC.md).
+An overview; the rules are in the tests and the vocabulary in [GLOSSARY.md](GLOSSARY.md).
 
 - **Notes**: each new tab is a new note, saved as you type. Empty notes are never kept, the title follows the first line until you rename it, and open tabs stay in sync.
 - **Writing**: markdown shortcuts as you type (headings, lists, checklists, quotes, code, links, formatting), highlight colors, images from web addresses, `#tags`, calculations after `=`, color swatches and a calendar that inserts dates.
@@ -84,22 +84,22 @@ If Chrome's **"Ask where to save each file before downloading"** option is on (`
 
 ### How data is stored
 
-Notes and settings stay in this browser (`chrome.storage.local`). The data model, the backup file format and the reasons behind them are in [SPEC.md](SPEC.md) (Data model, Technical decisions).
+Notes and settings stay in this browser (`chrome.storage.local`). The data model and the backup file format are in `src/notes.ts` and `src/backup.ts`, and the reasons behind them in [docs/adr/](docs/adr/).
 
 ### Permissions
 
-The permissions are listed in [SPEC.md](SPEC.md) (Technical decisions), and what each one is for in [STORE.md](STORE.md) (Privacy practices).
+The permissions, and what each one is for, are in [STORE.md](STORE.md) (Privacy practices); why there are so few is in [docs/adr/0005](docs/adr/0005-few-permissions-and-no-host-access.md).
 
 ### Tests
 
-`npm test` (Vitest) covers everything that doesn't need a browser, editor rules included, with `chrome.storage`, alarms and downloads simulated in `src/fake-chrome.ts`. What needs a real browser (focus, dragging, clipboard, visuals) is checked in Chrome: each change lists it under "To check by hand:" in its commit message, and those lists are confirmed before every release (see [STORE.md](STORE.md)). A pre-commit hook (turned on by `npm install`) runs the tests and the type check before every commit that touches code.
+`npm test` (Vitest) covers everything that doesn't need a browser, editor rules included, with `chrome.storage`, alarms and downloads simulated in `src/fake-chrome.ts`. What needs a real browser (focus, dragging, clipboard, visuals) is checked in Chrome before every release (see [STORE.md](STORE.md)). A pre-commit hook (turned on by `npm install`) runs the tests and the type check before every commit that touches code.
 
 ### Project documents
 
 | File | Contents |
 |---|---|
-| [SPEC.md](SPEC.md) | How Draftab behaves today (rules by area), data model and technical decisions |
-| [BACKLOG.md](BACKLOG.md) | Ideas, by area, and the feature in progress; done features move to CHANGELOG.md |
+| [GLOSSARY.md](GLOSSARY.md) | The words the project uses, and the names they have in the code |
+| [docs/adr/](docs/adr/) | Technical decisions and why they were made |
 | [CHANGELOG.md](CHANGELOG.md) | What changed in each version |
 | [STORE.md](STORE.md) | Chrome Web Store listing texts (en-US and pt-BR), privacy answers and how to submit or update |
 | [PRIVACY.md](PRIVACY.md) | Privacy policy (English and Portuguese) |
@@ -113,14 +113,14 @@ The code conventions, test conventions and development cycle are in [CLAUDE.md](
 
 Contributions are welcome. To propose a change:
 
-1. Open an *issue* describing the problem or the idea (ideas can also go into [BACKLOG.md](BACKLOG.md)).
+1. Open an *issue* describing the problem or the idea (ideas too).
 2. *Fork* the repo, create a branch and follow the conventions in [CLAUDE.md](CLAUDE.md).
 3. Make sure `npm run build` and `npm test` pass, and test what changed in Chrome.
 4. Open a *pull request* explaining what changed and how to verify it.
 
 ### Known limitations
 
-Notes only exist in this browser, with no sync across computers (the JSON backup covers moving them manually). The rest are in [SPEC.md](SPEC.md) (Known limitations).
+Notes only exist in this browser, with no sync across computers (the JSON backup covers moving them manually). The rest are listed as consequences in [docs/adr/](docs/adr/).
 
 ## License
 

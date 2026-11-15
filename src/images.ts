@@ -3,7 +3,7 @@ import { Selection, type EditorState, type Transaction } from '@tiptap/pm/state'
 import { InputRule } from '@tiptap/core'
 import { Image } from '@tiptap/extension-image'
 
-// Image blocks (see "Images" in SPEC.md): the note stores only the picture's web address
+// Image blocks: the note stores only the picture's web address
 
 // An http/https address (images with data:, relative or other addresses aren't kept)
 export function isWebAddress(src: unknown): src is string {
