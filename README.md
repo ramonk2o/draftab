@@ -92,7 +92,7 @@ The permissions are listed in [SPEC.md](SPEC.md) (Technical decisions), and what
 
 ### Tests
 
-`npm test` (Vitest) covers everything that doesn't need a browser, editor rules included, with `chrome.storage`, alarms and downloads simulated in `src/fake-chrome.ts`. What needs a real browser (focus, dragging, clipboard, visuals) is checked in Chrome: each change lists it under "To check by hand:" in its commit message, and those lists are confirmed before every release (see [STORE.md](STORE.md)). A pre-commit hook (turned on by `npm install`) runs the tests and the type check before every commit that touches code.
+`npm test` (Vitest) covers everything that doesn't need a browser, editor rules included, with `chrome.storage`, alarms and downloads simulated in `src/fake-chrome.ts`. What needs a real browser (focus, dragging, clipboard, visuals) is checked in Chrome before every release (see [STORE.md](STORE.md)). A pre-commit hook (turned on by `npm install`) runs the tests and the type check before every commit that touches code.
 
 ### Project documents
 
