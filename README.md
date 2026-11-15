@@ -99,7 +99,6 @@ The permissions are listed in [SPEC.md](SPEC.md) (Technical decisions), and what
 | File | Contents |
 |---|---|
 | [SPEC.md](SPEC.md) | How Draftab behaves today (rules by area), data model and technical decisions |
-| [BACKLOG.md](BACKLOG.md) | Ideas, by area, and the feature in progress; done features move to CHANGELOG.md |
 | [CHANGELOG.md](CHANGELOG.md) | What changed in each version |
 | [STORE.md](STORE.md) | Chrome Web Store listing texts (en-US and pt-BR), privacy answers and how to submit or update |
 | [PRIVACY.md](PRIVACY.md) | Privacy policy (English and Portuguese) |
@@ -113,7 +112,7 @@ The code conventions, test conventions and development cycle are in [CLAUDE.md](
 
 Contributions are welcome. To propose a change:
 
-1. Open an *issue* describing the problem or the idea (ideas can also go into [BACKLOG.md](BACKLOG.md)).
+1. Open an *issue* describing the problem or the idea (ideas too).
 2. *Fork* the repo, create a branch and follow the conventions in [CLAUDE.md](CLAUDE.md).
 3. Make sure `npm run build` and `npm test` pass, and test what changed in Chrome.
 4. Open a *pull request* explaining what changed and how to verify it.
