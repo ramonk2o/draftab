@@ -18,7 +18,7 @@ A Chrome extension ([Chrome Web Store](https://chromewebstore.google.com/detail/
 
 ## Features
 
-An overview; every rule is in [SPEC.md](SPEC.md).
+An overview; the rules are in the tests and the vocabulary in [GLOSSARY.md](GLOSSARY.md).
 
 - **Notes**: each new tab is a new note, saved as you type. Empty notes are never kept, the title follows the first line until you rename it, and open tabs stay in sync.
 - **Writing**: markdown shortcuts as you type (headings, lists, checklists, quotes, code, links, formatting), highlight colors, images from web addresses, `#tags`, calculations after `=`, color swatches and a calendar that inserts dates.
@@ -84,11 +84,11 @@ If Chrome's **"Ask where to save each file before downloading"** option is on (`
 
 ### How data is stored
 
-Notes and settings stay in this browser (`chrome.storage.local`). The data model, the backup file format and the reasons behind them are in [SPEC.md](SPEC.md) (Data model, Technical decisions).
+Notes and settings stay in this browser (`chrome.storage.local`). The data model and the backup file format are in `src/notes.ts` and `src/backup.ts`, and the reasons behind them in [docs/adr/](docs/adr/).
 
 ### Permissions
 
-The permissions are listed in [SPEC.md](SPEC.md) (Technical decisions), and what each one is for in [STORE.md](STORE.md) (Privacy practices).
+The permissions, and what each one is for, are in [STORE.md](STORE.md) (Privacy practices); why there are so few is in [docs/adr/0005](docs/adr/0005-few-permissions-and-no-host-access.md).
 
 ### Tests
 
@@ -98,7 +98,8 @@ The permissions are listed in [SPEC.md](SPEC.md) (Technical decisions), and what
 
 | File | Contents |
 |---|---|
-| [SPEC.md](SPEC.md) | How Draftab behaves today (rules by area), data model and technical decisions |
+| [GLOSSARY.md](GLOSSARY.md) | The words the project uses, and the names they have in the code |
+| [docs/adr/](docs/adr/) | Technical decisions and why they were made |
 | [CHANGELOG.md](CHANGELOG.md) | What changed in each version |
 | [STORE.md](STORE.md) | Chrome Web Store listing texts (en-US and pt-BR), privacy answers and how to submit or update |
 | [PRIVACY.md](PRIVACY.md) | Privacy policy (English and Portuguese) |
@@ -119,7 +120,7 @@ Contributions are welcome. To propose a change:
 
 ### Known limitations
 
-Notes only exist in this browser, with no sync across computers (the JSON backup covers moving them manually). The rest are in [SPEC.md](SPEC.md) (Known limitations).
+Notes only exist in this browser, with no sync across computers (the JSON backup covers moving them manually). The rest are listed as consequences in [docs/adr/](docs/adr/).
 
 ## License
 

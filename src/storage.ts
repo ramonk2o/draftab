@@ -143,7 +143,7 @@ function onFieldChanged(storageKey: 'settings' | 'meta', field: string, callback
 // ---------- Captured pages ----------
 
 // A page captured by the service worker waits here for the new tab that turns it into
-// a note (see "Saving web pages" in SPEC.md). Not a note: never listed or backed up.
+// a note. Not a note: never listed or backed up.
 const CLIP_PREFIX = 'clip:'
 const CLIP_MAX_AGE = 10 * 60 * 1000 // 10 minutes
 

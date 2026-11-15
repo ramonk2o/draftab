@@ -1,4 +1,4 @@
-// Calendar in the sidebar: the month grid and the formats of inserted dates (see "Calendar" in SPEC.md).
+// Calendar in the sidebar: the month grid and the formats of inserted dates.
 // No DOM here, so it can be tested; the sidebar part is in calendar-ui.ts.
 
 export const DATE_FORMATS = ['numeric', 'iso', 'short', 'long'] as const

@@ -1,7 +1,7 @@
 import type { JSONContent } from '@tiptap/core'
 import { t } from './i18n'
 
-// A note as it is stored (see "Data model" in SPEC.md)
+// A note as it is stored
 export type Note = {
   id: string
   doc: JSONContent // Tiptap JSON: the source of truth

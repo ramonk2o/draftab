@@ -1,7 +1,7 @@
 import { Mark } from '@tiptap/core'
 import type { EditorState, Transaction } from '@tiptap/pm/state'
 
-// Highlight: a background color on selected text (see "Highlight" in SPEC.md).
+// Highlight: a background color on selected text.
 // The note stores only the color's name; the shades for each theme are in newtab.css.
 // In the page it's <span data-highlight="yellow">: not <mark>, which other apps would
 // show highlighted in formatted copies (the highlight only exists in Draftab).

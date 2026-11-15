@@ -6,7 +6,7 @@ import { markdownDoc } from './markdown'
 // What the clipboard brings: its plain text, its HTML and the types it has
 export type Clipboard = { text: string; html: string; types: readonly string[] }
 
-// Pasting plain text reads it as markdown (see "Pasting markdown" in SPEC.md).
+// Pasting plain text reads it as markdown.
 // shift: Cmd/Ctrl+Shift+V, which pastes the raw text.
 // null = paste normally (the copy brought HTML, or the markdown couldn't be read)
 export function pasteMarkdown(state: EditorState, clipboard: Clipboard, shift: boolean): Transaction | null {

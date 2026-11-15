@@ -40,7 +40,7 @@ beforeEach(() => {
 })
 
 describe('createBackup', () => {
-  test('follows the SPEC format and includes each note in markdown', () => {
+  test('follows the backup file format and includes each note in markdown', () => {
     const backup = createBackup([fullNote()], { autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: false, dateFormat: 'long', colorSwatches: true, calculations: true, decimalSeparator: 'auto', newNoteHeading: true }, 999)
     expect(backup).toMatchObject({ app: 'draftab', version: 1, exportedAt: 999 })
     expect(backup.settings).toEqual({ autoBackupMinutes: 60, sidebarCollapsed: false, theme: 'auto', noteSort: 'updated', noteFont: 'sans', newNoteFont: 'sans', newNoteTextSize: 100, language: 'auto', showCalendar: false, dateFormat: 'long', colorSwatches: true, calculations: true, decimalSeparator: 'auto', newNoteHeading: true })

@@ -3,7 +3,7 @@ import { ICON_CHEVRON_LEFT, ICON_CHEVRON_RIGHT } from './icons'
 import { formatDate, monthGrid, monthTitle, sameDay, weekdayInitials, type DateFormat } from './calendar'
 import { locale, t } from './i18n'
 
-// The month calendar at the bottom of the sidebar (see "Calendar" in SPEC.md).
+// The month calendar at the bottom of the sidebar.
 // Clicking a day hands the formatted date to newtab.ts, which inserts it in the note.
 
 const calendar = element<HTMLElement>('#calendar')

@@ -1,4 +1,4 @@
-// Interface language: English or Portuguese (see "Language" in SPEC.md).
+// Interface language: English or Portuguese.
 // Our own dictionary instead of chrome.i18n, which only follows Chrome's language.
 // No side effects on import: the service worker and the tests use it too (always in English).
 

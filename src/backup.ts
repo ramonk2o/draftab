@@ -4,7 +4,7 @@ import { isNoteFont, isPinned, validTextSize, type Note } from './notes'
 import type { Settings } from './storage'
 import { t } from './i18n'
 
-// Backup file format (see SPEC.md). Doesn't depend on an open page:
+// Backup file format. Doesn't depend on an open page:
 // it's also used by the automatic backup.
 
 export type BackupNote = Note & { markdown: string }

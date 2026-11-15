@@ -2,7 +2,6 @@ import { Extension, InputRule } from '@tiptap/core'
 import { locale } from './i18n'
 
 // Calculations: typing "=" right after an expression writes the result ("2*5=" → "2*5=10").
-// See "Calculations" in SPEC.md.
 
 const DECIMAL_SEPARATORS = ['auto', '.', ','] as const
 export type DecimalSeparatorSetting = (typeof DECIMAL_SEPARATORS)[number]

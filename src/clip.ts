@@ -5,7 +5,7 @@ import { newBlankNote, textOf, withUpdatedTitle, type Note, type NoteFont } from
 import { t } from './i18n'
 import { isWebAddress } from './images'
 
-// Saving web pages (see "Saving web pages" in SPEC.md): what the capture in the page
+// Saving web pages: what the capture in the page
 // hands to the new tab, and how it becomes a note.
 
 // A captured page or selection.

@@ -502,7 +502,7 @@ window.addEventListener(
   true,
 )
 
-// ---------- Saved web pages (see "Saving web pages" in SPEC.md) ----------
+// ---------- Saved web pages ----------
 
 // The tab was opened by the toolbar icon or the right-click menu, with ?clip=<id>.
 // Returns true when it opened a note or showed a message.

@@ -1,7 +1,7 @@
 # Draftab
 
 Chrome extension (Manifest V3) that replaces the new tab with a notepad with a markdown block editor (Tiptap 3) and drag-to-reorder.
-- How it works today: `SPEC.md`. What changed in each version: `CHANGELOG.md`.
+- Vocabulary: `GLOSSARY.md`. Decisions and why: `docs/adr/`. What changed in each version: `CHANGELOG.md`.
 
 ## Commands
 - Install: `npm install` (also turns on the pre-commit hook in `.githooks/`: tests and type check before every commit that touches code)
@@ -16,7 +16,7 @@ Chrome extension (Manifest V3) that replaces the new tab with a notepad with a m
 - Strict TypeScript; no React or other UI framework.
 - All `chrome.storage` access goes through `src/storage.ts`.
 - The Tiptap JSON is the source of truth for notes; markdown only on export.
-- Manifest permissions: only those in SPEC.md → Technical decisions; a new one needs a reason in its issue and PR, and goes into SPEC.md, the justification table in STORE.md and PRIVACY.md (`src/conventions.test.ts` checks that the manifest, SPEC and STORE agree).
+- Manifest permissions: only those justified in the STORE.md table (see `docs/adr/0005`); a new one needs a reason in its issue and PR, and goes into that table and PRIVACY.md (`src/conventions.test.ts` checks that the manifest and STORE agree).
 - Everything in the project is in English: code, identifiers, comments, UI text, docs, issues, PRs and commit messages.
 - The user reads basic JS: prefer direct, readable code over abstractions.
 - Changelog: every PR with a change the people who use the extension notice adds a line under `[Unreleased]` in CHANGELOG.md. Refactoring, tests and tooling don't.
